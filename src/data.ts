@@ -32,6 +32,19 @@ export type District = {
   mapQuery: string;
 };
 
+export type SpiritualSite = {
+  id: string;
+  city: string;
+  name: string;
+  district: string;
+  kind: 'Türbe' | 'Külliye';
+  period: string;
+  summary: string;
+  etiquette: string;
+  mapQuery: string;
+  sourceUrl: string;
+};
+
 export const bursa: City = {
   id: 'bursa',
   name: 'Bursa',
@@ -76,4 +89,17 @@ export const bursaDistricts: District[] = [
   { name: 'Keles', signature: 'Dağ köyleri ve Kocayayla', theme: '#486452', highlights: ['Kocayayla', 'Gelemiç Şelalesi', 'Dağ köyleri'], flavors: ['Keles kirazı', 'Dağ çileği', 'Yörük yemekleri'], mapQuery: 'Keles Bursa' },
   { name: 'Harmancık', signature: 'Yaylalar ve sakin doğa', theme: '#5C7158', highlights: ['Harmancık yaylaları', 'Kanyon ve yürüyüş rotaları', 'Kırsal köyler'], flavors: ['Ceviz', 'Köy ürünleri', 'Yöresel hamur işleri'], mapQuery: 'Harmancık Bursa' },
   { name: 'Büyükorhan', signature: 'Göletler ve dağ rotaları', theme: '#586B62', highlights: ['Görecik Yaylası', 'Büyükorhan Göleti', 'Dağ köyleri'], flavors: ['Kırsal üretici ürünleri', 'Köy ekmeği', 'Yörük mutfağı'], mapQuery: 'Büyükorhan Bursa' },
+];
+
+export const spiritualSites: SpiritualSite[] = [
+  { id: 'osman-gazi', city: 'Bursa', name: 'Osman Gazi Türbesi', district: 'Osmangazi', kind: 'Türbe', period: 'Osmanlı’nın kuruluş dönemi', summary: 'Osmanlı Devleti’nin kurucusu Osman Gazi’nin Tophane’de bulunan türbesi; bugünkü yapı 1863 yılında yeniden yaptırılmıştır.', etiquette: 'Sessizliği koruyun, sandukalara dokunmayın ve ibadet eden ziyaretçilere alan bırakın.', mapQuery: 'Osman Gazi Türbesi Bursa', sourceUrl: 'https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/osmangazi-turbesi' },
+  { id: 'orhan-gazi', city: 'Bursa', name: 'Orhan Gazi Türbesi', district: 'Osmangazi', kind: 'Türbe', period: '14. yüzyıl Osmanlı mirası', summary: 'Bursa Fatihi Orhan Gazi’ye ait türbe, Tophane Parkı’nda Osman Gazi Türbesi’nin karşısında yer alır.', etiquette: 'Ziyaret sırasında sakin olun; içeride fotoğraf kuralları ve görevli yönlendirmelerine uyun.', mapQuery: 'Orhan Gazi Türbesi Bursa', sourceUrl: 'https://kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/orhan-gazi-turbesi' },
+  { id: 'emir-sultan', city: 'Bursa', name: 'Emir Sultan Türbesi ve Külliyesi', district: 'Yıldırım', kind: 'Külliye', period: 'Erken Osmanlı dönemi', summary: 'Bursa’nın en güçlü manevi odaklarından biri olan külliye, Emir Sultan’ın türbesi ve camisi çevresinde şekillenir.', etiquette: 'Cami bölümünde uygun kıyafet kullanın; namaz vakitlerinde ziyaret akışına dikkat edin.', mapQuery: 'Emir Sultan Türbesi Bursa', sourceUrl: 'https://bursa.ktb.gov.tr/TR-70228/bursa-ili-genel-bilgiler.html' },
+  { id: 'yesil-turbe', city: 'Bursa', name: 'Yeşil Türbe', district: 'Yıldırım', kind: 'Türbe', period: '15. yüzyıl', summary: 'Çelebi Sultan Mehmed için yaptırılan türbe, yeşil ve turkuaz çinileriyle Bursa’nın simge yapılarındandır.', etiquette: 'Çini yüzeylere dokunmayın; flaş ve fotoğraf kurallarını girişte kontrol edin.', mapQuery: 'Yeşil Türbe Bursa', sourceUrl: 'https://kulturportali.gov.tr/turkiye/bursa/gezilecekyer/yesil-turbe' },
+  { id: 'muradiye', city: 'Bursa', name: 'Muradiye Külliyesi ve Türbeleri', district: 'Osmangazi', kind: 'Külliye', period: '15. yüzyıl', summary: 'II. Murad ve hanedan üyelerine ait türbeleri barındıran UNESCO miras alanı; geniş bir tarihî bahçe içinde yer alır.', etiquette: 'Hazire ve türbe alanlarında belirlenmiş yollardan ilerleyin; sessizliği koruyun.', mapQuery: 'Muradiye Külliyesi Bursa', sourceUrl: 'https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/muradiye-kulliyesi' },
+  { id: 'uftade', city: 'Bursa', name: 'Üftade Camii ve Türbesi', district: 'Osmangazi', kind: 'Külliye', period: '16. yüzyıl manevi mirası', summary: 'Mutasavvıf Üftade Hazretleri’yle ilişkilendirilen cami ve türbe, Pınarbaşı çevresindeki önemli ziyaret noktalarındandır.', etiquette: 'Dik yokuşlu çevre yollarına hazırlıklı olun; ibadet alanındaki kurallara uyun.', mapQuery: 'Üftade Türbesi Bursa', sourceUrl: 'https://bursatanitim.gov.tr/wp-content/uploads/2025/07/mini-Bursa-Turizm-Rehberi_REV_29Tem.pdf' },
+  { id: 'suleyman-celebi', city: 'Bursa', name: 'Süleyman Çelebi Türbesi', district: 'Osmangazi', kind: 'Türbe', period: '15. yüzyıl kültür mirası', summary: 'Vesîletü’n-Necât adlı Mevlid’in yazarı Süleyman Çelebi’nin Çekirge yolu üzerindeki anıt mezarıdır.', etiquette: 'Alanı temiz tutun ve diğer ziyaretçilerin sessiz ziyaret hakkına saygı gösterin.', mapQuery: 'Süleyman Çelebi Türbesi Bursa', sourceUrl: 'https://bursa.ktb.gov.tr/TR-70228/bursa-ili-genel-bilgiler.html' },
+  { id: 'geyikli-baba', city: 'Bursa', name: 'Geyikli Baba Türbesi', district: 'Kestel', kind: 'Türbe', period: 'Erken Osmanlı dönemi', summary: 'Babasultan yerleşiminde bulunan türbe, Bursa’nın kuruluş dönemi manevi şahsiyetlerinden Geyikli Baba’yla ilişkilidir.', etiquette: 'Köy yaşamına ve ziyaret alanının yerel düzenine saygı gösterin.', mapQuery: 'Geyikli Baba Türbesi Babasultan Bursa', sourceUrl: 'https://bursa.ktb.gov.tr/TR-70228/bursa-ili-genel-bilgiler.html' },
+  { id: 'hudavendigar', city: 'Bursa', name: 'I. Murad Hüdavendigâr Türbesi', district: 'Osmangazi', kind: 'Türbe', period: '14. yüzyıl', summary: 'Çekirge’deki Hüdavendigâr Külliyesi içinde, Osmanlı hükümdarı I. Murad’a ait türbedir.', etiquette: 'Cami ve türbe bölümlerini ayıran yönlendirmelere, kıyafet ve sessizlik kurallarına uyun.', mapQuery: 'Hüdavendigar Türbesi Bursa', sourceUrl: 'https://bursa.ktb.gov.tr/Eklenti/78710%2Cdergi1-turkcepdf.pdf?0=' },
+  { id: 'yildirim-bayezid', city: 'Bursa', name: 'Yıldırım Bayezid Türbesi', district: 'Yıldırım', kind: 'Türbe', period: '15. yüzyıl başı', summary: 'Yıldırım Külliyesi çevresinde bulunan türbe, Osmanlı hükümdarı Yıldırım Bayezid’e aittir.', etiquette: 'Külliye içindeki ibadet ve eğitim alanlarının kullanımına dikkat ederek ziyaret edin.', mapQuery: 'Yıldırım Bayezid Türbesi Bursa', sourceUrl: 'https://bursatanitim.gov.tr/wp-content/uploads/2025/07/mini-Bursa-Turizm-Rehberi_REV_29Tem.pdf' },
 ];
