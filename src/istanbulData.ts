@@ -50,12 +50,12 @@ export const istanbulFoodGuide = [
 ];
 
 export const istanbulAccommodations = [
-  { area: 'Sultanahmet', district: 'Fatih', bestFor: 'İlk ziyaret · tarih', character: 'Ayasofya, Topkapı ve tarihî yarımadaya yürüyerek ulaşmak isteyenler için.', level: 'Karma', mapQuery: 'otel konaklama Sultanahmet Fatih İstanbul' },
-  { area: 'Taksim & Beyoğlu', district: 'Beyoğlu', bestFor: 'Kültür · gece hayatı', character: 'İstiklal, müzeler, restoranlar ve merkezi ulaşımın yakınında.', level: 'Karma', mapQuery: 'otel konaklama Taksim Beyoğlu İstanbul' },
-  { area: 'Beşiktaş & Ortaköy', district: 'Beşiktaş', bestFor: 'Boğaz · merkezi ulaşım', character: 'Vapur bağlantıları, saraylar ve Boğaz kıyısına yakın şehir otelleri.', level: 'Lüks', mapQuery: 'otel konaklama Beşiktaş Ortaköy İstanbul' },
-  { area: 'Kadıköy & Moda', district: 'Kadıköy', bestFor: 'Yerel yaşam · yeme içme', character: 'Anadolu Yakası’nın çarşı, sahil, kafe ve gece yaşamına yakın.', level: 'Orta', mapQuery: 'otel konaklama Kadıköy Moda İstanbul' },
-  { area: 'Şişli & Nişantaşı', district: 'Şişli', bestFor: 'Alışveriş · iş seyahati', character: 'Metro, alışveriş, iş merkezleri ve şehir otelleri için güçlü bir üs.', level: 'Lüks', mapQuery: 'otel konaklama Şişli Nişantaşı İstanbul' },
-  { area: 'Büyükada', district: 'Adalar', bestFor: 'Sakinlik · hafta sonu', character: 'Tarihî köşk atmosferinde butik otel ve pansiyon seçenekleri.', level: 'Orta', mapQuery: 'otel butik otel pansiyon Büyükada İstanbul' },
+  { area: 'Sultanahmet', district: 'Fatih', category: 'Tarih', bestFor: 'İlk ziyaret · tarih', character: 'Ayasofya, Topkapı ve tarihî yarımadaya yürüyerek ulaşmak isteyenler için.', level: 'Karma', mapQuery: 'otel konaklama Sultanahmet Fatih İstanbul' },
+  { area: 'Taksim & Beyoğlu', district: 'Beyoğlu', category: 'Gece hayatı', bestFor: 'Kültür · gece hayatı', character: 'İstiklal, müzeler, restoranlar ve merkezi ulaşımın yakınında.', level: 'Karma', mapQuery: 'otel konaklama Taksim Beyoğlu İstanbul' },
+  { area: 'Beşiktaş & Boğaz', district: 'Beşiktaş', category: 'Merkezi ulaşım', bestFor: 'Boğaz · merkezi ulaşım', character: 'Vapur bağlantıları, saraylar ve Boğaz kıyısına yakın şehir otelleri.', level: 'Lüks', mapQuery: 'otel konaklama Beşiktaş Boğaz İstanbul' },
+  { area: 'Kadıköy & Moda', district: 'Kadıköy', category: 'Yerel yaşam', bestFor: 'Yerel yaşam · yeme içme', character: 'Anadolu Yakası’nın çarşı, sahil, kafe ve gece yaşamına yakın.', level: 'Orta', mapQuery: 'otel konaklama Kadıköy Moda İstanbul' },
+  { area: 'Şişli & Nişantaşı', district: 'Şişli', category: 'İş & alışveriş', bestFor: 'Alışveriş · iş seyahati', character: 'Metro, alışveriş, iş merkezleri ve şehir otelleri için güçlü bir üs.', level: 'Lüks', mapQuery: 'otel konaklama Şişli Nişantaşı İstanbul' },
+  { area: 'Büyükada', district: 'Adalar', category: 'Sakin tatil', bestFor: 'Sakinlik · hafta sonu', character: 'Tarihî köşk atmosferinde butik otel ve pansiyon seçenekleri.', level: 'Orta', mapQuery: 'otel butik otel pansiyon Büyükada İstanbul' },
 ];
 
 export const istanbulRoutes = [

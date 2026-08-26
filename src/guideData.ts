@@ -38,7 +38,7 @@ export type VenueArea = {
   restaurantQuery: string;
 };
 
-export type AccommodationArea = { area: string; district: string; bestFor: string; character: string; level: 'Ekonomik' | 'Orta' | 'Lüks' | 'Karma'; mapQuery: string };
+export type AccommodationArea = { area: string; district: string; category: string; bestFor: string; character: string; level: 'Ekonomik' | 'Orta' | 'Lüks' | 'Karma'; mapQuery: string };
 
 export type CityGuideModules = {
   cityId: string;
@@ -89,12 +89,12 @@ export const bursaGuideModules: CityGuideModules = {
     { area: 'İnegöl Merkez', district: 'İnegöl', character: 'Köfte salonları ve yerel tatlılar', cafeQuery: 'en iyi kafeler İnegöl Bursa', restaurantQuery: 'en iyi restoranlar İnegöl Bursa' },
   ],
   accommodations: [
-    { area: 'Tarihî Merkez', district: 'Osmangazi', bestFor: 'İlk kez gelenler · tarih', character: 'Ulu Cami, Hanlar Bölgesi ve çarşılara yürüyerek ulaşmak isteyenler için.', level: 'Karma', mapQuery: 'otel konaklama Tarihi Merkez Osmangazi Bursa' },
-    { area: 'Çekirge', district: 'Osmangazi', bestFor: 'Termal · dinlenme', character: 'Termal oteller, kaplıcalar ve şehir merkezine kısa ulaşım.', level: 'Orta', mapQuery: 'termal oteller Çekirge Bursa' },
-    { area: 'Nilüfer & Görükle', district: 'Nilüfer', bestFor: 'Modern yaşam · ekonomik', character: 'Kafeler, metro bağlantısı, apart ve şehir oteli seçenekleri.', level: 'Ekonomik', mapQuery: 'otel apart Nilüfer Görükle Bursa' },
-    { area: 'Uludağ', district: 'Osmangazi', bestFor: 'Kayak · doğa', character: 'Kış sporlarına ve dağ yürüyüşlerine yakın oteller ve dağ evleri.', level: 'Lüks', mapQuery: 'Uludağ otelleri Bursa' },
-    { area: 'Mudanya & Tirilye', district: 'Mudanya', bestFor: 'Sahil · sakin tatil', character: 'Deniz manzaralı butik oteller, pansiyonlar ve tarihî konaklar.', level: 'Orta', mapQuery: 'otel butik otel Mudanya Tirilye Bursa' },
-    { area: 'İznik Gölü', district: 'İznik', bestFor: 'Göl · kamp', character: 'Göl kıyısı pansiyonları, bungalovlar ve kamp alanları.', level: 'Karma', mapQuery: 'otel pansiyon kamp İznik Gölü Bursa' },
+    { area: 'Tarihî Merkez', district: 'Osmangazi', category: 'Tarih', bestFor: 'İlk kez gelenler · tarih', character: 'Ulu Cami, Hanlar Bölgesi ve çarşılara yürüyerek ulaşmak isteyenler için.', level: 'Karma', mapQuery: 'otel konaklama Tarihi Merkez Osmangazi Bursa' },
+    { area: 'Çekirge', district: 'Osmangazi', category: 'Termal', bestFor: 'Termal · dinlenme', character: 'Termal oteller, kaplıcalar ve şehir merkezine kısa ulaşım.', level: 'Orta', mapQuery: 'termal oteller Çekirge Bursa' },
+    { area: 'Nilüfer & Görükle', district: 'Nilüfer', category: 'Modern yaşam', bestFor: 'Modern yaşam · ekonomik', character: 'Kafeler, metro bağlantısı, apart ve şehir oteli seçenekleri.', level: 'Ekonomik', mapQuery: 'otel apart Nilüfer Görükle Bursa' },
+    { area: 'Uludağ', district: 'Osmangazi', category: 'Kayak & doğa', bestFor: 'Kayak · doğa', character: 'Kış sporlarına ve dağ yürüyüşlerine yakın oteller ve dağ evleri.', level: 'Lüks', mapQuery: 'Uludağ otelleri Bursa' },
+    { area: 'Mudanya & Tirilye', district: 'Mudanya', category: 'Sahil', bestFor: 'Sahil · sakin tatil', character: 'Deniz manzaralı butik oteller, pansiyonlar ve tarihî konaklar.', level: 'Orta', mapQuery: 'otel butik otel Mudanya Tirilye Bursa' },
+    { area: 'İznik Gölü', district: 'İznik', category: 'Göl & kamp', bestFor: 'Göl · kamp', character: 'Göl kıyısı pansiyonları, bungalovlar ve kamp alanları.', level: 'Karma', mapQuery: 'otel pansiyon kamp İznik Gölü Bursa' },
   ],
   nearbySearches: [
     { label: 'Gezilecek yer', icon: '⌖', query: 'gezilecek yerler' },
