@@ -49,6 +49,15 @@ export const istanbulFoodGuide = [
   { dish: 'Moda dondurması', area: 'Moda · Kadıköy', note: 'Moda sahiline uzanan yürüyüşte mahalle dondurmacılarının mevsimlik ve klasik çeşitlerini keşfet.', mapQuery: 'dondurma Moda Kadıköy İstanbul' },
 ];
 
+export const istanbulAccommodations = [
+  { area: 'Sultanahmet', district: 'Fatih', bestFor: 'İlk ziyaret · tarih', character: 'Ayasofya, Topkapı ve tarihî yarımadaya yürüyerek ulaşmak isteyenler için.', level: 'Karma', mapQuery: 'otel konaklama Sultanahmet Fatih İstanbul' },
+  { area: 'Taksim & Beyoğlu', district: 'Beyoğlu', bestFor: 'Kültür · gece hayatı', character: 'İstiklal, müzeler, restoranlar ve merkezi ulaşımın yakınında.', level: 'Karma', mapQuery: 'otel konaklama Taksim Beyoğlu İstanbul' },
+  { area: 'Beşiktaş & Ortaköy', district: 'Beşiktaş', bestFor: 'Boğaz · merkezi ulaşım', character: 'Vapur bağlantıları, saraylar ve Boğaz kıyısına yakın şehir otelleri.', level: 'Lüks', mapQuery: 'otel konaklama Beşiktaş Ortaköy İstanbul' },
+  { area: 'Kadıköy & Moda', district: 'Kadıköy', bestFor: 'Yerel yaşam · yeme içme', character: 'Anadolu Yakası’nın çarşı, sahil, kafe ve gece yaşamına yakın.', level: 'Orta', mapQuery: 'otel konaklama Kadıköy Moda İstanbul' },
+  { area: 'Şişli & Nişantaşı', district: 'Şişli', bestFor: 'Alışveriş · iş seyahati', character: 'Metro, alışveriş, iş merkezleri ve şehir otelleri için güçlü bir üs.', level: 'Lüks', mapQuery: 'otel konaklama Şişli Nişantaşı İstanbul' },
+  { area: 'Büyükada', district: 'Adalar', bestFor: 'Sakinlik · hafta sonu', character: 'Tarihî köşk atmosferinde butik otel ve pansiyon seçenekleri.', level: 'Orta', mapQuery: 'otel butik otel pansiyon Büyükada İstanbul' },
+];
+
 export const istanbulRoutes = [
   { title: 'Tarihî Yarımada', duration: '1 tam gün', color: '#75513B', stops: ['Ayasofya','Sultanahmet Camii','Topkapı Sarayı','Yerebatan Sarnıcı','Kapalıçarşı'] },
   { title: 'Galata’dan Boğaz’a', duration: '1 tam gün', color: '#315F53', stops: ['Galata Kulesi','Karaköy','Dolmabahçe Sarayı','Ortaköy','Bebek'] },
