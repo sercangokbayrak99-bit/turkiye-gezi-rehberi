@@ -49,6 +49,9 @@ export type CityGuideModules = {
   venueAreas: VenueArea[];
   accommodations: AccommodationArea[];
   nearbySearches: { label: string; icon: string; query: string }[];
+  familyRoutes: { area: string; district: string; character: string; mapQuery: string }[];
+  nightlifeAreas: { area: string; district: string; character: string; mapQuery: string }[];
+  shoppingStreets: { area: string; district: string; character: string; mapQuery: string }[];
 };
 
 export const bursaGuideModules: CityGuideModules = {
@@ -101,5 +104,23 @@ export const bursaGuideModules: CityGuideModules = {
     { label: 'Yemek', icon: '◉', query: 'restoranlar' },
     { label: 'Eczane', icon: '+', query: 'eczaneler' },
     { label: 'Ulaşım', icon: '↗', query: 'toplu taşıma durakları' },
+  ],
+  familyRoutes: [
+    { area: 'Kültürpark & müze günü', district: 'Osmangazi', character: 'Bursa Arkeoloji Müzesi, Kültürpark ve çevredeki oyun alanlarını birleştiren kolay aile rotası.', mapQuery: 'Bursa Arkeoloji Müzesi Kültürpark Bursa' },
+    { area: 'Arabalar & tarih', district: 'Yıldırım', character: 'Tofaş Anadolu Arabaları Müzesi ile Yeşil Külliye çevresini aynı günde keşfet.', mapQuery: 'Tofaş Anadolu Arabaları Müzesi Yeşil Külliye Bursa' },
+    { area: 'Botanik Park & Hayvanat Bahçesi', district: 'Osmangazi', character: 'Bisiklet yolları, geniş yeşil alanlar ve hayvanat bahçesiyle çocuklara uygun tam günlük açık hava planı.', mapQuery: 'Soğanlı Botanik Park Bursa Hayvanat Bahçesi' },
+    { area: 'Cumalıkızık köy günü', district: 'Yıldırım', character: 'Taş sokaklar, köy kahvaltısı ve geleneksel evlerle ailece yavaş tempolu kültür gezisi.', mapQuery: 'Cumalıkızık Bursa aile gezisi' },
+  ],
+  nightlifeAreas: [
+    { area: 'FSM Bulvarı', district: 'Nilüfer', character: 'Restoranlar, kafeler ve akşam saatlerinde hareketlenen modern kent yaşamı.', mapQuery: 'FSM Bulvarı Bursa gece hayatı' },
+    { area: 'Özlüce', district: 'Nilüfer', character: 'Yeni nesil restoran, pub ve canlı müzik seçenekleriyle genç ve modern akşam rotası.', mapQuery: 'Özlüce Bursa gece hayatı mekanlar' },
+    { area: 'Görükle', district: 'Nilüfer', character: 'Üniversite çevresinde uygun fiyatlı kafeler, publar ve canlı sosyal yaşam.', mapQuery: 'Görükle Bursa gece hayatı' },
+    { area: 'Mudanya Sahili', district: 'Mudanya', character: 'Deniz manzaralı restoranlar ve sakin sahil yürüyüşleriyle daha dingin bir akşam alternatifi.', mapQuery: 'Mudanya Sahili akşam mekanları' },
+  ],
+  shoppingStreets: [
+    { area: 'Uzun Çarşı & Kapalıçarşı', district: 'Osmangazi', character: 'Hanlar Bölgesi’nde ipek, havlu, kuyumculuk ve geleneksel Bursa ürünleri.', mapQuery: 'Bursa Uzun Çarşı Kapalıçarşı' },
+    { area: 'Cumhuriyet Caddesi', district: 'Osmangazi', character: 'Tarihî merkez boyunca mağazaları, tramvayı ve çarşı bağlantılarıyla canlı yaya aksı.', mapQuery: 'Cumhuriyet Caddesi Bursa' },
+    { area: 'FSM Bulvarı', district: 'Nilüfer', character: 'Mağaza, kafe ve restoranların sıralandığı modern alışveriş ve yaşam bulvarı.', mapQuery: 'Fatih Sultan Mehmet Bulvarı Bursa' },
+    { area: 'PodyumPark çevresi', district: 'Nilüfer', character: 'Açık hava alışverişi, yeme içme ve eğlenceyi bir araya getiren çağdaş kent bölgesi.', mapQuery: 'PodyumPark Bursa' },
   ],
 };
