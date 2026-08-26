@@ -16,7 +16,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { bursa, bursaDistricts, comingCities, spiritualSites, type Category, type District, type Place, type SpiritualSite } from './src/data';
+import { bursa, bursaBaths, bursaDistricts, comingCities, spiritualSites, type Category, type District, type Place, type SpiritualSite } from './src/data';
 import { bursaGuideModules, type AccommodationArea, type DailyRoute } from './src/guideData';
 import { regions, turkeyCities, type Region } from './src/cities';
 import { istanbulAccommodations, istanbulDistricts, istanbulFoodGuide, istanbulPlaces, istanbulRoutes, istanbulVenueAreas, type IstanbulDistrict, type IstanbulPlace } from './src/istanbulData';
@@ -70,7 +70,7 @@ export default function App() {
     });
   }, [category, query]);
 
-  const favoritePlaces = bursa.places.filter(place => favorites.includes(place.id));
+  const favoritePlaces = [...bursa.places, ...bursaBaths].filter(place => favorites.includes(place.id));
   const toggleFavorite = (id: string) => setFavorites(current => {
     const next = current.includes(id) ? current.filter(item => item !== id) : [...current, id];
     AsyncStorage.setItem('turkiye-rehberi-favoriler', JSON.stringify(next)).catch(() => {});
@@ -219,6 +219,7 @@ function MainContent({ exploreOnly, query, setQuery, category, setCategory, plac
   const districtQuery = query.trim().toLocaleLowerCase('tr-TR');
   const visibleDistricts = bursaDistricts.filter(district => !districtQuery || `${district.name} ${district.signature} ${district.highlights.join(' ')} ${district.flavors.join(' ')}`.toLocaleLowerCase('tr-TR').includes(districtQuery));
   const visibleSpiritual = spiritualSites.filter(site => site.city === 'Bursa' && (category === 'Tümü' || category === 'Manevi') && (!districtQuery || `${site.name} ${site.district} ${site.kind} ${site.summary}`.toLocaleLowerCase('tr-TR').includes(districtQuery)));
+  const visibleBaths = bursaBaths.filter(place => (category === 'Tümü' || category === 'Tarih') && (!districtQuery || `${place.name} ${place.district} hamam kaplıca termal ${place.summary}`.toLocaleLowerCase('tr-TR').includes(districtQuery)));
   return (
     <ScrollView contentContainerStyle={styles.page} showsVerticalScrollIndicator={false} stickyHeaderIndices={exploreOnly ? [0] : undefined}>
       {!exploreOnly && <Hero />}
@@ -291,6 +292,8 @@ function MainContent({ exploreOnly, query, setQuery, category, setCategory, plac
         </View><View style={styles.cardGrid}>
           {places.map(place => <PlaceCard key={place.id} place={place} favorite={favorites.includes(place.id)} onFavorite={onFavorite} onOpen={onOpen} />)}
         </View>{!places.length && <View style={styles.empty}><Text style={styles.emptyIcon}>⌕</Text><Text style={styles.emptyTitle}>Sonuç bulunamadı</Text><Text style={styles.emptyCopy}>Başka bir kelime veya kategori deneyebilirsin.</Text></View>}</>}
+
+        {!exploreOnly && visibleBaths.length > 0 && <><View style={styles.bathHeading}><View><Text style={styles.bathEyebrow}>HAMAMLAR & TERMAL MİRAS</Text><Text style={styles.bathTitle}>Suyun iyileştirdiği şehir.</Text></View><Text style={styles.resultCount}>{visibleBaths.length} hamam</Text></View><Text style={styles.bathIntro}>Roma’dan Osmanlı’ya uzanan termal kültürü, kubbeli hamamları ve Çekirge kaplıcalarını keşfet.</Text><View style={styles.cardGrid}>{visibleBaths.map(place => <PlaceCard key={place.id} place={place} favorite={favorites.includes(place.id)} onFavorite={onFavorite} onOpen={onOpen} />)}</View></>}
 
         {!exploreOnly && <CityToolkit />}
 
@@ -428,7 +431,7 @@ function BottomTabs({ tab, setTab, favoriteCount, planCount }: { tab: Tab; setTa
 
 function PlaceModal({ place, favorite, onClose, onFavorite }: { place: Place | null; favorite: boolean; onClose: () => void; onFavorite: (id: string) => void }) {
   const openMap = () => place && Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.mapQuery)}`);
-  return <Modal visible={Boolean(place)} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>{place && <View style={styles.modal}><Image source={place.image} style={styles.modalImage} /><View style={styles.modalShade} /><SafeAreaView style={styles.modalSafe}><View style={styles.modalActions}><Pressable onPress={onClose} style={styles.modalRound}><Text style={styles.modalRoundText}>×</Text></Pressable><Pressable onPress={() => onFavorite(place.id)} style={styles.modalRound}><Text style={styles.modalRoundText}>{favorite ? '♥' : '♡'}</Text></Pressable></View><View style={styles.modalBody}><Text style={styles.modalMeta}>{place.category.toUpperCase()} · {place.district.toUpperCase()}</Text><Text style={styles.modalTitle}>{place.name}</Text><Text style={styles.modalCopy}>{place.summary}</Text><View style={styles.infoCard}><Text style={styles.infoLabel}>BU ROTA İÇİN</Text><Text style={styles.infoTitle}>Haritada konumu aç</Text><Text style={styles.infoCopy}>Güncel yol durumunu ve ulaşım seçeneklerini harita uygulamasından görüntüle.</Text></View><Pressable onPress={openMap} style={styles.primaryButton}><Text style={styles.primaryButtonText}>Yol tarifi al  →</Text></Pressable></View></SafeAreaView></View>}</Modal>;
+  return <Modal visible={Boolean(place)} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>{place && <View style={styles.modal}><Image source={place.image} style={styles.modalImage} /><View style={styles.modalShade} /><SafeAreaView style={styles.modalSafe}><View style={styles.modalActions}><Pressable onPress={onClose} style={styles.modalRound}><Text style={styles.modalRoundText}>×</Text></Pressable><Pressable onPress={() => onFavorite(place.id)} style={styles.modalRound}><Text style={styles.modalRoundText}>{favorite ? '♥' : '♡'}</Text></Pressable></View><View style={styles.modalBody}><Text style={styles.modalMeta}>{place.category.toUpperCase()} · {place.district.toUpperCase()}</Text><Text style={styles.modalTitle}>{place.name}</Text><Text style={styles.modalCopy}>{place.summary}</Text><View style={styles.infoCard}><Text style={styles.infoLabel}>BU ROTA İÇİN</Text><Text style={styles.infoTitle}>Haritada konumu aç</Text><Text style={styles.infoCopy}>Güncel yol durumunu ve ulaşım seçeneklerini harita uygulamasından görüntüle.</Text></View><Pressable onPress={openMap} style={styles.primaryButton}><Text style={styles.primaryButtonText}>Yol tarifi al  →</Text></Pressable>{place.imagePage && <Pressable onPress={() => Linking.openURL(place.imagePage!)} style={styles.sourceButton}><Text style={styles.sourceButtonText}>Fotoğraf: {place.imageCredit}</Text></Pressable>}</View></SafeAreaView></View>}</Modal>;
 }
 
 function DistrictModal({ district, planned, onClose, onTogglePlan }: { district: District | null; planned: boolean; onClose: () => void; onTogglePlan: (name: string) => void }) {
@@ -445,6 +448,7 @@ function SpiritualModal({ site, planned, onClose, onTogglePlan }: { site: Spirit
 }
 
 const istanbulStyles = {
+  bathHeading: { marginTop: 38, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }, bathEyebrow: { color: '#8B6844', fontSize: 9, fontWeight: '900', letterSpacing: 1.2 }, bathTitle: { marginTop: 6, color: palette.ink, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 29, fontWeight: '600' }, bathIntro: { marginTop: 9, marginBottom: 17, color: palette.muted, fontSize: 12, lineHeight: 18 },
   istanbulDetailOpen: { marginTop: 17, color: palette.moss, fontSize: 11, fontWeight: '900' }, istanbulDistrictModalCopy: { color: palette.muted, fontSize: 15, lineHeight: 23 },
   stayEyebrow: { marginBottom: 5, color: '#8B6844', fontSize: 8, fontWeight: '900', letterSpacing: 1.2 }, stayIntro: { marginTop: -5, marginBottom: 12, color: palette.muted, fontSize: 12, lineHeight: 18 }, stayFilterRail: { gap: 8, paddingBottom: 15 }, stayFilter: { paddingHorizontal: 14, paddingVertical: 9, borderRadius: 18, borderWidth: 1, borderColor: '#D6CCBB', backgroundColor: palette.paper }, stayFilterActive: { borderColor: '#8B6844', backgroundColor: '#8B6844' }, stayFilterText: { color: '#76583B', fontSize: 10, fontWeight: '800' }, stayFilterTextActive: { color: palette.white }, stayRail: { gap: 12, paddingRight: 20 }, stayCard: { width: 285, minHeight: 285, padding: 21, borderRadius: 26, backgroundColor: '#DCEAE4' }, stayCardAlt: { backgroundColor: '#E9DED0' }, stayTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, stayDistrict: { color: palette.moss, fontSize: 9, fontWeight: '900', letterSpacing: 1.1 }, stayLevel: { paddingHorizontal: 10, paddingVertical: 6, overflow: 'hidden', borderRadius: 13, color: '#76583B', fontSize: 8, fontWeight: '900', backgroundColor: 'rgba(255,255,255,.7)' }, stayArea: { marginTop: 25, color: palette.ink, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 28, fontWeight: '600' }, stayBest: { marginTop: 9, color: palette.gold, fontSize: 8, fontWeight: '900', letterSpacing: .8 }, stayCharacter: { marginTop: 9, color: palette.muted, fontSize: 12, lineHeight: 18 }, stayOpen: { marginTop: 'auto', paddingTop: 18, color: palette.forest, fontSize: 10, fontWeight: '900' },
   cityTileActive: { borderColor: '#7FA99B', backgroundColor: '#E4EEE9' }, cityStatusDotActive: { backgroundColor: palette.moss }, cityTileStatusActive: { color: palette.moss },

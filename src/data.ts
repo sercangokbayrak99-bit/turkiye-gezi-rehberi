@@ -10,7 +10,16 @@ export type Place = {
   summary: string;
   image: ImageSourcePropType;
   mapQuery: string;
+  imageCredit?: string;
+  imagePage?: string;
 };
+
+export const bursaBaths: Place[] = [
+  { id: 'eski-kaplica', name: 'Eski Kaplıca Hamamı', district: 'Osmangazi · Çekirge', category: 'Tarih', summary: '14. yüzyıldan bu yana Bursa’nın termal su ve hamam geleneğini yaşatan, Çekirge’nin en önemli tarihî kaplıca yapılarından.', image: require('../assets/baths/eski-kaplica.jpg'), mapQuery: 'Eski Kaplıca Hamamı Çekirge Bursa', imageCredit: 'Carl Ha · CC BY-SA 4.0', imagePage: 'https://commons.wikimedia.org/wiki/File:Bursa,_Eski_Kaplıca,_general_view_from_east.jpg' },
+  { id: 'ordekli-hamami', name: 'Ördekli Hamamı', district: 'Osmangazi', category: 'Tarih', summary: 'Yıldırım Bayezid döneminde başlayıp Çelebi Mehmed döneminde tamamlanan çifte hamam, günümüzde restore edilmiş bir kültür merkezi.', image: require('../assets/baths/ordekli.jpg'), mapQuery: 'Ördekli Hamamı Kültür Merkezi Bursa', imageCredit: 'Dosseman · CC BY-SA 4.0', imagePage: 'https://commons.wikimedia.org/wiki/File:Bursa_Ördekli_Hamamı_Kültür_Merkezi_2008_2435.jpg' },
+  { id: 'emir-sultan-hamami', name: 'Emir Sultan Hamamı', district: 'Yıldırım', category: 'Tarih', summary: '1426’da Hundi Fatma Hatun tarafından yaptırılan tarihî hamam, Emir Sultan Külliyesi’nin güneyindeki termal ve sosyal mirası temsil eder.', image: require('../assets/baths/emir-sultan-hamam.jpg'), mapQuery: 'Emir Sultan Hamamı Bursa', imageCredit: 'Dosseman · CC BY-SA 4.0', imagePage: 'https://commons.wikimedia.org/wiki/File:Bursa_Emir_Sultan_Camii_7068.jpg' },
+  { id: 'muradiye-hamami', name: 'Muradiye Hamamı', district: 'Osmangazi', category: 'Tarih', summary: 'Muradiye Külliyesi’nin karşısında bulunan yapı, Bursa’nın erken Osmanlı döneminden kalan hamam mimarisinin önemli örneklerinden.', image: require('../assets/baths/muradiye-hamam.jpg'), mapQuery: 'Muradiye Hamamı Osmangazi Bursa', imageCredit: 'Dosseman · CC BY-SA 4.0', imagePage: 'https://commons.wikimedia.org/wiki/File:Bursa_Muradiye_Hamam_2006_0088.jpg' },
+];
 
 export type City = {
   id: string;
