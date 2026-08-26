@@ -1,4 +1,5 @@
 import type { ImageSourcePropType } from 'react-native';
+import type { BursaBeach } from './beaches';
 
 export type Category = 'Tarih' | 'Doğa' | 'Lezzet' | 'Sahil';
 
@@ -12,6 +13,7 @@ export type Place = {
   mapQuery: string;
   imageCredit?: string;
   imagePage?: string;
+  beach?: BursaBeach;
 };
 
 export const bursaBaths: Place[] = [
