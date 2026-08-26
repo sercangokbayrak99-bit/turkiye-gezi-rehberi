@@ -21,6 +21,7 @@ import { bursaGuideModules, type AccommodationArea, type DailyRoute } from './sr
 import { regions, turkeyCities, type Region } from './src/cities';
 import { istanbulAccommodations, istanbulDistricts, istanbulFamilyRoutes, istanbulFoodGuide, istanbulNightlifeAreas, istanbulPlaces, istanbulRoutes, istanbulShoppingStreets, istanbulTransport, istanbulVenueAreas, type IstanbulDistrict, type IstanbulPlace } from './src/istanbulData';
 import { beachDistricts, beachWaterTypes, bursaBeaches, type BeachDistrict, type BeachWaterType, type BursaBeach } from './src/beaches';
+import { istanbulBeachAccesses, istanbulBeachSeas, istanbulBeachSides, istanbulBeachTypes, istanbulBeaches, type IstanbulBeach, type IstanbulBeachAccess, type IstanbulBeachSide, type IstanbulBeachType, type IstanbulSea } from './src/istanbulBeaches';
 
 const palette = {
   forest: '#153E35',
@@ -48,6 +49,9 @@ const bursaBeachPlaces: Place[] = bursaBeaches.map(beach => ({
   beach,
 }));
 const allBursaPlaces = [...bursa.places, ...bursaBeachPlaces];
+const istanbulBeachPlaceAdapters: IstanbulPlace[] = istanbulBeaches.map(beach => ({ id: beach.id, name: beach.name, district: beach.district, category: 'Sahil & Plaj', summary: beach.summary, image: beach.image, mapQuery: beach.latitude !== null && beach.longitude !== null ? `${beach.latitude},${beach.longitude}` : `${beach.name} ${beach.district} İstanbul`, credit: 'Temsilî görsel', imagePage: beach.sourceUrl }));
+const istanbulBeachFavoritePlaces: Place[] = istanbulBeaches.map(beach => ({ id: beach.id, name: beach.name, district: `${beach.district} / İstanbul`, category: 'Sahil', summary: beach.summary, image: beach.image, mapQuery: beach.latitude !== null && beach.longitude !== null ? `${beach.latitude},${beach.longitude}` : `${beach.name} ${beach.district} İstanbul` }));
+const allIstanbulPlanPlaces = [...istanbulPlaces, ...istanbulBeachPlaceAdapters];
 
 export default function App() {
   const [tab, setTab] = useState<Tab>('home');
@@ -91,7 +95,7 @@ export default function App() {
     });
   }, [category, query]);
 
-  const favoritePlaces = [...allBursaPlaces, ...bursaBaths].filter(place => favorites.includes(place.id));
+  const favoritePlaces = [...allBursaPlaces, ...bursaBaths, ...istanbulBeachFavoritePlaces].filter(place => favorites.includes(place.id));
   const toggleFavorite = (id: string) => setFavorites(current => {
     const next = current.includes(id) ? current.filter(item => item !== id) : [...current, id];
     AsyncStorage.setItem('turkiye-rehberi-favoriler', JSON.stringify(next)).catch(() => {});
@@ -127,7 +131,7 @@ export default function App() {
       : tab === 'explore'
         ? <CitiesExplore onOpenCity={city => { setActiveCity(city); setTab('home'); }} />
       : activeCity === 'istanbul'
-        ? <IstanbulGuide plannedPlaceIds={plannedIstanbulPlaces} onTogglePlan={toggleIstanbulPlacePlan} />
+        ? <IstanbulGuide plannedPlaceIds={plannedIstanbulPlaces} favorites={favorites} onFavorite={toggleFavorite} onTogglePlan={toggleIstanbulPlacePlan} />
       : <MainContent
           exploreOnly={false}
           query={query}
@@ -182,9 +186,10 @@ function CitiesExplore({ onOpenCity }: { onOpenCity: (city: 'bursa' | 'istanbul'
   </ScrollView></SafeAreaView>;
 }
 
-function IstanbulGuide({ plannedPlaceIds, onTogglePlan }: { plannedPlaceIds: string[]; onTogglePlan: (id: string) => void }) {
+function IstanbulGuide({ plannedPlaceIds, favorites, onFavorite, onTogglePlan }: { plannedPlaceIds: string[]; favorites: string[]; onFavorite: (id: string) => void; onTogglePlan: (id: string) => void }) {
   const [query, setQuery] = useState('');
   const [side, setSide] = useState<'Tümü' | 'Avrupa' | 'Anadolu' | 'Adalar'>('Tümü');
+  const [mode, setMode] = useState<'rehber' | 'plajlar'>('rehber');
   const [offline, setOffline] = useState(false);
   const [selectedDistrict, setSelectedDistrict] = useState<IstanbulDistrict | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<IstanbulPlace | null>(null);
@@ -197,6 +202,7 @@ function IstanbulGuide({ plannedPlaceIds, onTogglePlan }: { plannedPlaceIds: str
 
   useEffect(() => { AsyncStorage.getItem('turkiye-rehberi-offline-istanbul').then(value => setOffline(value === 'ready')).catch(() => {}); }, []);
   const toggleOffline = () => { const next = !offline; setOffline(next); AsyncStorage.setItem('turkiye-rehberi-offline-istanbul', next ? 'ready' : 'none').catch(() => {}); };
+  if (mode === 'plajlar') return <IstanbulBeachGuide query={query} setQuery={setQuery} favorites={favorites} plannedPlaceIds={plannedPlaceIds} onFavorite={onFavorite} onTogglePlan={onTogglePlan} onBack={() => setMode('rehber')} />;
   const renderPlaces = (title: string, kicker: string, categories: string[]) => {
     const items = visiblePlaces.filter(place => categories.includes(place.category));
     if (!items.length) return null;
@@ -207,6 +213,7 @@ function IstanbulGuide({ plannedPlaceIds, onTogglePlan }: { plannedPlaceIds: str
     <ImageBackground source={require('./assets/istanbul/hero.jpg')} style={styles.istanbulHero} imageStyle={styles.istanbulHeroImage}><View style={styles.istanbulHeroShade} /><View style={styles.istanbulHeroTop}><View style={styles.istanbulLive}><Text style={styles.istanbulLiveText}>YAYINDA · 34</Text></View><Text style={styles.istanbulHeroRegion}>MARMARA · 39 İLÇE</Text></View><View style={styles.istanbulHeroBody}><Text style={styles.istanbulHeroKicker}>İKİ KITA · TEK ŞEHİR</Text><Text style={styles.istanbulHeroTitle}>İstanbul</Text><Text style={styles.istanbulHeroCopy}>Boğaz kıyılarından tarihî yarımadaya, çarşılardan adalara uzanan kapsamlı şehir rehberi.</Text></View></ImageBackground>
     <View style={styles.istanbulBody}>
       <View style={styles.citySearch}><Text style={styles.searchIcon}>⌕</Text><TextInput value={query} onChangeText={setQuery} placeholder="İlçe, yapı veya deneyim ara" placeholderTextColor="#8A9691" style={styles.searchInput} /></View>
+      <Pressable onPress={() => setMode('plajlar')} style={styles.istanbulBeachEntry}><View><Text style={styles.istanbulBeachEntryEyebrow}>YENİ KATEGORİ</Text><Text style={styles.istanbulBeachEntryTitle}>🏖️ Sahiller & Plajlar</Text><Text style={styles.istanbulBeachEntryCopy}>Avrupa, Anadolu ve Adalar kıyılarını deniz ve mekân türüne göre keşfet.</Text></View><Text style={styles.istanbulBeachEntryArrow}>→</Text></Pressable>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.regionRail}>{(['Tümü','Avrupa','Anadolu','Adalar'] as const).map(item => <Pressable key={item} onPress={() => setSide(item)} style={[styles.regionChip, side === item && styles.regionChipActive]}><Text style={[styles.regionChipText, side === item && styles.regionChipTextActive]}>{item}</Text></Pressable>)}</ScrollView>
       <View style={styles.moduleHeading}><View><Text style={styles.istanbulEyebrow}>İLÇE REHBERİ</Text><Text style={styles.moduleTitle}>39 ilçeyi keşfet</Text></View><Text style={styles.moduleHint}>{visibleDistricts.length} sonuç</Text></View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.istanbulDistrictRail}>{visibleDistricts.map((item, index) => <Pressable key={item.name} onPress={() => setSelectedDistrict(item)} style={[styles.istanbulDistrictCard, { backgroundColor: index % 3 === 0 ? '#315F53' : index % 3 === 1 ? '#75513B' : '#477A89' }]}><Text style={styles.istanbulDistrictSide}>{item.side.toUpperCase()}</Text><Text style={styles.istanbulDistrictName}>{item.name}</Text><Text style={styles.istanbulDistrictCopy}>{item.signature}</Text><Text style={styles.istanbulDistrictOpen}>Detayı aç  →</Text></Pressable>)}</ScrollView>
@@ -241,6 +248,75 @@ function IstanbulGuide({ plannedPlaceIds, onTogglePlan }: { plannedPlaceIds: str
       <Text style={styles.istanbulSource}>İlçe yapısı İstanbul İl Kültür ve Turizm Müdürlüğü ile İBB kaynaklarına dayanır. Fotoğraflar Wikimedia Commons lisanslarıyla belirtilmiştir; çalışma saatlerini ziyaret öncesinde doğrulayın.</Text>
     </View>
   </ScrollView><IstanbulPlaceModal place={selectedPlace} planned={selectedPlace ? plannedPlaceIds.includes(selectedPlace.id) : false} onTogglePlan={onTogglePlan} onClose={() => setSelectedPlace(null)} /><IstanbulDistrictModal district={selectedDistrict} onClose={() => setSelectedDistrict(null)} /></SafeAreaView>;
+}
+
+const istanbulBeachTypeLabels: Record<IstanbulBeachType, string> = {
+  public_beach: 'Halk Plajı', private_beach: 'Özel Plaj', beach_club: 'Beach Club', coast: 'Sahil', bay: 'Koy', cove: 'Doğal Koy',
+};
+
+function IstanbulBeachGuide({ query, setQuery, favorites, plannedPlaceIds, onFavorite, onTogglePlan, onBack }: { query: string; setQuery: (value: string) => void; favorites: string[]; plannedPlaceIds: string[]; onFavorite: (id: string) => void; onTogglePlan: (id: string) => void; onBack: () => void }) {
+  const [side, setSide] = useState<'Tümü' | IstanbulBeachSide>('Tümü');
+  const [sea, setSea] = useState<'Tümü' | IstanbulSea>('Tümü');
+  const [district, setDistrict] = useState('Tümü');
+  const [placeType, setPlaceType] = useState<'Tümü' | IstanbulBeachType>('Tümü');
+  const [access, setAccess] = useState<'Tümü' | Exclude<IstanbulBeachAccess, null>>('Tümü');
+  const [selected, setSelected] = useState<IstanbulBeach | null>(null);
+  const districts = useMemo(() => ['Tümü', ...Array.from(new Set(istanbulBeaches.filter(item => side === 'Tümü' || item.side === side).map(item => item.district))).sort((a, b) => a.localeCompare(b, 'tr'))], [side]);
+  const normalized = query.trim().toLocaleLowerCase('tr-TR');
+  const visible = useMemo(() => istanbulBeaches.filter(beach => {
+    const text = `${beach.name} ${beach.district} ${beach.area} ${beach.side} ${beach.sea} ${istanbulBeachTypeLabels[beach.placeType]} ${beach.access ?? ''} plaj sahil koy ${beach.blueFlag ? 'mavi bayrak' : ''}`.toLocaleLowerCase('tr-TR');
+    return (side === 'Tümü' || beach.side === side)
+      && (sea === 'Tümü' || beach.sea === sea)
+      && (district === 'Tümü' || beach.district === district)
+      && (placeType === 'Tümü' || beach.placeType === placeType)
+      && (access === 'Tümü' || beach.access === access)
+      && (!normalized || text.includes(normalized));
+  }), [access, district, normalized, placeType, sea, side]);
+  const chooseSide = (value: 'Tümü' | IstanbulBeachSide) => { setSide(value); setDistrict('Tümü'); };
+  return <SafeAreaView style={styles.istanbulPage}><ScrollView contentContainerStyle={styles.istanbulContent} showsVerticalScrollIndicator={false}>
+    <View style={styles.istanbulBeachTop}><Pressable onPress={onBack} style={styles.istanbulBeachBack}><Text style={styles.istanbulBeachBackText}>← İstanbul rehberi</Text></Pressable><Text style={styles.istanbulBeachKicker}>İSTANBUL KIYI REHBERİ</Text><Text style={styles.istanbulBeachTitle}>Sahiller &{`\n`}Plajlar</Text><Text style={styles.istanbulBeachIntro}>Karadeniz’in doğal kıyılarından Marmara plajlarına ve Adalar koylarına uzanan, türü açıkça belirtilmiş kıyı seçkisi.</Text></View>
+    <View style={styles.istanbulBody}>
+      <View style={styles.citySearch}><Text style={styles.searchIcon}>⌕</Text><TextInput value={query} onChangeText={setQuery} placeholder="Plaj, ilçe, deniz veya özellik ara" placeholderTextColor="#8A9691" style={styles.searchInput} /></View>
+      <BeachFilter label="BÖLGE" items={istanbulBeachSides} selected={side} onSelect={value => chooseSide(value as 'Tümü' | IstanbulBeachSide)} labelFor={value => value === 'Adalar' ? '🏝️ Adalar' : value} />
+      <BeachFilter label="DENİZ" items={istanbulBeachSeas} selected={sea} onSelect={value => setSea(value as 'Tümü' | IstanbulSea)} labelFor={value => value === 'Marmara' ? '🌊 Marmara' : value === 'Karadeniz' ? '🌊 Karadeniz' : value} />
+      <BeachFilter label="İLÇE" items={districts} selected={district} onSelect={setDistrict} />
+      <BeachFilter label="MEKÂN TÜRÜ" items={istanbulBeachTypes} selected={placeType} onSelect={value => setPlaceType(value as 'Tümü' | IstanbulBeachType)} labelFor={value => value === 'Tümü' ? value : istanbulBeachTypeLabels[value as IstanbulBeachType]} />
+      <BeachFilter label="GİRİŞ" items={istanbulBeachAccesses} selected={access} onSelect={value => setAccess(value as 'Tümü' | Exclude<IstanbulBeachAccess, null>)} />
+      <View style={styles.subheadingRow}><Text style={styles.subheading}>İstanbul kıyıları</Text><Text style={styles.resultCount}>{visible.length} sonuç</Text></View>
+      <View style={styles.cardGrid}>{visible.map(beach => <IstanbulBeachCard key={beach.id} beach={beach} favorite={favorites.includes(beach.id)} planned={plannedPlaceIds.includes(beach.id)} onFavorite={onFavorite} onPlan={onTogglePlan} onOpen={() => setSelected(beach)} />)}</View>
+      {!visible.length && <View style={styles.empty}><Text style={styles.emptyIcon}>⌕</Text><Text style={styles.emptyTitle}>Kıyı noktası bulunamadı</Text><Text style={styles.emptyCopy}>Aramayı temizle veya filtrelerden birini değiştir.</Text></View>}
+      <View style={styles.istanbulBeachDataNote}><Text style={styles.istanbulBeachDataTitle}>Veri doğruluğu notu</Text><Text style={styles.istanbulBeachDataCopy}>Koordinatlar İstanbul Valiliğinin resmî yüzme alanı sınırlarından alınmıştır. 2023 listesindeki noktalar güncel sezonda açık kabul edilmez; 2025 İBB hizmet noktaları ayrıca belirtilir. Yüzmeden önce güncel su kalitesi ve yerel uyarıları kontrol edin.</Text></View>
+    </View>
+  </ScrollView><IstanbulBeachModal beach={selected} favorite={selected ? favorites.includes(selected.id) : false} planned={selected ? plannedPlaceIds.includes(selected.id) : false} onFavorite={onFavorite} onPlan={onTogglePlan} onClose={() => setSelected(null)} /></SafeAreaView>;
+}
+
+function BeachFilter<T extends string>({ label, items, selected, onSelect, labelFor }: { label: string; items: readonly T[]; selected: T; onSelect: (value: T) => void; labelFor?: (value: T) => string }) {
+  return <><Text style={styles.beachFilterLabel}>{label}</Text><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.beachFilterRail}>{items.map(item => <Pressable key={item} onPress={() => onSelect(item)} style={[styles.beachFilterChip, selected === item && styles.beachFilterChipActive]}><Text style={[styles.beachFilterText, selected === item && styles.beachFilterTextActive]}>{labelFor ? labelFor(item) : item}</Text></Pressable>)}</ScrollView></>;
+}
+
+function istanbulBeachTags(beach: IstanbulBeach) {
+  const tags = [`🌊 ${beach.sea}`, istanbulBeachTypeLabels[beach.placeType]];
+  if (beach.access === 'Ücretsiz') tags.push('🆓 Ücretsiz');
+  if (beach.access === 'Ücretli') tags.push('💳 Ücretli');
+  if (beach.shower === true) tags.push('🚿 Duş');
+  if (beach.lifeguardAvailable === true) tags.push('🏊 Cankurtaran');
+  if (beach.camping === true) tags.push('⛺ Kamp');
+  if (beach.blueFlag) tags.push(`🏅 Mavi Bayrak ${beach.blueFlagYear}`);
+  return tags;
+}
+
+function IstanbulBeachCard({ beach, favorite, planned, onFavorite, onPlan, onOpen }: { beach: IstanbulBeach; favorite: boolean; planned: boolean; onFavorite: (id: string) => void; onPlan: (id: string) => void; onOpen: () => void }) {
+  return <Pressable onPress={onOpen} style={styles.placeCard}><View><Image source={beach.image} style={styles.placeImage} {...(Platform.OS === 'web' ? ({ loading: 'lazy' } as object) : {})} /><View style={styles.placeholderBadge}><Text style={styles.placeholderBadgeText}>TEMSİLİ GÖRSEL</Text></View><Pressable hitSlop={10} onPress={event => { event.stopPropagation(); onFavorite(beach.id); }} style={styles.favoriteButton}><Text style={[styles.favoriteIcon, favorite && styles.favoriteIconActive]}>{favorite ? '♥' : '♡'}</Text></Pressable></View><View style={styles.placeBody}><View style={styles.placeMeta}><Text style={styles.placeCategory}>{istanbulBeachTypeLabels[beach.placeType].toUpperCase()}</Text><Text style={styles.placeDistrict}>📍 {beach.district} / İstanbul</Text></View><Text style={styles.placeName}>{beach.name}</Text><Text style={styles.beachArea}>{beach.area} · {beach.side}</Text><View style={styles.beachTags}>{istanbulBeachTags(beach).map(tag => <View key={tag} style={styles.beachTag}><Text style={styles.beachTagText}>{tag}</Text></View>)}</View><Text numberOfLines={3} style={styles.placeSummary}>{beach.summary}</Text><Text style={styles.cardOpen}>Detayı aç  →</Text><Pressable onPress={event => { event.stopPropagation(); onPlan(beach.id); }} style={[styles.bursaCardPlanButton, planned && styles.bursaCardPlanButtonActive]}><Text style={[styles.bursaCardPlanText, planned && styles.bursaCardPlanTextActive]}>{planned ? '✓  Planıma eklendi' : '+  Planıma ekle'}</Text></Pressable></View></Pressable>;
+}
+
+function IstanbulBeachModal({ beach, favorite, planned, onFavorite, onPlan, onClose }: { beach: IstanbulBeach | null; favorite: boolean; planned: boolean; onFavorite: (id: string) => void; onPlan: (id: string) => void; onClose: () => void }) {
+  if (!beach) return null;
+  const hasCoordinates = beach.latitude !== null && beach.longitude !== null;
+  const openDirections = () => hasCoordinates && Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${beach.latitude},${beach.longitude}&travelmode=driving`);
+  const features = [
+    ['🌊', 'Deniz', `${beach.sea} Denizi`], ['🏖️', 'Mekân türü', istanbulBeachTypeLabels[beach.placeType]], ['◉', 'Plaj yapısı', beach.surface ?? 'Doğrulanmadı'], ['💳', 'Giriş', beach.access ?? 'Doğrulanmadı'], ['⌂', 'İşletme', beach.operator ?? 'Doğrulanmadı'], ['👨‍👩‍👧', 'Aile uygunluğu', facilityLabel(beach.familyFriendly)], ['👶', 'Çocuk uygunluğu', facilityLabel(beach.childFriendly)], ['🚗', 'Otopark', facilityLabel(beach.parking)], ['🚿', 'Duş', facilityLabel(beach.shower)], ['🚻', 'WC', facilityLabel(beach.toilet)], ['🍴', 'Yeme içme', facilityLabel(beach.food)], ['⛱️', 'Şezlong / şemsiye', `${facilityLabel(beach.sunbed)} / ${facilityLabel(beach.umbrella)}`], ['🏊', 'Cankurtaran', facilityLabel(beach.lifeguardAvailable)], ['♿', 'Engelli erişimi', facilityLabel(beach.accessible)], ['🏅', 'Mavi Bayrak', beach.blueFlag ? `Var · ${beach.blueFlagYear}` : '2026 için doğrulanmadı'],
+  ];
+  return <Modal visible animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}><SafeAreaView style={styles.beachModal}><View style={styles.beachModalHero}><Image source={beach.image} style={styles.beachModalImage} /><View style={styles.beachModalShade} /><View style={styles.beachModalActions}><Pressable onPress={onClose} style={styles.modalRound}><Text style={styles.modalRoundText}>×</Text></Pressable><Pressable onPress={() => onFavorite(beach.id)} style={styles.modalRound}><Text style={styles.modalRoundText}>{favorite ? '♥' : '♡'}</Text></Pressable></View><View style={styles.beachModalCaption}><Text style={styles.placeholderBadgeText}>TEMSİLİ GÖRSEL · GERÇEK FOTOĞRAF HAZIRLANIYOR</Text></View></View><ScrollView contentContainerStyle={styles.beachModalScroll}><Text style={styles.modalMeta}>{beach.side.toUpperCase()} · {beach.sea.toUpperCase()}</Text><Text style={styles.beachModalTitle}>{beach.name}</Text><Text style={styles.beachLocation}>📍 {beach.area}, {beach.district} / İstanbul</Text><Text style={styles.modalCopy}>{beach.summary}</Text>{beach.seaWarning && <View style={styles.istanbulSeaWarning}><Text style={styles.istanbulSeaWarningText}>⚠️ {beach.seaWarning}</Text></View>}<Text style={styles.beachFeaturesTitle}>Plaj özellikleri</Text><View style={styles.beachFeatureGrid}>{features.map(([icon, label, value]) => <View key={label} style={styles.beachFeature}><Text style={styles.beachFeatureIcon}>{icon}</Text><View style={styles.beachFeatureBody}><Text style={styles.beachFeatureLabel}>{label}</Text><Text style={styles.beachFeatureValue}>{value}</Text></View></View>)}</View><Pressable onPress={() => onPlan(beach.id)} style={[styles.spiritualPlanButton, planned && styles.spiritualPlanButtonActive]}><Text style={[styles.spiritualPlanText, planned && styles.spiritualPlanTextActive]}>{planned ? '✓  Gezi planıma eklendi' : '+  Gezi planıma ekle'}</Text></Pressable><Pressable disabled={!hasCoordinates} onPress={openDirections} style={[styles.primaryButton, !hasCoordinates && styles.disabledButton]}><Text style={styles.primaryButtonText}>{hasCoordinates ? '📍  Yol Tarifi Al' : 'Konum doğrulaması bekleniyor'}</Text></Pressable><Pressable onPress={() => Linking.openURL(beach.sourceUrl)} style={styles.sourceButton}><Text style={styles.sourceButtonText}>Resmî bilgi / konum kaynağı  ↗</Text></Pressable><Text style={styles.beachSafetyNote}>Su kalitesi yüzme sezonunda değişebilir. İstanbul İl Sağlık Müdürlüğünün güncel analizini ve plajdaki bayrakları kontrol edin.</Text></ScrollView></SafeAreaView></Modal>;
 }
 
 function IstanbulPlaceModal({ place, planned, onClose, onTogglePlan }: { place: IstanbulPlace | null; planned: boolean; onClose: () => void; onTogglePlan: (id: string) => void }) {
@@ -524,7 +600,7 @@ function PlanScreen({ districtNames, spiritualIds, bursaPlaceIds, istanbulPlaceI
   const districts = districtNames.map(name => bursaDistricts.find(item => item.name === name)).filter((item): item is District => Boolean(item));
   const sites = spiritualIds.map(id => spiritualSites.find(item => item.id === id)).filter((item): item is SpiritualSite => Boolean(item));
   const bursaStops = bursaPlaceIds.map(id => [...allBursaPlaces, ...bursaBaths].find(item => item.id === id)).filter((item): item is Place => Boolean(item));
-  const istanbulStops = istanbulPlaceIds.map(id => istanbulPlaces.find(item => item.id === id)).filter((item): item is IstanbulPlace => Boolean(item));
+  const istanbulStops = istanbulPlaceIds.map(id => allIstanbulPlanPlaces.find(item => item.id === id)).filter((item): item is IstanbulPlace => Boolean(item));
   const destinations = [...districts.map(item => item.mapQuery), ...sites.map(item => item.mapQuery), ...bursaStops.map(item => item.mapQuery), ...istanbulStops.map(item => item.mapQuery)];
   const openRoute = () => {
     const first = destinations[0];
@@ -613,6 +689,22 @@ const styles = StyleSheet.create({
   modal: { flex: 1, backgroundColor: palette.cream }, modalImage: { width: '100%', height: 350 }, modalShade: { position: 'absolute', top: 0, right: 0, left: 0, height: 160, backgroundColor: 'rgba(7,31,26,.22)' }, modalSafe: { position: 'absolute', inset: 0 }, modalActions: { padding: 18, flexDirection: 'row', justifyContent: 'space-between' }, modalRound: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 22, backgroundColor: 'rgba(255,255,255,.94)' }, modalRoundText: { color: palette.forest, fontSize: 24, fontWeight: '600' }, modalBody: { flex: 1, marginTop: 235, padding: 24, borderTopLeftRadius: 30, borderTopRightRadius: 30, backgroundColor: palette.cream }, modalMeta: { color: palette.moss, fontSize: 11, fontWeight: '900', letterSpacing: 1.2 }, modalTitle: { marginTop: 9, color: palette.ink, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 36, lineHeight: 41, fontWeight: '600' }, modalCopy: { marginTop: 13, color: palette.muted, fontSize: 16, lineHeight: 24 }, infoCard: { marginTop: 25, padding: 20, borderRadius: 22, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.paper }, infoLabel: { color: palette.gold, fontSize: 10, fontWeight: '900', letterSpacing: 1.1 }, infoTitle: { marginTop: 7, color: palette.ink, fontSize: 18, fontWeight: '800' }, infoCopy: { marginTop: 6, color: palette.muted, fontSize: 13, lineHeight: 19 }, primaryButton: { height: 56, marginTop: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 18, backgroundColor: palette.forest }, primaryButtonText: { color: palette.white, fontSize: 15, fontWeight: '900' },
   districtModal: { flex: 1 }, districtModalTop: { padding: 24, paddingTop: Platform.OS === 'android' ? (NativeStatusBar.currentHeight ?? 24) + 20 : 28, flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }, districtModalKicker: { color: 'rgba(255,255,255,.65)', fontSize: 10, fontWeight: '900', letterSpacing: 1.3 }, districtModalTitle: { marginTop: 8, color: palette.white, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 42, fontWeight: '600', letterSpacing: -1.3 }, districtClose: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 22, backgroundColor: 'rgba(255,255,255,.15)' }, districtCloseText: { color: palette.white, fontSize: 27 }, districtModalSignature: { paddingHorizontal: 24, paddingBottom: 24, color: 'rgba(255,255,255,.82)', fontSize: 16, lineHeight: 23 }, districtModalScroll: { padding: 14, paddingBottom: 40, gap: 12 }, addPlanButton: { height: 53, alignItems: 'center', justifyContent: 'center', borderRadius: 19, borderWidth: 1, borderColor: 'rgba(255,255,255,.45)', backgroundColor: 'rgba(255,255,255,.1)' }, addPlanButtonActive: { borderColor: palette.gold, backgroundColor: palette.gold }, addPlanText: { color: palette.white, fontSize: 13, fontWeight: '900' }, addPlanTextActive: { color: palette.ink }, districtPanel: { padding: 21, borderRadius: 24, backgroundColor: palette.paper }, districtPanelLabel: { marginBottom: 12, color: palette.moss, fontSize: 10, fontWeight: '900', letterSpacing: 1.2 }, districtListItem: { minHeight: 52, paddingVertical: 13, flexDirection: 'row', alignItems: 'center', gap: 13, borderTopWidth: 1, borderTopColor: palette.line }, districtListIndex: { color: palette.gold, fontSize: 10, fontWeight: '900' }, districtListText: { flex: 1, color: palette.ink, fontSize: 15, fontWeight: '700' }, districtListArrow: { color: palette.moss, fontSize: 17, fontWeight: '800' }, flavorWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 }, flavorChip: { paddingHorizontal: 13, paddingVertical: 10, borderRadius: 18, backgroundColor: palette.cream }, flavorText: { color: palette.ink, fontSize: 12, fontWeight: '700' }, districtMapButton: { height: 57, alignItems: 'center', justifyContent: 'center', borderRadius: 20, backgroundColor: palette.gold }, districtMapText: { color: palette.ink, fontSize: 14, fontWeight: '900' }, sourceNote: { paddingHorizontal: 10, color: 'rgba(255,255,255,.7)', fontSize: 11, lineHeight: 17, textAlign: 'center' },
   spiritualModal: { flex: 1, backgroundColor: '#F5EFE4' }, spiritualModalHero: { height: 360, backgroundColor: '#6D5135' }, spiritualModalImage: { width: '100%', height: '100%' }, spiritualModalImageShade: { position: 'absolute', inset: 0, backgroundColor: 'rgba(10,22,18,.42)' }, spiritualModalTop: { position: 'absolute', right: 0, bottom: 0, left: 0, padding: 24, paddingTop: Platform.OS === 'android' ? (NativeStatusBar.currentHeight ?? 24) + 22 : 30, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }, spiritualModalKicker: { color: '#F0DFC3', fontSize: 10, fontWeight: '900', letterSpacing: 1.2 }, spiritualModalTitle: { maxWidth: 300, marginTop: 9, color: palette.white, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 35, lineHeight: 40, fontWeight: '600' }, spiritualClose: { position: 'absolute', top: 22, right: 20, width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 22, backgroundColor: 'rgba(255,255,255,.18)' }, spiritualCloseText: { color: palette.white, fontSize: 27 }, spiritualModalScroll: { padding: 22, paddingBottom: 45, gap: 15 }, photoCredit: { paddingBottom: 13, borderBottomWidth: 1, borderBottomColor: '#DED5C6' }, photoCreditLabel: { color: '#896B47', fontSize: 8, fontWeight: '900', letterSpacing: 1 }, photoCreditText: { marginTop: 4, color: '#70583E', fontSize: 11, fontWeight: '700' }, spiritualPeriod: { alignSelf: 'flex-start', paddingHorizontal: 13, paddingVertical: 9, borderRadius: 18, backgroundColor: '#E8DCC8' }, spiritualPeriodLabel: { color: '#896B47', fontSize: 8, fontWeight: '900', letterSpacing: 1 }, spiritualPeriodText: { marginTop: 3, color: palette.ink, fontSize: 12, fontWeight: '700' }, spiritualModalCopy: { color: palette.ink, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 21, lineHeight: 31 }, etiquetteCard: { padding: 19, borderLeftWidth: 4, borderLeftColor: '#9B754C', borderRadius: 18, backgroundColor: palette.paper }, etiquetteLabel: { color: '#8B6844', fontSize: 9, fontWeight: '900', letterSpacing: 1.1 }, etiquetteText: { marginTop: 8, color: palette.muted, fontSize: 14, lineHeight: 21 }, spiritualPlanButton: { height: 54, alignItems: 'center', justifyContent: 'center', borderRadius: 18, borderWidth: 1, borderColor: '#8B6844' }, spiritualPlanButtonActive: { backgroundColor: '#8B6844' }, spiritualPlanText: { color: '#7A5A38', fontSize: 13, fontWeight: '900' }, spiritualPlanTextActive: { color: palette.white }, spiritualMapButton: { height: 57, alignItems: 'center', justifyContent: 'center', borderRadius: 19, backgroundColor: palette.forest }, spiritualMapText: { color: palette.white, fontSize: 14, fontWeight: '900' }, sourceButton: { minHeight: 44, alignItems: 'center', justifyContent: 'center' }, sourceButtonText: { color: '#76583B', fontSize: 12, fontWeight: '800' },
+  istanbulBeachEntry: { minHeight: 112, marginBottom: 18, padding: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderRadius: 24, backgroundColor: '#DDEDEB', borderWidth: 1, borderColor: '#BED8D3' },
+  istanbulBeachEntryEyebrow: { color: palette.moss, fontSize: 9, fontWeight: '900', letterSpacing: 1.2 },
+  istanbulBeachEntryTitle: { marginTop: 5, color: palette.forest, fontSize: 22, fontWeight: '900' },
+  istanbulBeachEntryCopy: { maxWidth: 265, marginTop: 6, color: palette.muted, fontSize: 12, lineHeight: 17 },
+  istanbulBeachEntryArrow: { color: palette.forest, fontSize: 27, fontWeight: '800' },
+  istanbulBeachTop: { padding: 22, paddingTop: 30, paddingBottom: 28, backgroundColor: '#153E35' },
+  istanbulBeachBack: { minHeight: 44, alignSelf: 'flex-start', paddingHorizontal: 14, alignItems: 'center', justifyContent: 'center', borderRadius: 20, backgroundColor: 'rgba(255,255,255,.12)' },
+  istanbulBeachBackText: { color: palette.white, fontSize: 12, fontWeight: '800' },
+  istanbulBeachKicker: { marginTop: 26, color: '#A9D5CA', fontSize: 10, fontWeight: '900', letterSpacing: 1.4 },
+  istanbulBeachTitle: { marginTop: 8, color: palette.white, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 43, lineHeight: 47, fontWeight: '600' },
+  istanbulBeachIntro: { marginTop: 12, maxWidth: 590, color: 'rgba(255,255,255,.76)', fontSize: 14, lineHeight: 21 },
+  istanbulBeachDataNote: { marginTop: 24, padding: 19, borderRadius: 21, borderWidth: 1, borderColor: '#D7DDD7', backgroundColor: '#F8F4EB' },
+  istanbulBeachDataTitle: { color: palette.ink, fontSize: 14, fontWeight: '900' },
+  istanbulBeachDataCopy: { marginTop: 7, color: palette.muted, fontSize: 12, lineHeight: 18 },
+  istanbulSeaWarning: { marginTop: 18, padding: 15, borderRadius: 16, backgroundColor: '#FFF1D8', borderWidth: 1, borderColor: '#E6C98E' },
+  istanbulSeaWarningText: { color: '#72531F', fontSize: 12, lineHeight: 18, fontWeight: '800' },
   beachSection: { paddingTop: 4, paddingBottom: 24 },
   beachHero: { marginBottom: 22, padding: 22, borderRadius: 26, backgroundColor: '#DDEDEB', borderWidth: 1, borderColor: '#C7DEDA' },
   beachHeroEyebrow: { color: palette.moss, fontSize: 10, fontWeight: '900', letterSpacing: 1.4 },

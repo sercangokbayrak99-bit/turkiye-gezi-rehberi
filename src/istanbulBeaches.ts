@@ -1,0 +1,216 @@
+import type { ImageSourcePropType } from 'react-native';
+
+export type IstanbulBeachSide = 'Avrupa Yakası' | 'Anadolu Yakası' | 'Adalar';
+export type IstanbulSea = 'Marmara' | 'Karadeniz';
+export type IstanbulBeachType = 'public_beach' | 'private_beach' | 'beach_club' | 'coast' | 'bay' | 'cove';
+export type IstanbulBeachAccess = 'Ücretsiz' | 'Ücretli' | null;
+export type IstanbulBeachFacility = boolean | null;
+
+export type IstanbulBeach = {
+  id: string;
+  name: string;
+  city: 'İstanbul';
+  district: string;
+  area: string;
+  side: IstanbulBeachSide;
+  category: 'Sahil';
+  placeType: IstanbulBeachType;
+  sea: IstanbulSea;
+  summary: string;
+  latitude: number | null;
+  longitude: number | null;
+  image: ImageSourcePropType;
+  imageIsPlaceholder: true;
+  surface: 'Kum' | 'Çakıl' | 'Kayalık' | 'Karışık' | null;
+  access: IstanbulBeachAccess;
+  operator: 'İBB' | 'İlçe Belediyesi' | 'Özel işletme' | null;
+  entryFee: number | null;
+  entryFeeYear: number | null;
+  parking: IstanbulBeachFacility;
+  toilet: IstanbulBeachFacility;
+  shower: IstanbulBeachFacility;
+  changingRoom: IstanbulBeachFacility;
+  sunbed: IstanbulBeachFacility;
+  umbrella: IstanbulBeachFacility;
+  food: IstanbulBeachFacility;
+  familyFriendly: IstanbulBeachFacility;
+  childFriendly: IstanbulBeachFacility;
+  camping: IstanbulBeachFacility;
+  picnic: IstanbulBeachFacility;
+  blueFlag: boolean;
+  blueFlagYear: number | null;
+  lifeguardAvailable: IstanbulBeachFacility;
+  accessible: IstanbulBeachFacility;
+  waterQuality: null;
+  waterQualityDate: null;
+  waterQualitySource: string | null;
+  seaWarning: string | null;
+  swimmingRisk: null;
+  officialSwimmingAreaYear: number | null;
+  sourceUrl: string;
+};
+
+const placeholder = require('../assets/bursa/beach-placeholder.jpg');
+const governorSource = 'https://www.istanbul.gov.tr/yuzme-alani-ve-plajlarla-ilgili-karar';
+const ibb2025Source = 'https://destekhizmetleri.ibb.istanbul/haberler/ibb-plajlari-3-haziranda-sezona-merhaba-diyor/';
+const healthSource = 'https://istanbulism.saglik.gov.tr/TR-109719/deniz-suyu-plajlar.html';
+
+type Seed = [string, string, string, string, IstanbulBeachSide, IstanbulSea, IstanbulBeachType, number | null, number | null, IstanbulBeachAccess?, ('İBB' | 'İlçe Belediyesi' | 'Özel işletme' | null)?, string?];
+
+const seeds: Seed[] = [
+  ['karaburun-halk', 'Karaburun Halk Plajı', 'Arnavutköy', 'Karaburun ön deniz', 'Avrupa Yakası', 'Karadeniz', 'public_beach', 41.341394, 28.687696, null, null],
+  ['karaburun-sahil', 'Karaburun Sahili', 'Arnavutköy', 'Karaburun arka deniz', 'Avrupa Yakası', 'Karadeniz', 'coast', 41.343856, 28.678239, null, null],
+  ['yenikoy-plaji', 'Yeniköy Halk Plajı', 'Arnavutköy', 'Yeniköy sahili', 'Avrupa Yakası', 'Karadeniz', 'public_beach', 41.328949, 28.717453, 'Ücretsiz', 'İBB', ibb2025Source],
+
+  ['cilingoz', 'Çilingoz Tabiat Parkı Plajı', 'Çatalca', 'Binkılıç · Çilingoz', 'Avrupa Yakası', 'Karadeniz', 'public_beach', 41.52516, 28.21993, 'Ücretli', null],
+  ['yalikoy-1', 'Yalıköy Plajı 1', 'Çatalca', 'Karacaköy · Yalıköy', 'Avrupa Yakası', 'Karadeniz', 'public_beach', 41.48824, 28.29164, 'Ücretsiz', 'İBB', ibb2025Source],
+  ['yalikoy-2', 'Yalıköy Plajı 2', 'Çatalca', 'Karacaköy · Çobankule', 'Avrupa Yakası', 'Karadeniz', 'public_beach', 41.48137, 28.30943, 'Ücretsiz', 'İBB', ibb2025Source],
+  ['evcik', 'Evcik Plajı', 'Çatalca', 'Karacaköy · Evcik', 'Avrupa Yakası', 'Karadeniz', 'public_beach', 41.4512, 28.38266, null, null],
+  ['ormanli', 'Ormanlı Plajı', 'Çatalca', 'Karacaköy · Ormanlı', 'Avrupa Yakası', 'Karadeniz', 'public_beach', 41.4107, 28.48671, null, null],
+
+  ['kilyos-halk', 'Kilyos Halk Plajı', 'Sarıyer', 'Kilyos', 'Avrupa Yakası', 'Karadeniz', 'public_beach', 41.245976, 29.007791, null, null],
+  ['gumusdere', 'Gümüşdere Plajı', 'Sarıyer', 'Gümüşdere', 'Avrupa Yakası', 'Karadeniz', 'public_beach', 41.249313, 28.990149, null, null],
+  ['uzunya', 'Uzunya Plajı', 'Sarıyer', 'Demirciköy', 'Avrupa Yakası', 'Karadeniz', 'private_beach', 41.248281, 29.071005, 'Ücretli', 'Özel işletme'],
+  ['dalya', 'Dalya Plajı', 'Sarıyer', 'Demirciköy', 'Avrupa Yakası', 'Karadeniz', 'private_beach', 41.251151, 29.0633627, 'Ücretli', 'Özel işletme'],
+  ['kisirkaya', 'Kısırkaya Halk Plajı', 'Sarıyer', 'Kısırkaya', 'Avrupa Yakası', 'Karadeniz', 'public_beach', 41.252402, 28.974146, 'Ücretsiz', 'İBB', ibb2025Source],
+  ['rumeli-feneri', 'Rumeli Feneri Plajı', 'Sarıyer', 'Rumeli Feneri · Gençlik Kampı', 'Avrupa Yakası', 'Karadeniz', 'public_beach', 41.244518, 29.091241, null, null],
+  ['rumeli-kavagi', 'Rumeli Kavağı Plajı', 'Sarıyer', 'Rumeli Kavağı', 'Avrupa Yakası', 'Marmara', 'public_beach', 41.185617, 29.077163, null, null],
+  ['tarabya', 'Tarabya Plajı', 'Sarıyer', 'Tarabya', 'Avrupa Yakası', 'Marmara', 'public_beach', 41.13718, 29.057551, null, null],
+  ['burc-beach', 'Burç Beach', 'Sarıyer', 'Gümüşdere · Kilyos', 'Avrupa Yakası', 'Karadeniz', 'beach_club', null, null, 'Ücretli', 'Özel işletme', 'https://www.burcbeach.com/'],
+  ['solar-beach', 'Solar Beach', 'Sarıyer', 'Kilyos', 'Avrupa Yakası', 'Karadeniz', 'beach_club', null, null, 'Ücretli', 'Özel işletme', 'https://solarbeach.com.tr/'],
+  ['tirmata-beach', 'Tırmata Beach', 'Sarıyer', 'Kilyos', 'Avrupa Yakası', 'Karadeniz', 'beach_club', null, null, 'Ücretli', 'Özel işletme', 'https://tirmata.com/'],
+
+  ['denizkoskler', 'Denizköşkler Yüzme Alanı', 'Avcılar', 'Denizköşkler', 'Avrupa Yakası', 'Marmara', 'public_beach', 40.9723903, 28.7131454, 'Ücretsiz', 'İBB', ibb2025Source],
+  ['gunes-plaji', 'Florya Güneş Plajı', 'Bakırköy', 'Florya', 'Avrupa Yakası', 'Marmara', 'public_beach', null, null, 'Ücretli', 'İBB', ibb2025Source],
+  ['yesilkoy-polis', 'Yeşilköy Polis Merkezi Önü Yüzme Alanı', 'Bakırköy', 'Yeşilköy', 'Avrupa Yakası', 'Marmara', 'public_beach', 40.955509, 28.827551, null, null],
+  ['yesilkoy-hospital', 'Yeşilköy International Hospital Önü', 'Bakırköy', 'Yeşilköy', 'Avrupa Yakası', 'Marmara', 'public_beach', 40.95704, 28.8382, null, null],
+  ['menekse', 'Menekşe Plajı', 'Küçükçekmece', 'Menekşe', 'Avrupa Yakası', 'Marmara', 'public_beach', 40.978825, 28.771793, 'Ücretsiz', 'İBB', ibb2025Source],
+  ['gurpinar-halk', 'Gürpınar Halk Plajı', 'Beylikdüzü', 'Gürpınar sahili', 'Avrupa Yakası', 'Marmara', 'public_beach', 40.98177, 28.59843, null, null],
+  ['west-marina', 'West İstanbul Marina Plajı', 'Beylikdüzü', 'Yakuplu', 'Avrupa Yakası', 'Marmara', 'private_beach', 40.96287, 28.65028, 'Ücretli', 'Özel işletme'],
+  ['albatros', 'Albatros Halk Plajı', 'Büyükçekmece', 'Albatros sahili', 'Avrupa Yakası', 'Marmara', 'public_beach', 41.0080706, 28.5997939, 'Ücretsiz', 'İBB', ibb2025Source],
+  ['buyukcekmece-halk', 'Büyükçekmece Halk Plajı', 'Büyükçekmece', 'Merkez', 'Avrupa Yakası', 'Marmara', 'public_beach', 41.0145553, 28.5944831, null, null],
+  ['buyukcekmece-cocuk', 'Büyükçekmece Çocuk Sahili', 'Büyükçekmece', 'Merkez', 'Avrupa Yakası', 'Marmara', 'coast', 41.0138955, 28.5958457, null, null],
+  ['mimarsinan', 'Mimarsinan Sahili', 'Büyükçekmece', 'Mimarsinan', 'Avrupa Yakası', 'Marmara', 'coast', 41.0134543, 28.5626909, null, null],
+  ['kumburgaz', 'Kumburgaz Plajı', 'Büyükçekmece', 'Kumburgaz', 'Avrupa Yakası', 'Marmara', 'public_beach', 41.0292002, 28.4548687, null, null],
+  ['celaliye', 'Celaliye Halk Plajı', 'Büyükçekmece', 'Celaliye', 'Avrupa Yakası', 'Marmara', 'public_beach', 41.0447562, 28.409121, null, null],
+  ['kamiloba', 'Kamiloba Halk Plajı', 'Büyükçekmece', 'Kamiloba · Ağar Kamping', 'Avrupa Yakası', 'Marmara', 'public_beach', 41.038839, 28.4285348, null, null],
+  ['gumusyaka', 'Gümüşyaka Sahili', 'Silivri', 'Gümüşyaka', 'Avrupa Yakası', 'Marmara', 'coast', 41.047404, 28.054456, null, null],
+  ['canta-kinali', 'Çanta / Kınalı Yüzme Alanı', 'Silivri', 'Çanta · Kınalı mevkii', 'Avrupa Yakası', 'Marmara', 'public_beach', 41.058482, 28.093438, null, null],
+  ['semizkum-basinkent', 'Semizkum Halk Plajı', 'Silivri', 'Semizkum · Başınkent', 'Avrupa Yakası', 'Marmara', 'public_beach', 41.070004, 28.152449, 'Ücretsiz', 'İBB', ibb2025Source],
+  ['semizkum-cadir', 'Semizkum Çadır Yerleri Yüzme Alanı', 'Silivri', 'Semizkum', 'Avrupa Yakası', 'Marmara', 'public_beach', 41.071477, 28.159394, null, null],
+  ['altinorak', 'Altınorak Yüzme Alanı', 'Silivri', 'Altınorak mevkii', 'Avrupa Yakası', 'Marmara', 'public_beach', 41.073436, 28.176754, null, null],
+  ['silivri-kumluk', 'Silivri Kumluk Halk Plajı', 'Silivri', 'Kumluk mevkii', 'Avrupa Yakası', 'Marmara', 'public_beach', 41.077815, 28.223703, 'Ücretsiz', 'İBB', ibb2025Source],
+  ['selimpasa-baskent', 'Selimpaşa Başkent Yüzme Alanı', 'Silivri', 'Selimpaşa', 'Avrupa Yakası', 'Marmara', 'public_beach', 41.058036, 28.342925, null, null],
+  ['selimpasa', 'Selimpaşa Halk Plajı', 'Silivri', 'Selimpaşa · Duruman', 'Avrupa Yakası', 'Marmara', 'public_beach', 41.053168, 28.371547, 'Ücretsiz', 'İBB', ibb2025Source],
+
+  ['riva-elmasburnu', 'Riva Elmasburnu Plajı', 'Beykoz', 'Riva · Elmasburnu', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.229759, 29.218481, null, 'İlçe Belediyesi'],
+  ['riva-halk', 'Riva Halk Plajı', 'Beykoz', 'Riva', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.22637, 29.21672, null, null],
+  ['riva-su-urunleri', 'Riva Su Ürünleri Plajı', 'Beykoz', 'Riva', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.22847, 29.22937, null, null],
+
+  ['dogancili', 'Doğancılı Plajı', 'Şile', 'Doğancılı', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.19834, 29.44989, null, null],
+  ['imrenli', 'İmrenli Plajı', 'Şile', 'İmrenli', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.158467, 29.757676, null, null],
+  ['kabakoz-sile', 'Kabakoz Plajı', 'Şile', 'Kabakoz', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.159049, 29.708649, null, null],
+  ['sahilkoy', 'Sahilköy Plajı', 'Şile', 'Sahilköy', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.237933, 29.41043, null, null],
+  ['sofular', 'Sofular Plajı', 'Şile', 'Sofular', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.18962, 29.48499, null, null],
+  ['alacali', 'Alacalı Plajı', 'Şile', 'Alacalı', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.19117, 29.47916, null, null],
+  ['aglayankaya', 'Ağlayankaya Plajı', 'Şile', 'Balibey', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.17536, 29.62505, null, null],
+  ['aglayankaya-life', 'Ağlayankaya Life Beach', 'Şile', 'Balibey', 'Anadolu Yakası', 'Karadeniz', 'beach_club', 41.17423, 29.62798, 'Ücretli', 'Özel işletme'],
+  ['agva-camlik', 'Ağva Halk Plajı', 'Şile', 'Ağva · Çamlık', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.139101, 29.844851, null, null],
+  ['agva-mendirek', 'Ağva Mendirek Yanı Plajı', 'Şile', 'Ağva', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.139973, 29.852122, null, null],
+  ['akcakese', 'Akçakese Akkaya Plajı', 'Şile', 'Akçakese', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.155483, 29.733682, null, null],
+  ['ayazma', 'Ayazma Plajı', 'Şile', 'Şile merkez', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.1725, 29.60024, null, null],
+  ['kumbaba', 'Kumbaba Plajı', 'Şile', 'Kumbaba', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.1713132, 29.5816041, null, null],
+  ['uzunkum', 'Uzunkum Plajı', 'Şile', 'Uzunkum', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.1710113, 29.6354095, null, null],
+  ['bozgaca', 'Bozgaca Plajı', 'Şile', 'Bozgaca', 'Anadolu Yakası', 'Karadeniz', 'public_beach', 41.15751, 29.77541, null, null],
+  ['north-beach', 'North Beach', 'Şile', 'Kumbaba batısı', 'Anadolu Yakası', 'Karadeniz', 'private_beach', 41.176284, 29.551997, 'Ücretli', 'Özel işletme'],
+  ['peacock-beach', 'Peacock Beach', 'Şile', 'Akçakese', 'Anadolu Yakası', 'Karadeniz', 'beach_club', 41.15701, 29.724053, 'Ücretli', 'Özel işletme'],
+  ['kilimli-koyu', 'Kilimli Koyu', 'Şile', 'Bucaklı · Ağva', 'Anadolu Yakası', 'Karadeniz', 'cove', null, null, null, null, 'https://www.istanbul.gov.tr/basin-aciklamasi-2026-331'],
+  ['kadirga-koyu', 'Kadırga Koyu', 'Şile', 'Ağva çevresi', 'Anadolu Yakası', 'Karadeniz', 'cove', null, null, null, null],
+
+  ['caddebostan-1', 'Caddebostan Plajı 1', 'Kadıköy', 'Caddebostan', 'Anadolu Yakası', 'Marmara', 'public_beach', 40.967977, 29.051458, 'Ücretli', 'İBB', ibb2025Source],
+  ['caddebostan-2', 'Caddebostan Plajı 2', 'Kadıköy', 'Caddebostan', 'Anadolu Yakası', 'Marmara', 'public_beach', 40.964289, 29.056136, 'Ücretsiz', 'İBB', ibb2025Source],
+  ['caddebostan-3', 'Caddebostan Plajı 3', 'Kadıköy', 'Caddebostan · Suadiye yönü', 'Anadolu Yakası', 'Marmara', 'public_beach', 40.958558, 29.071254, 'Ücretsiz', 'İBB', ibb2025Source],
+  ['tuzla-halk', 'Tuzla Belediyesi Halk Plajı', 'Tuzla', 'Postane', 'Anadolu Yakası', 'Marmara', 'public_beach', null, null, null, 'İlçe Belediyesi'],
+
+  ['burgazada-su-sporlari', 'Burgazada Su Sporları Kulübü Önü', 'Adalar', 'Burgazada', 'Adalar', 'Marmara', 'public_beach', 40.87891, 29.07236, null, null],
+  ['aya-nikola', 'Aya Nikola Halk Plajı', 'Adalar', 'Büyükada · Aya Nikola', 'Adalar', 'Marmara', 'public_beach', 40.85444, 29.12534, null, null],
+  ['halik-eskibag', 'Halik Koyu / Eskibağ Halk Plajı', 'Adalar', 'Büyükada · Halik Koyu', 'Adalar', 'Marmara', 'bay', 40.84899, 29.11368, null, null],
+  ['blue-beach', 'Kayıkhane Blue Beach', 'Adalar', 'Büyükada', 'Adalar', 'Marmara', 'beach_club', 40.87244, 29.12279, 'Ücretli', 'Özel işletme'],
+  ['nakibey', 'Nakibey Plajı', 'Adalar', 'Büyükada', 'Adalar', 'Marmara', 'private_beach', 40.864444, 29.134722, 'Ücretli', 'Özel işletme'],
+  ['yorukali', 'Yörükali Plajı', 'Adalar', 'Büyükada · Yörükali', 'Adalar', 'Marmara', 'private_beach', 40.859167, 29.113056, 'Ücretli', 'Özel işletme'],
+  ['prenses-koyu', 'Prenses Koyu', 'Adalar', 'Büyükada', 'Adalar', 'Marmara', 'cove', 40.85887, 29.112681, null, null],
+  ['sadikbey', 'Sadıkbey Plajı', 'Adalar', 'Heybeliada', 'Adalar', 'Marmara', 'private_beach', 40.88015, 29.08984, 'Ücretli', 'Özel işletme'],
+  ['ada-beach', 'Ada Beach Club', 'Adalar', 'Heybeliada', 'Adalar', 'Marmara', 'beach_club', 40.87082, 29.08803, 'Ücretli', 'Özel işletme'],
+  ['asaf-beach', 'Asaf Beach', 'Adalar', 'Heybeliada', 'Adalar', 'Marmara', 'beach_club', 40.879399, 29.088621, 'Ücretli', 'Özel işletme'],
+  ['burgazada-deniz-kulubu', 'Burgazada Deniz Kulübü', 'Adalar', 'Burgazada', 'Adalar', 'Marmara', 'private_beach', 40.878913, 29.071076, 'Ücretli', 'Özel işletme'],
+  ['kinaliada-su-sporlari', 'Kınalıada Su Sporları Kulübü Önü', 'Adalar', 'Kınalıada', 'Adalar', 'Marmara', 'public_beach', 40.914452, 29.050937, null, null],
+  ['kinaliada-iskele-sag', 'Kınalıada İskele Sağ Halk Plajı', 'Adalar', 'Kınalıada', 'Adalar', 'Marmara', 'public_beach', 40.910556, 29.055556, null, null],
+  ['kinaliada-iskele-sol', 'Kınalıada İskele Sol Halk Plajı', 'Adalar', 'Kınalıada', 'Adalar', 'Marmara', 'public_beach', 40.907306, 29.056762, null, null],
+  ['sedef-halk', 'Sedef Adası Halk Plajı', 'Adalar', 'Sedef Adası', 'Adalar', 'Marmara', 'public_beach', 40.85023, 29.1408, null, null],
+  ['kalpazankaya', 'Kalpazankaya', 'Adalar', 'Burgazada', 'Adalar', 'Marmara', 'cove', null, null, null, null],
+  ['madam-martha', 'Madam Martha Koyu', 'Adalar', 'Burgazada', 'Adalar', 'Marmara', 'cove', null, null, null, null],
+  ['camakya', 'Çamakya Sahili', 'Adalar', 'Burgazada', 'Adalar', 'Marmara', 'coast', null, null, null, null],
+  ['alman-koyu', 'Alman Koyu', 'Adalar', 'Heybeliada', 'Adalar', 'Marmara', 'cove', null, null, null, null],
+  ['akvaryum-koyu', 'Akvaryum Koyu', 'Adalar', 'Heybeliada', 'Adalar', 'Marmara', 'cove', null, null, null, null],
+  ['degirmenburnu', 'Değirmenburnu Sahili', 'Adalar', 'Heybeliada', 'Adalar', 'Marmara', 'coast', null, null, null, null, 'https://www.istanbul.gov.tr/basin-aciklamasi-2025-43'],
+  ['kumluk-kinaliada', 'Kumluk Plajı', 'Adalar', 'Kınalıada', 'Adalar', 'Marmara', 'public_beach', null, null, null, null],
+  ['teos-beach', 'Teos Beach', 'Adalar', 'Kınalıada', 'Adalar', 'Marmara', 'beach_club', null, null, 'Ücretli', 'Özel işletme'],
+];
+
+const currentIbbIds = new Set(['yenikoy-plaji', 'yalikoy-1', 'yalikoy-2', 'kisirkaya', 'denizkoskler', 'gunes-plaji', 'menekse', 'albatros', 'semizkum-basinkent', 'silivri-kumluk', 'selimpasa', 'caddebostan-1', 'caddebostan-2', 'caddebostan-3']);
+
+const typeLabel: Record<IstanbulBeachType, string> = {
+  public_beach: 'halk plajı', private_beach: 'özel plaj', beach_club: 'beach club', coast: 'sahil', bay: 'koy', cove: 'doğal koy',
+};
+
+export const istanbulBeaches: IstanbulBeach[] = seeds.map(([id, name, district, area, side, sea, placeType, latitude, longitude, access = null, operator = null, sourceUrl]) => {
+  const currentIbb = currentIbbIds.has(id);
+  return {
+    id: `istanbul-beach-${id}`,
+    name,
+    city: 'İstanbul',
+    district,
+    area,
+    side,
+    category: 'Sahil',
+    placeType,
+    sea,
+    summary: `${area} bölgesindeki ${name}, ${sea === 'Karadeniz' ? 'Karadeniz' : 'Marmara Denizi'} kıyısında ${typeLabel[placeType]} olarak sınıflandırılmıştır. ${currentIbb ? 'İBB’nin 2025 hizmet listesinde yer alır.' : 'Yüzme durumu ve hizmetler sezona göre değişebileceğinden güncel resmî uyarılar kontrol edilmelidir.'}`,
+    latitude,
+    longitude,
+    image: placeholder,
+    imageIsPlaceholder: true,
+    surface: null,
+    access,
+    operator,
+    entryFee: null,
+    entryFeeYear: null,
+    parking: null,
+    toilet: currentIbb ? true : null,
+    shower: currentIbb ? true : null,
+    changingRoom: currentIbb ? true : null,
+    sunbed: currentIbb ? true : null,
+    umbrella: currentIbb ? true : null,
+    food: currentIbb ? true : null,
+    familyFriendly: null,
+    childFriendly: null,
+    camping: id === 'cilingoz' ? true : null,
+    picnic: id === 'cilingoz' ? true : null,
+    blueFlag: false,
+    blueFlagYear: null,
+    lifeguardAvailable: currentIbb ? true : null,
+    accessible: null,
+    waterQuality: null,
+    waterQualityDate: null,
+    waterQualitySource: healthSource,
+    seaWarning: sea === 'Karadeniz' ? 'Dalga ve çeken akıntı uyarılarını ziyaret günü kontrol edin.' : null,
+    swimmingRisk: null,
+    officialSwimmingAreaYear: latitude !== null ? 2023 : null,
+    sourceUrl: sourceUrl ?? governorSource,
+  };
+});
+
+export const istanbulBeachSides: Array<'Tümü' | IstanbulBeachSide> = ['Tümü', 'Avrupa Yakası', 'Anadolu Yakası', 'Adalar'];
+export const istanbulBeachSeas: Array<'Tümü' | IstanbulSea> = ['Tümü', 'Marmara', 'Karadeniz'];
+export const istanbulBeachTypes: Array<'Tümü' | IstanbulBeachType> = ['Tümü', 'public_beach', 'private_beach', 'beach_club', 'cove', 'bay', 'coast'];
+export const istanbulBeachAccesses: Array<'Tümü' | Exclude<IstanbulBeachAccess, null>> = ['Tümü', 'Ücretsiz', 'Ücretli'];
