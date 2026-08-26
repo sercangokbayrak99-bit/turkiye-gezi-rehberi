@@ -19,7 +19,7 @@ import {
 import { bursa, bursaDistricts, comingCities, spiritualSites, type Category, type District, type Place, type SpiritualSite } from './src/data';
 import { bursaGuideModules, type DailyRoute } from './src/guideData';
 import { regions, turkeyCities, type Region } from './src/cities';
-import { istanbulDistricts, istanbulPlaces, istanbulRoutes, istanbulVenueAreas, type IstanbulDistrict, type IstanbulPlace } from './src/istanbulData';
+import { istanbulDistricts, istanbulFoodGuide, istanbulPlaces, istanbulRoutes, istanbulVenueAreas, type IstanbulDistrict, type IstanbulPlace } from './src/istanbulData';
 
 const palette = {
   forest: '#153E35',
@@ -179,6 +179,8 @@ function IstanbulGuide() {
       {renderPlaces('Doğa & manzara', 'İKİ KITA ARASINDA', ['Doğa · Sahil', 'Manzara · Ulaşım'])}
       <View style={styles.moduleHeading}><View><Text style={styles.istanbulEyebrow}>BÖLGE BÖLGE</Text><Text style={styles.moduleTitle}>Kafeler & restoranlar</Text></View><Text style={styles.moduleHint}>8 bölge</Text></View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.venueRail}>{istanbulVenueAreas.map(item => <View key={item.area} style={styles.venueCard}><Text style={styles.venueDistrict}>{item.district.toUpperCase()}</Text><Text style={styles.venueArea}>{item.area}</Text><Text style={styles.venueCharacter}>{item.character}</Text><Pressable onPress={() => openMap(item.cafeQuery)} style={styles.venueButton}><Text style={styles.venueButtonText}>Yakındaki kafeler  ↗</Text></Pressable><Pressable onPress={() => openMap(item.restaurantQuery)} style={[styles.venueButton, styles.venueButtonDark]}><Text style={[styles.venueButtonText, styles.venueButtonTextDark]}>Restoranları göster  ↗</Text></Pressable></View>)}</ScrollView>
+      <View style={styles.moduleHeading}><View><Text style={styles.istanbulEyebrow}>İSTANBUL LEZZET REHBERİ</Text><Text style={styles.moduleTitle}>Ne, nerede yenir?</Text></View><Text style={styles.moduleHint}>8 öneri</Text></View>
+      <View style={styles.foodList}>{istanbulFoodGuide.map((food, index) => <View key={food.dish} style={styles.foodRow}><Text style={styles.foodNumber}>{String(index + 1).padStart(2, '0')}</Text><View style={styles.foodBody}><Text style={styles.foodDish}>{food.dish}</Text><Text style={styles.foodArea}>{food.area}</Text><Text style={styles.foodNote}>{food.note}</Text></View></View>)}</View>
       <View style={styles.moduleHeading}><View><Text style={styles.istanbulEyebrow}>PLANINI HAZIRLA</Text><Text style={styles.moduleTitle}>Günlük gezi rotaları</Text></View><Text style={styles.moduleHint}>4 rota</Text></View>
       <View style={styles.routeList}>{istanbulRoutes.map((route, index) => <Pressable key={route.title} onPress={() => openRoute(route.stops)} style={[styles.routeCard, { backgroundColor: route.color }]}><View style={styles.routeTop}><Text style={styles.routeIndex}>{String(index + 1).padStart(2, '0')}</Text><Text style={styles.routeDuration}>{route.duration}</Text></View><Text style={styles.routeTitle}>{route.title}</Text><Text style={styles.routeStops}>{route.stops.join('  ·  ')}</Text><Text style={styles.routeOpen}>Rotayı haritada başlat  →</Text></Pressable>)}</View>
       <View style={styles.moduleHeading}><View><Text style={styles.istanbulEyebrow}>ŞEHİRDE İHTİYACIN OLAN</Text><Text style={styles.moduleTitle}>Temel hizmetler</Text></View></View>

@@ -38,6 +38,17 @@ const venueRows: [string, string, string][] = [
 ];
 export const istanbulVenueAreas = venueRows.map(([area,district,character]) => ({ area, district, character, cafeQuery: `en iyi kafeler ${area} İstanbul`, restaurantQuery: `en iyi restoranlar ${area} İstanbul` }));
 
+export const istanbulFoodGuide = [
+  { dish: 'Balık ekmek', area: 'Eminönü · Karaköy', note: 'Haliç ve Boğaz manzarası eşliğinde, kıyıdaki geleneksel balık-ekmek noktalarında dene.' },
+  { dish: 'Sultanahmet köftesi', area: 'Sultanahmet · Fatih', note: 'Tarihî yarımadadaki köftecilerde piyaz ve ayran eşliğinde servis edilen klasik yorumu tercih et.' },
+  { dish: 'Kumpir', area: 'Ortaköy · Beşiktaş', note: 'Ortaköy Meydanı çevresindeki kumpircilerde malzemelerini seçerek Boğaz kıyısında tadabilirsin.' },
+  { dish: 'Kanlıca yoğurdu', area: 'Kanlıca · Beykoz', note: 'Vapur iskelesi çevresinde pudra şekeriyle sunulan geleneksel Kanlıca yoğurdunu dene.' },
+  { dish: 'Sarıyer böreği', area: 'Sarıyer Merkez', note: 'Sarıyer’in köklü börekçilerinde kıymalı, peynirli veya kuş üzümlü çeşitlerini sıcak olarak ara.' },
+  { dish: 'Vefa bozası', area: 'Vefa · Fatih', note: 'Kış aylarında tarçın ve leblebiyle sunulan koyu kıvamlı geleneksel bozayı tarihî Vefa çevresinde tat.' },
+  { dish: 'Profiterol', area: 'Beyoğlu', note: 'İstiklal Caddesi ve çevresindeki geleneksel pastanelerde yoğun çikolata soslu İstanbul klasiğini dene.' },
+  { dish: 'Moda dondurması', area: 'Moda · Kadıköy', note: 'Moda sahiline uzanan yürüyüşte mahalle dondurmacılarının mevsimlik ve klasik çeşitlerini keşfet.' },
+];
+
 export const istanbulRoutes = [
   { title: 'Tarihî Yarımada', duration: '1 tam gün', color: '#75513B', stops: ['Ayasofya','Sultanahmet Camii','Topkapı Sarayı','Yerebatan Sarnıcı','Kapalıçarşı'] },
   { title: 'Galata’dan Boğaz’a', duration: '1 tam gün', color: '#315F53', stops: ['Galata Kulesi','Karaköy','Dolmabahçe Sarayı','Ortaköy','Bebek'] },
