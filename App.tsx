@@ -49,6 +49,7 @@ export default function App() {
   const [selectedSpiritual, setSelectedSpiritual] = useState<SpiritualSite | null>(null);
   const [plannedSpiritual, setPlannedSpiritual] = useState<string[]>([]);
   const [plannedIstanbulPlaces, setPlannedIstanbulPlaces] = useState<string[]>([]);
+  const [plannedBursaPlaces, setPlannedBursaPlaces] = useState<string[]>([]);
 
   useEffect(() => {
     AsyncStorage.getItem('turkiye-rehberi-favoriler').then(value => {
@@ -62,6 +63,9 @@ export default function App() {
     }).catch(() => {});
     AsyncStorage.getItem('turkiye-rehberi-istanbul-mekan-plani').then(value => {
       if (value) setPlannedIstanbulPlaces(JSON.parse(value));
+    }).catch(() => {});
+    AsyncStorage.getItem('turkiye-rehberi-bursa-mekan-plani').then(value => {
+      if (value) setPlannedBursaPlaces(JSON.parse(value));
     }).catch(() => {});
   }, []);
 
@@ -95,9 +99,14 @@ export default function App() {
     AsyncStorage.setItem('turkiye-rehberi-istanbul-mekan-plani', JSON.stringify(next)).catch(() => {});
     return next;
   });
+  const toggleBursaPlacePlan = (id: string) => setPlannedBursaPlaces(current => {
+    const next = current.includes(id) ? current.filter(item => item !== id) : [...current, id];
+    AsyncStorage.setItem('turkiye-rehberi-bursa-mekan-plani', JSON.stringify(next)).catch(() => {});
+    return next;
+  });
 
   const content = tab === 'plan'
-    ? <PlanScreen districtNames={plannedDistricts} spiritualIds={plannedSpiritual} istanbulPlaceIds={plannedIstanbulPlaces} onRemoveDistrict={toggleDistrictPlan} onRemoveSpiritual={toggleSpiritualPlan} onRemoveIstanbulPlace={toggleIstanbulPlacePlan} />
+    ? <PlanScreen districtNames={plannedDistricts} spiritualIds={plannedSpiritual} bursaPlaceIds={plannedBursaPlaces} istanbulPlaceIds={plannedIstanbulPlaces} onRemoveDistrict={toggleDistrictPlan} onRemoveSpiritual={toggleSpiritualPlan} onRemoveBursaPlace={toggleBursaPlacePlan} onRemoveIstanbulPlace={toggleIstanbulPlacePlan} />
     : tab === 'favorites'
     ? <Favorites places={favoritePlaces} onOpen={setSelected} onRemove={toggleFavorite} />
     : tab === 'profile'
@@ -114,7 +123,13 @@ export default function App() {
           setCategory={setCategory}
           places={filteredPlaces}
           favorites={favorites}
+          plannedPlaces={plannedBursaPlaces}
+          plannedDistricts={plannedDistricts}
+          plannedSpiritual={plannedSpiritual}
           onFavorite={toggleFavorite}
+          onPlacePlan={toggleBursaPlacePlan}
+          onDistrictPlan={toggleDistrictPlan}
+          onSpiritualPlan={toggleSpiritualPlan}
           onOpen={setSelected}
           onDistrictOpen={setSelectedDistrict}
           onSpiritualOpen={setSelectedSpiritual}
@@ -124,8 +139,8 @@ export default function App() {
     <View style={styles.app}>
       <StatusBar style="light" />
       {content}
-      <BottomTabs tab={tab} setTab={setTab} favoriteCount={favorites.length} planCount={plannedDistricts.length + plannedSpiritual.length + plannedIstanbulPlaces.length} />
-      <PlaceModal place={selected} favorite={selected ? favorites.includes(selected.id) : false} onClose={() => setSelected(null)} onFavorite={toggleFavorite} />
+      <BottomTabs tab={tab} setTab={setTab} favoriteCount={favorites.length} planCount={plannedDistricts.length + plannedSpiritual.length + plannedBursaPlaces.length + plannedIstanbulPlaces.length} />
+      <PlaceModal place={selected} favorite={selected ? favorites.includes(selected.id) : false} planned={selected ? plannedBursaPlaces.includes(selected.id) : false} onClose={() => setSelected(null)} onFavorite={toggleFavorite} onTogglePlan={toggleBursaPlacePlan} />
       <DistrictModal district={selectedDistrict} planned={selectedDistrict ? plannedDistricts.includes(selectedDistrict.name) : false} onClose={() => setSelectedDistrict(null)} onTogglePlan={toggleDistrictPlan} />
       <SpiritualModal site={selectedSpiritual} planned={selectedSpiritual ? plannedSpiritual.includes(selectedSpiritual.id) : false} onClose={() => setSelectedSpiritual(null)} onTogglePlan={toggleSpiritualPlan} />
     </View>
@@ -217,7 +232,7 @@ function IstanbulDistrictModal({ district, onClose }: { district: IstanbulDistri
   return <Modal visible={Boolean(district)} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>{district && <SafeAreaView style={[styles.districtModal, { backgroundColor: district.side === 'Avrupa' ? '#315F53' : district.side === 'Anadolu' ? '#477A89' : '#75513B' }]}><View style={styles.districtModalTop}><View><Text style={styles.districtModalKicker}>İSTANBUL · {district.side.toUpperCase()} YAKASI</Text><Text style={styles.districtModalTitle}>{district.name}</Text></View><Pressable onPress={onClose} style={styles.districtClose}><Text style={styles.districtCloseText}>×</Text></Pressable></View><Text style={styles.districtModalSignature}>{district.signature}</Text><ScrollView contentContainerStyle={styles.districtModalScroll}><View style={styles.districtPanel}><Text style={styles.districtPanelLabel}>İLÇE HAKKINDA</Text><Text style={styles.istanbulDistrictModalCopy}>Mahalleleri, tarihî mirası, yeme-içme noktaları ve ulaşım seçenekleriyle {district.name} rehberini keşfedin.</Text></View>{related.length > 0 && <View style={styles.districtPanel}><Text style={styles.districtPanelLabel}>ÖNE ÇIKAN YERLER</Text>{related.map((place, index) => <View key={place.id} style={styles.districtListItem}><Text style={styles.districtListIndex}>{String(index + 1).padStart(2, '0')}</Text><Text style={styles.districtListText}>{place.name}</Text></View>)}</View>}<Pressable onPress={openMap} style={styles.districtMapButton}><Text style={styles.districtMapText}>Haritada {district.name}  →</Text></Pressable><Text style={styles.sourceNote}>Konum, ulaşım ve çalışma saatlerini ziyaret öncesinde doğrulayın.</Text></ScrollView></SafeAreaView>}</Modal>;
 }
 
-function MainContent({ exploreOnly, query, setQuery, category, setCategory, places, favorites, onFavorite, onOpen, onDistrictOpen, onSpiritualOpen }: {
+function MainContent({ exploreOnly, query, setQuery, category, setCategory, places, favorites, plannedPlaces, plannedDistricts, plannedSpiritual, onFavorite, onPlacePlan, onDistrictPlan, onSpiritualPlan, onOpen, onDistrictOpen, onSpiritualOpen }: {
   exploreOnly: boolean;
   query: string;
   setQuery: (value: string) => void;
@@ -225,7 +240,13 @@ function MainContent({ exploreOnly, query, setQuery, category, setCategory, plac
   setCategory: (value: ExploreCategory) => void;
   places: Place[];
   favorites: string[];
+  plannedPlaces: string[];
+  plannedDistricts: string[];
+  plannedSpiritual: string[];
   onFavorite: (id: string) => void;
+  onPlacePlan: (id: string) => void;
+  onDistrictPlan: (name: string) => void;
+  onSpiritualPlan: (id: string) => void;
   onOpen: (place: Place) => void;
   onDistrictOpen: (district: District) => void;
   onSpiritualOpen: (site: SpiritualSite) => void;
@@ -281,6 +302,7 @@ function MainContent({ exploreOnly, query, setQuery, category, setCategory, plac
                   <Text style={styles.districtName}>{district.name}</Text>
                   <Text style={styles.districtSignature}>{district.signature}</Text>
                   <Text style={styles.districtOpen}>Detayı aç  →</Text>
+                  <Pressable onPress={event => { event.stopPropagation(); onDistrictPlan(district.name); }} style={[styles.inlinePlanButton, plannedDistricts.includes(district.name) && styles.inlinePlanButtonActive]}><Text style={styles.inlinePlanButtonText}>{plannedDistricts.includes(district.name) ? '✓ Planımda' : '+ Planıma ekle'}</Text></Pressable>
                 </Pressable>
               ))}
               {!visibleDistricts.length && <View style={styles.districtNoResult}><Text style={styles.districtNoResultText}>Bu aramayla eşleşen ilçe bulunamadı.</Text></View>}
@@ -295,7 +317,7 @@ function MainContent({ exploreOnly, query, setQuery, category, setCategory, plac
               <Text style={styles.spiritualCount}>{visibleSpiritual.length} yer</Text>
             </View>
             <View style={styles.spiritualGrid}>
-              {visibleSpiritual.map((site, index) => <Pressable key={site.id} onPress={() => onSpiritualOpen(site)} style={styles.spiritualCard}><View style={styles.spiritualVisual}><Image source={site.image} style={styles.spiritualImage} /><View style={styles.spiritualImageShade} /><View style={styles.spiritualMark}><Text style={styles.spiritualMarkText}>{String(index + 1).padStart(2, '0')}</Text></View><View style={styles.realPhotoBadge}><Text style={styles.realPhotoBadgeText}>GERÇEK FOTOĞRAF</Text></View></View><View style={styles.spiritualBody}><Text style={styles.spiritualMeta}>{site.kind.toUpperCase()} · {site.district.toUpperCase()}</Text><Text style={styles.spiritualName}>{site.name}</Text><Text numberOfLines={2} style={styles.spiritualSummary}>{site.summary}</Text><Text style={styles.spiritualOpen}>Detayı aç  →</Text></View></Pressable>)}
+              {visibleSpiritual.map((site, index) => <Pressable key={site.id} onPress={() => onSpiritualOpen(site)} style={styles.spiritualCard}><View style={styles.spiritualVisual}><Image source={site.image} style={styles.spiritualImage} /><View style={styles.spiritualImageShade} /><View style={styles.spiritualMark}><Text style={styles.spiritualMarkText}>{String(index + 1).padStart(2, '0')}</Text></View><View style={styles.realPhotoBadge}><Text style={styles.realPhotoBadgeText}>GERÇEK FOTOĞRAF</Text></View></View><View style={styles.spiritualBody}><Text style={styles.spiritualMeta}>{site.kind.toUpperCase()} · {site.district.toUpperCase()}</Text><Text style={styles.spiritualName}>{site.name}</Text><Text numberOfLines={2} style={styles.spiritualSummary}>{site.summary}</Text><Text style={styles.spiritualOpen}>Detayı aç  →</Text><Pressable onPress={event => { event.stopPropagation(); onSpiritualPlan(site.id); }} style={[styles.bursaCardPlanButton, plannedSpiritual.includes(site.id) && styles.bursaCardPlanButtonActive]}><Text style={[styles.bursaCardPlanText, plannedSpiritual.includes(site.id) && styles.bursaCardPlanTextActive]}>{plannedSpiritual.includes(site.id) ? '✓  Planıma eklendi' : '+  Planıma ekle'}</Text></Pressable></View></Pressable>)}
             </View>
           </>
         )}
@@ -304,10 +326,10 @@ function MainContent({ exploreOnly, query, setQuery, category, setCategory, plac
           <Text style={styles.subheading}>{query || category !== 'Tümü' ? 'Arama sonuçları' : 'Bursa’da kaçırma'}</Text>
           <Text style={styles.resultCount}>{places.length} öneri</Text>
         </View><View style={styles.cardGrid}>
-          {places.map(place => <PlaceCard key={place.id} place={place} favorite={favorites.includes(place.id)} onFavorite={onFavorite} onOpen={onOpen} />)}
+          {places.map(place => <PlaceCard key={place.id} place={place} favorite={favorites.includes(place.id)} planned={plannedPlaces.includes(place.id)} onFavorite={onFavorite} onPlan={onPlacePlan} onOpen={onOpen} />)}
         </View>{!places.length && <View style={styles.empty}><Text style={styles.emptyIcon}>⌕</Text><Text style={styles.emptyTitle}>Sonuç bulunamadı</Text><Text style={styles.emptyCopy}>Başka bir kelime veya kategori deneyebilirsin.</Text></View>}</>}
 
-        {!exploreOnly && visibleBaths.length > 0 && <><View style={styles.bathHeading}><View><Text style={styles.bathEyebrow}>HAMAMLAR & TERMAL MİRAS</Text><Text style={styles.bathTitle}>Suyun iyileştirdiği şehir.</Text></View><Text style={styles.resultCount}>{visibleBaths.length} hamam</Text></View><Text style={styles.bathIntro}>Roma’dan Osmanlı’ya uzanan termal kültürü, kubbeli hamamları ve Çekirge kaplıcalarını keşfet.</Text><View style={styles.cardGrid}>{visibleBaths.map(place => <PlaceCard key={place.id} place={place} favorite={favorites.includes(place.id)} onFavorite={onFavorite} onOpen={onOpen} />)}</View></>}
+        {!exploreOnly && visibleBaths.length > 0 && <><View style={styles.bathHeading}><View><Text style={styles.bathEyebrow}>HAMAMLAR & TERMAL MİRAS</Text><Text style={styles.bathTitle}>Suyun iyileştirdiği şehir.</Text></View><Text style={styles.resultCount}>{visibleBaths.length} hamam</Text></View><Text style={styles.bathIntro}>Roma’dan Osmanlı’ya uzanan termal kültürü, kubbeli hamamları ve Çekirge kaplıcalarını keşfet.</Text><View style={styles.cardGrid}>{visibleBaths.map(place => <PlaceCard key={place.id} place={place} favorite={favorites.includes(place.id)} planned={plannedPlaces.includes(place.id)} onFavorite={onFavorite} onPlan={onPlacePlan} onOpen={onOpen} />)}</View></>}
 
         {!exploreOnly && <CityToolkit />}
 
@@ -399,7 +421,7 @@ function Hero() {
   );
 }
 
-function PlaceCard({ place, favorite, onFavorite, onOpen }: { place: Place; favorite: boolean; onFavorite: (id: string) => void; onOpen: (place: Place) => void }) {
+function PlaceCard({ place, favorite, planned, onFavorite, onPlan, onOpen }: { place: Place; favorite: boolean; planned?: boolean; onFavorite: (id: string) => void; onPlan?: (id: string) => void; onOpen: (place: Place) => void }) {
   return (
     <Pressable onPress={() => onOpen(place)} style={styles.placeCard}>
       <Image source={place.image} style={styles.placeImage} />
@@ -408,6 +430,7 @@ function PlaceCard({ place, favorite, onFavorite, onOpen }: { place: Place; favo
         <View style={styles.placeMeta}><Text style={styles.placeCategory}>{place.category}</Text><Text style={styles.placeDistrict}>{place.district}</Text></View>
         <Text style={styles.placeName}>{place.name}</Text>
         <Text numberOfLines={2} style={styles.placeSummary}>{place.summary}</Text>
+        {onPlan && <Pressable onPress={event => { event.stopPropagation(); onPlan(place.id); }} style={[styles.bursaCardPlanButton, planned && styles.bursaCardPlanButtonActive]}><Text style={[styles.bursaCardPlanText, planned && styles.bursaCardPlanTextActive]}>{planned ? '✓  Planıma eklendi' : '+  Planıma ekle'}</Text></Pressable>}
       </View>
     </Pressable>
   );
@@ -421,11 +444,12 @@ function Profile() {
   return <SafeAreaView style={styles.plainPage}><ScrollView contentContainerStyle={styles.plainHeader}><Text style={styles.eyebrow}>YOLCULUK PROFİLİ</Text><Text style={styles.sectionTitle}>Merhaba Gezgin</Text><Text style={styles.plainCopy}>Kişiselleştirilmiş rota, çevrimdışı şehir paketleri ve gezi geçmişi sonraki sürümlerde burada olacak.</Text><View style={styles.statRow}><View style={styles.stat}><Text style={styles.statNumber}>1</Text><Text style={styles.statLabel}>Keşfedilen il</Text></View><View style={styles.stat}><Text style={styles.statNumber}>5</Text><Text style={styles.statLabel}>Hazır öneri</Text></View><View style={styles.stat}><Text style={styles.statNumber}>81</Text><Text style={styles.statLabel}>Hedef şehir</Text></View></View><View style={styles.roadmap}><Text style={styles.roadmapTitle}>Yakında</Text>{['Çevrimdışı şehir indirme','Akıllı günlük rota','Konuma göre yakındakiler','Gezi notları ve listeler'].map((item, index) => <View key={item} style={styles.roadmapItem}><Text style={styles.roadmapIndex}>0{index + 1}</Text><Text style={styles.roadmapText}>{item}</Text></View>)}</View></ScrollView></SafeAreaView>;
 }
 
-function PlanScreen({ districtNames, spiritualIds, istanbulPlaceIds, onRemoveDistrict, onRemoveSpiritual, onRemoveIstanbulPlace }: { districtNames: string[]; spiritualIds: string[]; istanbulPlaceIds: string[]; onRemoveDistrict: (name: string) => void; onRemoveSpiritual: (id: string) => void; onRemoveIstanbulPlace: (id: string) => void }) {
+function PlanScreen({ districtNames, spiritualIds, bursaPlaceIds, istanbulPlaceIds, onRemoveDistrict, onRemoveSpiritual, onRemoveBursaPlace, onRemoveIstanbulPlace }: { districtNames: string[]; spiritualIds: string[]; bursaPlaceIds: string[]; istanbulPlaceIds: string[]; onRemoveDistrict: (name: string) => void; onRemoveSpiritual: (id: string) => void; onRemoveBursaPlace: (id: string) => void; onRemoveIstanbulPlace: (id: string) => void }) {
   const districts = districtNames.map(name => bursaDistricts.find(item => item.name === name)).filter((item): item is District => Boolean(item));
   const sites = spiritualIds.map(id => spiritualSites.find(item => item.id === id)).filter((item): item is SpiritualSite => Boolean(item));
+  const bursaStops = bursaPlaceIds.map(id => [...bursa.places, ...bursaBaths].find(item => item.id === id)).filter((item): item is Place => Boolean(item));
   const istanbulStops = istanbulPlaceIds.map(id => istanbulPlaces.find(item => item.id === id)).filter((item): item is IstanbulPlace => Boolean(item));
-  const destinations = [...districts.map(item => item.mapQuery), ...sites.map(item => item.mapQuery), ...istanbulStops.map(item => item.mapQuery)];
+  const destinations = [...districts.map(item => item.mapQuery), ...sites.map(item => item.mapQuery), ...bursaStops.map(item => item.mapQuery), ...istanbulStops.map(item => item.mapQuery)];
   const openRoute = () => {
     const first = destinations[0];
     const last = destinations.at(-1);
@@ -436,7 +460,7 @@ function PlanScreen({ districtNames, spiritualIds, istanbulPlaceIds, onRemoveDis
     const waypoints = destinations.slice(1, -1).join('|');
     return Linking.openURL(`https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}${waypoints ? `&waypoints=${encodeURIComponent(waypoints)}` : ''}`);
   };
-  return <SafeAreaView style={styles.plainPage}><View style={styles.plainHeader}><Text style={styles.eyebrow}>KİŞİSEL TÜRKİYE ROTAN</Text><Text style={styles.sectionTitle}>Gezi planım</Text><Text style={styles.plainCopy}>Bursa ve İstanbul’dan seçtiğin duraklar burada sıralanır ve tek rota olarak haritada açılır.</Text></View><ScrollView contentContainerStyle={styles.planContent}>{districts.map((district, index) => <View key={district.name} style={styles.planDistrict}><View style={[styles.planNumber, { backgroundColor: district.theme }]}><Text style={styles.planNumberText}>{String(index + 1).padStart(2, '0')}</Text></View><View style={styles.planDistrictBody}><Text style={styles.planDistrictName}>{district.name}</Text><Text style={styles.planDistrictCopy}>Bursa · İlçe · {district.signature}</Text></View><Pressable onPress={() => onRemoveDistrict(district.name)} hitSlop={10}><Text style={styles.planRemove}>×</Text></Pressable></View>)}{sites.map((site, index) => <View key={site.id} style={styles.planDistrict}><View style={[styles.planNumber, styles.planSpiritual]}><Text style={styles.planNumberText}>{String(districts.length + index + 1).padStart(2, '0')}</Text></View><View style={styles.planDistrictBody}><Text style={styles.planDistrictName}>{site.name}</Text><Text style={styles.planDistrictCopy}>Bursa · Manevi miras · {site.district}</Text></View><Pressable onPress={() => onRemoveSpiritual(site.id)} hitSlop={10}><Text style={styles.planRemove}>×</Text></Pressable></View>)}{istanbulStops.map((place, index) => <View key={place.id} style={styles.planDistrict}><View style={[styles.planNumber, styles.planIstanbul]}><Text style={styles.planNumberText}>{String(districts.length + sites.length + index + 1).padStart(2, '0')}</Text></View><View style={styles.planDistrictBody}><Text style={styles.planDistrictName}>{place.name}</Text><Text style={styles.planDistrictCopy}>İstanbul · {place.category} · {place.district}</Text></View><Pressable onPress={() => onRemoveIstanbulPlace(place.id)} hitSlop={10}><Text style={styles.planRemove}>×</Text></Pressable></View>)}{!destinations.length && <View style={styles.empty}><Text style={styles.emptyIcon}>⌖</Text><Text style={styles.emptyTitle}>Rotan henüz boş</Text><Text style={styles.emptyCopy}>Şehir rehberlerindeki “Planıma ekle” düğmesine dokun.</Text></View>}{destinations.length > 0 && <Pressable onPress={openRoute} style={styles.planRouteButton}><Text style={styles.planRouteText}>Rotayı Google Maps’te aç  →</Text></Pressable>}</ScrollView></SafeAreaView>;
+  return <SafeAreaView style={styles.plainPage}><View style={styles.plainHeader}><Text style={styles.eyebrow}>KİŞİSEL TÜRKİYE ROTAN</Text><Text style={styles.sectionTitle}>Gezi planım</Text><Text style={styles.plainCopy}>Bursa ve İstanbul’dan seçtiğin duraklar burada sıralanır ve tek rota olarak haritada açılır.</Text></View><ScrollView contentContainerStyle={styles.planContent}>{districts.map((district, index) => <View key={district.name} style={styles.planDistrict}><View style={[styles.planNumber, { backgroundColor: district.theme }]}><Text style={styles.planNumberText}>{String(index + 1).padStart(2, '0')}</Text></View><View style={styles.planDistrictBody}><Text style={styles.planDistrictName}>{district.name}</Text><Text style={styles.planDistrictCopy}>Bursa · İlçe · {district.signature}</Text></View><Pressable onPress={() => onRemoveDistrict(district.name)} hitSlop={10}><Text style={styles.planRemove}>×</Text></Pressable></View>)}{sites.map((site, index) => <View key={site.id} style={styles.planDistrict}><View style={[styles.planNumber, styles.planSpiritual]}><Text style={styles.planNumberText}>{String(districts.length + index + 1).padStart(2, '0')}</Text></View><View style={styles.planDistrictBody}><Text style={styles.planDistrictName}>{site.name}</Text><Text style={styles.planDistrictCopy}>Bursa · Manevi miras · {site.district}</Text></View><Pressable onPress={() => onRemoveSpiritual(site.id)} hitSlop={10}><Text style={styles.planRemove}>×</Text></Pressable></View>)}{bursaStops.map((place, index) => <View key={place.id} style={styles.planDistrict}><View style={[styles.planNumber, { backgroundColor: palette.moss }]}><Text style={styles.planNumberText}>{String(districts.length + sites.length + index + 1).padStart(2, '0')}</Text></View><View style={styles.planDistrictBody}><Text style={styles.planDistrictName}>{place.name}</Text><Text style={styles.planDistrictCopy}>Bursa · {place.category} · {place.district}</Text></View><Pressable onPress={() => onRemoveBursaPlace(place.id)} hitSlop={10}><Text style={styles.planRemove}>×</Text></Pressable></View>)}{istanbulStops.map((place, index) => <View key={place.id} style={styles.planDistrict}><View style={[styles.planNumber, styles.planIstanbul]}><Text style={styles.planNumberText}>{String(districts.length + sites.length + index + 1).padStart(2, '0')}</Text></View><View style={styles.planDistrictBody}><Text style={styles.planDistrictName}>{place.name}</Text><Text style={styles.planDistrictCopy}>İstanbul · {place.category} · {place.district}</Text></View><Pressable onPress={() => onRemoveIstanbulPlace(place.id)} hitSlop={10}><Text style={styles.planRemove}>×</Text></Pressable></View>)}{!destinations.length && <View style={styles.empty}><Text style={styles.emptyIcon}>⌖</Text><Text style={styles.emptyTitle}>Rotan henüz boş</Text><Text style={styles.emptyCopy}>Şehir rehberlerindeki “Planıma ekle” düğmesine dokun.</Text></View>}{destinations.length > 0 && <Pressable onPress={openRoute} style={styles.planRouteButton}><Text style={styles.planRouteText}>Rotayı Google Maps’te aç  →</Text></Pressable>}</ScrollView></SafeAreaView>;
 }
 
 function BottomTabs({ tab, setTab, favoriteCount, planCount }: { tab: Tab; setTab: (tab: Tab) => void; favoriteCount: number; planCount: number }) {
@@ -444,9 +468,9 @@ function BottomTabs({ tab, setTab, favoriteCount, planCount }: { tab: Tab; setTa
   return <View style={styles.tabBar}>{items.map(item => { const badge = item.id === 'favorites' ? favoriteCount : item.id === 'plan' ? planCount : 0; return <Pressable key={item.id} onPress={() => setTab(item.id)} style={styles.tabItem}><View><Text style={[styles.tabIcon, tab === item.id && styles.tabActive]}>{item.icon}</Text>{badge > 0 && <View style={styles.tabBadge}><Text style={styles.tabBadgeText}>{badge}</Text></View>}</View><Text style={[styles.tabLabel, tab === item.id && styles.tabActive]}>{item.label}</Text></Pressable>; })}</View>;
 }
 
-function PlaceModal({ place, favorite, onClose, onFavorite }: { place: Place | null; favorite: boolean; onClose: () => void; onFavorite: (id: string) => void }) {
+function PlaceModal({ place, favorite, planned, onClose, onFavorite, onTogglePlan }: { place: Place | null; favorite: boolean; planned: boolean; onClose: () => void; onFavorite: (id: string) => void; onTogglePlan: (id: string) => void }) {
   const openMap = () => place && Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.mapQuery)}`);
-  return <Modal visible={Boolean(place)} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>{place && <View style={styles.modal}><Image source={place.image} style={styles.modalImage} /><View style={styles.modalShade} /><SafeAreaView style={styles.modalSafe}><View style={styles.modalActions}><Pressable onPress={onClose} style={styles.modalRound}><Text style={styles.modalRoundText}>×</Text></Pressable><Pressable onPress={() => onFavorite(place.id)} style={styles.modalRound}><Text style={styles.modalRoundText}>{favorite ? '♥' : '♡'}</Text></Pressable></View><View style={styles.modalBody}><Text style={styles.modalMeta}>{place.category.toUpperCase()} · {place.district.toUpperCase()}</Text><Text style={styles.modalTitle}>{place.name}</Text><Text style={styles.modalCopy}>{place.summary}</Text><View style={styles.infoCard}><Text style={styles.infoLabel}>BU ROTA İÇİN</Text><Text style={styles.infoTitle}>Haritada konumu aç</Text><Text style={styles.infoCopy}>Güncel yol durumunu ve ulaşım seçeneklerini harita uygulamasından görüntüle.</Text></View><Pressable onPress={openMap} style={styles.primaryButton}><Text style={styles.primaryButtonText}>Yol tarifi al  →</Text></Pressable>{place.imagePage && <Pressable onPress={() => Linking.openURL(place.imagePage!)} style={styles.sourceButton}><Text style={styles.sourceButtonText}>Fotoğraf: {place.imageCredit}</Text></Pressable>}</View></SafeAreaView></View>}</Modal>;
+  return <Modal visible={Boolean(place)} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>{place && <View style={styles.modal}><Image source={place.image} style={styles.modalImage} /><View style={styles.modalShade} /><SafeAreaView style={styles.modalSafe}><View style={styles.modalActions}><Pressable onPress={onClose} style={styles.modalRound}><Text style={styles.modalRoundText}>×</Text></Pressable><Pressable onPress={() => onFavorite(place.id)} style={styles.modalRound}><Text style={styles.modalRoundText}>{favorite ? '♥' : '♡'}</Text></Pressable></View><View style={styles.modalBody}><Text style={styles.modalMeta}>{place.category.toUpperCase()} · {place.district.toUpperCase()}</Text><Text style={styles.modalTitle}>{place.name}</Text><Text style={styles.modalCopy}>{place.summary}</Text><View style={styles.infoCard}><Text style={styles.infoLabel}>BU ROTA İÇİN</Text><Text style={styles.infoTitle}>Haritada konumu aç</Text><Text style={styles.infoCopy}>Güncel yol durumunu ve ulaşım seçeneklerini harita uygulamasından görüntüle.</Text></View><Pressable onPress={() => onTogglePlan(place.id)} style={[styles.spiritualPlanButton, planned && styles.spiritualPlanButtonActive]}><Text style={[styles.spiritualPlanText, planned && styles.spiritualPlanTextActive]}>{planned ? '✓  Gezi planıma eklendi' : '+  Gezi planıma ekle'}</Text></Pressable><Pressable onPress={openMap} style={styles.primaryButton}><Text style={styles.primaryButtonText}>Yol tarifi al  →</Text></Pressable>{place.imagePage && <Pressable onPress={() => Linking.openURL(place.imagePage!)} style={styles.sourceButton}><Text style={styles.sourceButtonText}>Fotoğraf: {place.imageCredit}</Text></Pressable>}</View></SafeAreaView></View>}</Modal>;
 }
 
 function DistrictModal({ district, planned, onClose, onTogglePlan }: { district: District | null; planned: boolean; onClose: () => void; onTogglePlan: (name: string) => void }) {
@@ -463,6 +487,7 @@ function SpiritualModal({ site, planned, onClose, onTogglePlan }: { site: Spirit
 }
 
 const istanbulStyles = {
+  bursaCardPlanButton: { height: 47, marginTop: 16, alignItems: 'center', justifyContent: 'center', borderRadius: 15, borderWidth: 1, borderColor: palette.moss }, bursaCardPlanButtonActive: { backgroundColor: palette.moss }, bursaCardPlanText: { color: palette.moss, fontSize: 11, fontWeight: '900' }, bursaCardPlanTextActive: { color: palette.white }, inlinePlanButton: { marginTop: 13, paddingVertical: 9, alignItems: 'center', borderRadius: 13, borderWidth: 1, borderColor: 'rgba(255,255,255,.55)' }, inlinePlanButtonActive: { backgroundColor: 'rgba(255,255,255,.2)' }, inlinePlanButtonText: { color: palette.white, fontSize: 9, fontWeight: '900' },
   bathHeading: { marginTop: 38, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }, bathEyebrow: { color: '#8B6844', fontSize: 9, fontWeight: '900', letterSpacing: 1.2 }, bathTitle: { marginTop: 6, color: palette.ink, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 29, fontWeight: '600' }, bathIntro: { marginTop: 9, marginBottom: 17, color: palette.muted, fontSize: 12, lineHeight: 18 },
   istanbulDetailOpen: { marginTop: 17, color: palette.moss, fontSize: 11, fontWeight: '900' }, istanbulDistrictModalCopy: { color: palette.muted, fontSize: 15, lineHeight: 23 }, istanbulCardPlanButton: { height: 48, marginHorizontal: 19, marginBottom: 19, alignItems: 'center', justifyContent: 'center', borderRadius: 16, borderWidth: 1, borderColor: palette.moss, backgroundColor: palette.paper }, istanbulCardPlanButtonActive: { backgroundColor: palette.moss }, istanbulCardPlanText: { color: palette.moss, fontSize: 12, fontWeight: '900' }, istanbulCardPlanTextActive: { color: palette.white }, planIstanbul: { backgroundColor: '#477A89' },
   stayEyebrow: { marginBottom: 5, color: '#8B6844', fontSize: 8, fontWeight: '900', letterSpacing: 1.2 }, stayIntro: { marginTop: -5, marginBottom: 12, color: palette.muted, fontSize: 12, lineHeight: 18 }, stayFilterRail: { gap: 8, paddingBottom: 15 }, stayFilter: { paddingHorizontal: 14, paddingVertical: 9, borderRadius: 18, borderWidth: 1, borderColor: '#D6CCBB', backgroundColor: palette.paper }, stayFilterActive: { borderColor: '#8B6844', backgroundColor: '#8B6844' }, stayFilterText: { color: '#76583B', fontSize: 10, fontWeight: '800' }, stayFilterTextActive: { color: palette.white }, stayRail: { gap: 12, paddingRight: 20 }, stayCard: { width: 285, minHeight: 285, padding: 21, borderRadius: 26, backgroundColor: '#DCEAE4' }, stayCardAlt: { backgroundColor: '#E9DED0' }, stayTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, stayDistrict: { color: palette.moss, fontSize: 9, fontWeight: '900', letterSpacing: 1.1 }, stayLevel: { paddingHorizontal: 10, paddingVertical: 6, overflow: 'hidden', borderRadius: 13, color: '#76583B', fontSize: 8, fontWeight: '900', backgroundColor: 'rgba(255,255,255,.7)' }, stayArea: { marginTop: 25, color: palette.ink, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 28, fontWeight: '600' }, stayBest: { marginTop: 9, color: palette.gold, fontSize: 8, fontWeight: '900', letterSpacing: .8 }, stayCharacter: { marginTop: 9, color: palette.muted, fontSize: 12, lineHeight: 18 }, stayOpen: { marginTop: 'auto', paddingTop: 18, color: palette.forest, fontSize: 10, fontWeight: '900' },
