@@ -23,6 +23,12 @@ export type City = {
   places: Place[];
 };
 
+export type District = {
+  name: string;
+  signature: string;
+  theme: string;
+};
+
 export const bursa: City = {
   id: 'bursa',
   name: 'Bursa',
@@ -47,4 +53,24 @@ export const comingCities = [
   { name: 'Trabzon', region: 'Karadeniz', tone: '#486F59' },
   { name: 'Mardin', region: 'Güneydoğu', tone: '#A78055' },
   { name: 'Kapadokya', region: 'İç Anadolu', tone: '#8B665A' }
+];
+
+export const bursaDistricts: District[] = [
+  { name: 'Osmangazi', signature: 'Hanlar, camiler ve tarihî merkez', theme: '#315F53' },
+  { name: 'Yıldırım', signature: 'Külliyeler ve Cumalıkızık', theme: '#8A6048' },
+  { name: 'Nilüfer', signature: 'Modern yaşam, parklar ve kültür', theme: '#3D7480' },
+  { name: 'Mudanya', signature: 'Mütareke, Tirilye ve sahil', theme: '#477A89' },
+  { name: 'Gemlik', signature: 'Körfez, zeytin ve kıyı rotaları', theme: '#617A51' },
+  { name: 'İznik', signature: 'Çini, surlar ve göl gün batımı', theme: '#507B73' },
+  { name: 'İnegöl', signature: 'Oylat, mobilya ve köfte', theme: '#80604A' },
+  { name: 'Mustafakemalpaşa', signature: 'Suuçtu ve peynir tatlısı', theme: '#4E745A' },
+  { name: 'Karacabey', signature: 'Longoz, kuşlar ve kıyılar', theme: '#526F66' },
+  { name: 'Orhangazi', signature: 'İznik Gölü ve Gedelek turşusu', theme: '#7A6E48' },
+  { name: 'Kestel', signature: 'Saitabat ve Uludağ etekleri', theme: '#426B57' },
+  { name: 'Gürsu', signature: 'Tarım, armut ve doğa', theme: '#75804A' },
+  { name: 'Yenişehir', signature: 'Osmanlı izleri ve kırsal kültür', theme: '#8A6A50' },
+  { name: 'Orhaneli', signature: 'Kanyonlar ve yayla doğası', theme: '#506C5A' },
+  { name: 'Keles', signature: 'Dağ köyleri ve Kocayayla', theme: '#486452' },
+  { name: 'Harmancık', signature: 'Yaylalar ve sakin doğa', theme: '#5C7158' },
+  { name: 'Büyükorhan', signature: 'Göletler ve dağ rotaları', theme: '#586B62' },
 ];
