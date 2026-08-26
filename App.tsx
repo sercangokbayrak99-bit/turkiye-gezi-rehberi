@@ -202,6 +202,9 @@ function IstanbulGuide({ plannedPlaceIds, onTogglePlan }: { plannedPlaceIds: str
       {renderPlaces('Camiler', 'MİMARİ & MANEVİ MİRAS', ['Cami'])}
       {renderPlaces('Türbeler & ziyaret yerleri', 'İSTANBUL’UN MANEVİ DURAKLARI', ['Türbe'])}
       {renderPlaces('Çok kültürlü İstanbul', 'İNANÇLAR & MAHALLELER', ['Çok kültürlü miras'])}
+      {renderPlaces('İstanbul hamamları', 'SU, MERMER & OSMANLI MİRASI', ['Hamam'])}
+      {renderPlaces('Anadolu Yakası keşifleri', 'MAHALLELER & YEREL YAŞAM', ['Anadolu Yakası'])}
+      {renderPlaces('Sahiller', 'DENİZLE BULUŞAN ŞEHİR', ['Sahil'])}
       {renderPlaces('Doğa & manzara', 'İKİ KITA ARASINDA', ['Doğa · Sahil', 'Manzara · Ulaşım'])}
       <View style={styles.moduleHeading}><View><Text style={styles.istanbulEyebrow}>BÖLGE BÖLGE</Text><Text style={styles.moduleTitle}>Kafeler & restoranlar</Text></View><Text style={styles.moduleHint}>8 bölge</Text></View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.venueRail}>{istanbulVenueAreas.map(item => <View key={item.area} style={styles.venueCard}><Text style={styles.venueDistrict}>{item.district.toUpperCase()}</Text><Text style={styles.venueArea}>{item.area}</Text><Text style={styles.venueCharacter}>{item.character}</Text><Pressable onPress={() => openMap(item.cafeQuery)} style={styles.venueButton}><Text style={styles.venueButtonText}>Yakındaki kafeler  ↗</Text></Pressable><Pressable onPress={() => openMap(item.restaurantQuery)} style={[styles.venueButton, styles.venueButtonDark]}><Text style={[styles.venueButtonText, styles.venueButtonTextDark]}>Restoranları göster  ↗</Text></Pressable></View>)}</ScrollView>
