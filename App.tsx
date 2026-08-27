@@ -188,14 +188,13 @@ function CitiesExplore({ onOpenCity }: { onOpenCity: (city: 'bursa' | 'istanbul'
 
 function IstanbulGuide({ plannedPlaceIds, favorites, onFavorite, onTogglePlan }: { plannedPlaceIds: string[]; favorites: string[]; onFavorite: (id: string) => void; onTogglePlan: (id: string) => void }) {
   const [query, setQuery] = useState('');
-  const [side, setSide] = useState<'Tümü' | 'Avrupa' | 'Anadolu' | 'Adalar'>('Tümü');
   const [mode, setMode] = useState<'rehber' | 'plajlar'>('rehber');
   const [category, setCategory] = useState<ExploreCategory>('Tümü');
   const [offline, setOffline] = useState(false);
   const [selectedDistrict, setSelectedDistrict] = useState<IstanbulDistrict | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<IstanbulPlace | null>(null);
   const normalized = query.trim().toLocaleLowerCase('tr-TR');
-  const visibleDistricts = istanbulDistricts.filter(item => (side === 'Tümü' || item.side === side) && (!normalized || `${item.name} ${item.signature}`.toLocaleLowerCase('tr-TR').includes(normalized)));
+  const visibleDistricts = istanbulDistricts.filter(item => !normalized || `${item.name} ${item.signature}`.toLocaleLowerCase('tr-TR').includes(normalized));
   const visiblePlaces = istanbulPlaces.filter(item => !normalized || `${item.name} ${item.district} ${item.category} ${item.summary}`.toLocaleLowerCase('tr-TR').includes(normalized));
   const openMap = (mapQuery: string) => Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`);
   const openRoute = (stops: string[]) => Linking.openURL(`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(`${stops[0]} İstanbul`)}&destination=${encodeURIComponent(`${stops[stops.length - 1]} İstanbul`)}&waypoints=${encodeURIComponent(stops.slice(1, -1).map(stop => `${stop} İstanbul`).join('|'))}`);
@@ -215,7 +214,6 @@ function IstanbulGuide({ plannedPlaceIds, favorites, onFavorite, onTogglePlan }:
     <View style={styles.istanbulBody}>
       <View style={styles.citySearch}><Text style={styles.searchIcon}>⌕</Text><TextInput value={query} onChangeText={setQuery} placeholder="İlçe, yapı veya deneyim ara" placeholderTextColor="#8A9691" style={styles.searchInput} /></View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow}>{categories.map(item => <Pressable key={item} onPress={() => { if (item === 'Sahil') { setCategory(item); setMode('plajlar'); } else setCategory(item); }} style={[styles.categoryChip, category === item && styles.categoryChipActive]}><Text style={[styles.categoryText, category === item && styles.categoryTextActive]}>{item === 'Sahil' ? '🏖️ Sahiller & Plajlar' : item}</Text></Pressable>)}</ScrollView>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.regionRail}>{(['Tümü','Avrupa','Anadolu','Adalar'] as const).map(item => <Pressable key={item} onPress={() => setSide(item)} style={[styles.regionChip, side === item && styles.regionChipActive]}><Text style={[styles.regionChipText, side === item && styles.regionChipTextActive]}>{item}</Text></Pressable>)}</ScrollView>
       <View style={styles.moduleHeading}><View><Text style={styles.istanbulEyebrow}>İLÇE REHBERİ</Text><Text style={styles.moduleTitle}>39 ilçeyi keşfet</Text></View><Text style={styles.moduleHint}>{visibleDistricts.length} sonuç</Text></View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.istanbulDistrictRail}>{visibleDistricts.map((item, index) => <Pressable key={item.name} onPress={() => setSelectedDistrict(item)} style={[styles.istanbulDistrictCard, { backgroundColor: index % 3 === 0 ? '#315F53' : index % 3 === 1 ? '#75513B' : '#477A89' }]}><Text style={styles.istanbulDistrictSide}>{item.side.toUpperCase()}</Text><Text style={styles.istanbulDistrictName}>{item.name}</Text><Text style={styles.istanbulDistrictCopy}>{item.signature}</Text><Text style={styles.istanbulDistrictOpen}>Detayı aç  →</Text></Pressable>)}</ScrollView>
       {category === 'Tarih' && <>{renderPlaces('Saraylar & tarihî yapılar', 'İMPARATORLUKLARIN İZİNDE', ['Saray', 'Tarihî yapı', 'Müze · Manzara'])}{renderPlaces('Müzeler', 'KOLEKSİYONLAR & KEŞİF', ['Müze'])}{renderPlaces('Çok kültürlü İstanbul', 'İNANÇLAR & MAHALLELER', ['Çok kültürlü miras'])}{renderPlaces('İstanbul hamamları', 'SU, MERMER & OSMANLI MİRASI', ['Hamam'])}</>}
