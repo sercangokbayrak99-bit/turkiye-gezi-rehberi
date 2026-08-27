@@ -20,7 +20,9 @@ export type IstanbulBeach = {
   latitude: number | null;
   longitude: number | null;
   image: ImageSourcePropType;
-  imageIsPlaceholder: true;
+  imageIsPlaceholder: boolean;
+  imageCredit: string | null;
+  imagePage: string | null;
   surface: 'Kum' | 'Çakıl' | 'Kayalık' | 'Karışık' | null;
   access: IstanbulBeachAccess;
   operator: 'İBB' | 'İlçe Belediyesi' | 'Özel işletme' | null;
@@ -51,6 +53,13 @@ export type IstanbulBeach = {
 };
 
 const placeholder = require('../assets/bursa/beach-placeholder.jpg');
+const beachPhotos: Record<string, { image: ImageSourcePropType; credit: string; page: string }> = {
+  'kilyos-halk': { image: require('../assets/istanbul/kilyos.jpg'), credit: 'eleesege · CC BY 3.0', page: 'https://commons.wikimedia.org/wiki/File:Kylyos_Beach_on_the_Black_Sea,_Turkey_-_panoramio.jpg' },
+  ayazma: { image: require('../assets/istanbul/beaches/sile-beach.jpg'), credit: 'Özgür Okkalı · CC BY-SA 2.5', page: 'https://commons.wikimedia.org/wiki/File:Silebeach.JPG' },
+  'caddebostan-1': { image: require('../assets/istanbul/caddebostan.jpg'), credit: 'Raicem · CC BY-SA 4.0', page: 'https://commons.wikimedia.org/wiki/File:Caddebostan_Coastal_Park.jpg' },
+  'caddebostan-2': { image: require('../assets/istanbul/caddebostan.jpg'), credit: 'Raicem · CC BY-SA 4.0', page: 'https://commons.wikimedia.org/wiki/File:Caddebostan_Coastal_Park.jpg' },
+  'caddebostan-3': { image: require('../assets/istanbul/caddebostan.jpg'), credit: 'Raicem · CC BY-SA 4.0', page: 'https://commons.wikimedia.org/wiki/File:Caddebostan_Coastal_Park.jpg' },
+};
 const governorSource = 'https://www.istanbul.gov.tr/yuzme-alani-ve-plajlarla-ilgili-karar';
 const ibb2025Source = 'https://destekhizmetleri.ibb.istanbul/haberler/ibb-plajlari-3-haziranda-sezona-merhaba-diyor/';
 const healthSource = 'https://istanbulism.saglik.gov.tr/TR-109719/deniz-suyu-plajlar.html';
@@ -165,6 +174,7 @@ const typeLabel: Record<IstanbulBeachType, string> = {
 
 export const istanbulBeaches: IstanbulBeach[] = seeds.map(([id, name, district, area, side, sea, placeType, latitude, longitude, access = null, operator = null, sourceUrl]) => {
   const currentIbb = currentIbbIds.has(id);
+  const photo = beachPhotos[id];
   return {
     id: `istanbul-beach-${id}`,
     name,
@@ -178,8 +188,10 @@ export const istanbulBeaches: IstanbulBeach[] = seeds.map(([id, name, district, 
     summary: `${area} bölgesindeki ${name}, ${sea === 'Karadeniz' ? 'Karadeniz' : 'Marmara Denizi'} kıyısında ${typeLabel[placeType]} olarak sınıflandırılmıştır. ${currentIbb ? 'İBB’nin 2025 hizmet listesinde yer alır.' : 'Yüzme durumu ve hizmetler sezona göre değişebileceğinden güncel resmî uyarılar kontrol edilmelidir.'}`,
     latitude,
     longitude,
-    image: placeholder,
-    imageIsPlaceholder: true,
+    image: photo?.image ?? placeholder,
+    imageIsPlaceholder: !photo,
+    imageCredit: photo?.credit ?? null,
+    imagePage: photo?.page ?? null,
     surface: null,
     access,
     operator,
