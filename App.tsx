@@ -112,6 +112,7 @@ export default function App() {
   const [plannedSpiritual, setPlannedSpiritual] = useState<string[]>([]);
   const [plannedIstanbulPlaces, setPlannedIstanbulPlaces] = useState<string[]>([]);
   const [plannedBursaPlaces, setPlannedBursaPlaces] = useState<string[]>([]);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     if (Platform.OS === 'web' && typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
@@ -176,11 +177,11 @@ export default function App() {
     : tab === 'favorites'
     ? <Favorites places={favoritePlaces} onOpen={setSelected} onRemove={toggleFavorite} />
     : tab === 'profile'
-      ? <Profile />
+      ? <Profile favoriteCount={favorites.length} planCount={plannedDistricts.length + plannedSpiritual.length + plannedBursaPlaces.length + plannedIstanbulPlaces.length} />
       : tab === 'explore'
         ? <CitiesExplore onOpenCity={city => { setActiveCity(city); setTab('home'); }} />
       : activeCity === 'istanbul'
-        ? <IstanbulGuide plannedPlaceIds={plannedIstanbulPlaces} favorites={favorites} onFavorite={toggleFavorite} onTogglePlan={toggleIstanbulPlacePlan} />
+        ? <IstanbulGuide plannedPlaceIds={plannedIstanbulPlaces} favorites={favorites} onFavorite={toggleFavorite} onTogglePlan={toggleIstanbulPlacePlan} onMenu={() => setMenuOpen(true)} />
       : <MainContent
           exploreOnly={false}
           query={query}
@@ -199,6 +200,7 @@ export default function App() {
           onOpen={setSelected}
           onDistrictOpen={setSelectedDistrict}
           onSpiritualOpen={setSelectedSpiritual}
+          onMenu={() => setMenuOpen(true)}
         />;
 
   return (
@@ -209,6 +211,7 @@ export default function App() {
       <PlaceModal place={selected} favorite={selected ? favorites.includes(selected.id) : false} planned={selected ? plannedBursaPlaces.includes(selected.id) : false} onClose={() => setSelected(null)} onFavorite={toggleFavorite} onTogglePlan={toggleBursaPlacePlan} />
       <DistrictModal district={selectedDistrict} planned={selectedDistrict ? plannedDistricts.includes(selectedDistrict.name) : false} onClose={() => setSelectedDistrict(null)} onTogglePlan={toggleDistrictPlan} />
       <SpiritualModal site={selectedSpiritual} planned={selectedSpiritual ? plannedSpiritual.includes(selectedSpiritual.id) : false} onClose={() => setSelectedSpiritual(null)} onTogglePlan={toggleSpiritualPlan} />
+      <AppMenu visible={menuOpen} activeCity={activeCity} favoriteCount={favorites.length} planCount={plannedDistricts.length + plannedSpiritual.length + plannedBursaPlaces.length + plannedIstanbulPlaces.length} onClose={() => setMenuOpen(false)} onNavigate={nextTab => { setMenuOpen(false); setTab(nextTab); }} onCity={city => { setActiveCity(city); setTab('home'); setMenuOpen(false); }} />
     </View>
   );
 }
@@ -235,7 +238,7 @@ function CitiesExplore({ onOpenCity }: { onOpenCity: (city: 'bursa' | 'istanbul'
   </ScrollView></SafeAreaView>;
 }
 
-function IstanbulGuide({ plannedPlaceIds, favorites, onFavorite, onTogglePlan }: { plannedPlaceIds: string[]; favorites: string[]; onFavorite: (id: string) => void; onTogglePlan: (id: string) => void }) {
+function IstanbulGuide({ plannedPlaceIds, favorites, onFavorite, onTogglePlan, onMenu }: { plannedPlaceIds: string[]; favorites: string[]; onFavorite: (id: string) => void; onTogglePlan: (id: string) => void; onMenu: () => void }) {
   const [query, setQuery] = useState('');
   const [mode, setMode] = useState<'rehber' | 'plajlar'>('rehber');
   const [category, setCategory] = useState<ExploreCategory>('Tümü');
@@ -268,7 +271,7 @@ function IstanbulGuide({ plannedPlaceIds, favorites, onFavorite, onTogglePlan }:
   };
 
   return <SafeAreaView style={styles.istanbulPage}><ScrollView contentContainerStyle={styles.istanbulContent} showsVerticalScrollIndicator={false}>
-    <ImageBackground source={require('./assets/istanbul/hero.jpg')} style={styles.istanbulHero} imageStyle={styles.istanbulHeroImage}><View style={styles.istanbulHeroShade} /><View style={styles.istanbulHeroTop}><View style={styles.istanbulLive}><Text style={styles.istanbulLiveText}>YAYINDA · 34</Text></View><Text style={styles.istanbulHeroRegion}>MARMARA · 39 İLÇE</Text></View><View style={styles.istanbulHeroBody}><Text style={styles.istanbulHeroKicker}>İKİ KITA · TEK ŞEHİR</Text><Text style={styles.istanbulHeroTitle}>İstanbul</Text><Text style={styles.istanbulHeroCopy}>Boğaz kıyılarından tarihî yarımadaya, çarşılardan adalara uzanan kapsamlı şehir rehberi.</Text></View></ImageBackground>
+    <ImageBackground source={require('./assets/istanbul/hero.jpg')} style={styles.istanbulHero} imageStyle={styles.istanbulHeroImage}><View style={styles.istanbulHeroShade} /><View style={styles.istanbulHeroTop}><View style={styles.istanbulLive}><Text style={styles.istanbulLiveText}>YAYINDA · 34</Text></View><View style={styles.istanbulHeroActions}><Text style={styles.istanbulHeroRegion}>MARMARA · 39 İLÇE</Text><Pressable accessibilityRole="button" accessibilityLabel="Ana menüyü aç" onPress={onMenu} style={styles.roundButton}><Text style={styles.roundButtonText}>☰</Text></Pressable></View></View><View style={styles.istanbulHeroBody}><Text style={styles.istanbulHeroKicker}>İKİ KITA · TEK ŞEHİR</Text><Text style={styles.istanbulHeroTitle}>İstanbul</Text><Text style={styles.istanbulHeroCopy}>Boğaz kıyılarından tarihî yarımadaya, çarşılardan adalara uzanan kapsamlı şehir rehberi.</Text></View></ImageBackground>
     <View style={styles.istanbulBody}>
       <View style={styles.citySearch}><Text style={styles.searchIcon}>⌕</Text><TextInput value={query} onChangeText={setQuery} placeholder="İlçe, yapı veya deneyim ara" placeholderTextColor="#8A9691" style={styles.searchInput} /></View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow}>{categories.map(item => <Pressable key={item} onPress={() => { if (item === 'Sahil') { setCategory(item); setMode('plajlar'); } else setCategory(item); }} style={[styles.categoryChip, category === item && styles.categoryChipActive]}><Text style={[styles.categoryText, category === item && styles.categoryTextActive]}>{item === 'Sahil' ? '🏖️ Sahiller & Plajlar' : item}</Text></Pressable>)}</ScrollView>
@@ -396,7 +399,7 @@ function IstanbulDistrictModal({ district, planned, onTogglePlan, onClose }: { d
   return <Modal visible={Boolean(district)} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>{district && <SafeAreaView style={[styles.districtModal, { backgroundColor: district.side === 'Avrupa' ? '#315F53' : district.side === 'Anadolu' ? '#477A89' : '#75513B' }]}><View style={styles.districtModalTop}><View><Text style={styles.districtModalKicker}>İSTANBUL · {district.side.toUpperCase()} YAKASI</Text><Text style={styles.districtModalTitle}>{district.name}</Text></View><Pressable onPress={onClose} style={styles.districtClose}><Text style={styles.districtCloseText}>×</Text></Pressable></View><Text style={styles.districtModalSignature}>{district.signature}</Text><ScrollView contentContainerStyle={styles.districtModalScroll}><View style={styles.districtPanel}><Text style={styles.districtPanelLabel}>İLÇE HAKKINDA</Text><Text style={styles.istanbulDistrictModalCopy}>Mahalleleri, tarihî mirası, yeme-içme noktaları ve ulaşım seçenekleriyle {district.name} rehberini keşfedin.</Text></View>{related.length > 0 && <View style={styles.districtPanel}><Text style={styles.districtPanelLabel}>ÖNE ÇIKAN YERLER · {related.length}</Text>{related.map((place, index) => <View key={place.id} style={styles.districtListItem}><Text style={styles.districtListIndex}>{String(index + 1).padStart(2, '0')}</Text><Text style={styles.districtListText}>{place.name}</Text></View>)}</View>}{beaches.length > 0 && <View style={styles.districtPanel}><Text style={styles.districtPanelLabel}>SAHİLLER & PLAJLAR · {beaches.length}</Text>{beaches.slice(0, 8).map((beach, index) => <View key={beach.id} style={styles.districtListItem}><Text style={styles.districtListIndex}>{String(index + 1).padStart(2, '0')}</Text><Text style={styles.districtListText}>{beach.name}</Text></View>)}</View>}<View style={styles.districtPanel}><Text style={styles.districtPanelLabel}>İLÇEDE ARA</Text><View style={styles.districtServiceGrid}>{services.map(([icon, label, query]) => <Pressable key={label} onPress={() => openDistrictSearch(query)} style={styles.districtServiceButton}><Text style={styles.districtServiceIcon}>{icon}</Text><Text style={styles.districtServiceText}>{label}</Text></Pressable>)}</View></View><Pressable onPress={() => onTogglePlan(`istanbul-ilce-${district.name}`)} style={[styles.spiritualPlanButton, planned && styles.spiritualPlanButtonActive]}><Text style={[styles.spiritualPlanText, planned && styles.spiritualPlanTextActive]}>{planned ? '✓  İlçe gezi planımda' : '+  İlçeyi gezi planıma ekle'}</Text></Pressable><Pressable onPress={openMap} style={styles.districtMapButton}><Text style={styles.districtMapText}>Haritada {district.name}  →</Text></Pressable><Text style={styles.sourceNote}>Konum, ulaşım ve çalışma saatlerini ziyaret öncesinde doğrulayın.</Text></ScrollView></SafeAreaView>}</Modal>;
 }
 
-function MainContent({ exploreOnly, query, setQuery, category, setCategory, places, favorites, plannedPlaces, plannedDistricts, plannedSpiritual, onFavorite, onPlacePlan, onDistrictPlan, onSpiritualPlan, onOpen, onDistrictOpen, onSpiritualOpen }: {
+function MainContent({ exploreOnly, query, setQuery, category, setCategory, places, favorites, plannedPlaces, plannedDistricts, plannedSpiritual, onFavorite, onPlacePlan, onDistrictPlan, onSpiritualPlan, onOpen, onDistrictOpen, onSpiritualOpen, onMenu }: {
   exploreOnly: boolean;
   query: string;
   setQuery: (value: string) => void;
@@ -414,6 +417,7 @@ function MainContent({ exploreOnly, query, setQuery, category, setCategory, plac
   onOpen: (place: Place) => void;
   onDistrictOpen: (district: District) => void;
   onSpiritualOpen: (site: SpiritualSite) => void;
+  onMenu: () => void;
 }) {
   const districtQuery = query.trim().toLocaleLowerCase('tr-TR');
   const visibleDistricts = bursaDistricts.filter(district => !districtQuery || `${district.name} ${district.signature} ${district.highlights.join(' ')} ${district.flavors.join(' ')}`.toLocaleLowerCase('tr-TR').includes(districtQuery));
@@ -421,7 +425,7 @@ function MainContent({ exploreOnly, query, setQuery, category, setCategory, plac
   const visibleBaths = bursaBaths.filter(place => (category === 'Tümü' || category === 'Tarih') && (!districtQuery || `${place.name} ${place.district} hamam kaplıca termal ${place.summary}`.toLocaleLowerCase('tr-TR').includes(districtQuery)));
   return (
     <ScrollView contentContainerStyle={styles.page} showsVerticalScrollIndicator={false} stickyHeaderIndices={exploreOnly ? [0] : undefined}>
-      {!exploreOnly && <Hero />}
+      {!exploreOnly && <Hero onMenu={onMenu} />}
       <View style={[styles.content, exploreOnly && styles.exploreHeader]}>
         <View style={styles.titleRow}>
           <View>
@@ -652,12 +656,12 @@ function NearbySection({ city, items }: { city: string; items: { label: string; 
   return <View style={styles.nearbyPanel}><Text style={styles.nearbyEyebrow}>KONUMUNA GÖRE</Text><Text style={styles.nearbyTitle}>Şu anda çevrende ne var?</Text><Text style={styles.nearbyCopy}>Bir kategori seç. İzin verirsen konumun yalnızca yakınındaki güncel harita sonuçlarını açmak için kullanılır.</Text>{status === 'locating' && <Text style={styles.nearbyStatus}>Konumun alınıyor…</Text>}{status === 'fallback' && <Text style={styles.nearbyStatus}>Konum alınamadı; {city} geneli gösteriliyor.</Text>}<View style={styles.nearbyGrid}>{items.map(item => <Pressable key={item.label} disabled={status === 'locating'} onPress={() => openNearby(item.query)} style={[styles.nearbyButton, status === 'locating' && styles.disabledButton]}><Text style={styles.nearbyIcon}>{item.icon}</Text><Text style={styles.nearbyLabel}>{item.label}</Text></Pressable>)}</View></View>;
 }
 
-function Hero() {
+function Hero({ onMenu }: { onMenu: () => void }) {
   return (
     <ImageBackground source={bursa.hero} style={styles.hero} imageStyle={styles.heroImage}>
       <View style={styles.heroOverlay} />
       <SafeAreaView style={styles.heroSafe}>
-        <View style={styles.brandRow}><View style={styles.brandMark}><Text style={styles.brandMarkText}>TR</Text></View><Text style={styles.brand}>Türkiye Rehberi</Text><Pressable style={styles.roundButton}><Text style={styles.roundButtonText}>☰</Text></Pressable></View>
+        <View style={styles.brandRow}><View style={styles.brandMark}><Text style={styles.brandMarkText}>TR</Text></View><Text style={styles.brand}>Türkiye Rehberi</Text><Pressable accessibilityRole="button" accessibilityLabel="Ana menüyü aç" onPress={onMenu} style={styles.roundButton}><Text style={styles.roundButtonText}>☰</Text></Pressable></View>
         <View style={styles.heroCopy}>
           <View style={styles.liveBadge}><View style={styles.liveDot} /><Text style={styles.liveText}>81 ŞEHİR · BİNLERCE HİKÂYE</Text></View>
           <Text style={styles.heroTitle}>Yolun{`\n`}Türkiye’den{`\n`}geçsin.</Text>
@@ -688,8 +692,40 @@ function Favorites({ places, onOpen, onRemove }: { places: Place[]; onOpen: (pla
   return <SafeAreaView style={styles.plainPage}><View style={styles.plainHeader}><Text style={styles.eyebrow}>KİŞİSEL KOLEKSİYONUN</Text><Text style={styles.sectionTitle}>Favorilerim</Text><Text style={styles.plainCopy}>Gitmek istediğin yerleri burada biriktir.</Text></View><ScrollView contentContainerStyle={styles.favoriteList}>{places.map(place => <PlaceCard key={place.id} place={place} favorite onFavorite={onRemove} onOpen={onOpen} />)}{!places.length && <View style={styles.empty}><Text style={styles.emptyIcon}>♡</Text><Text style={styles.emptyTitle}>Listen henüz boş</Text><Text style={styles.emptyCopy}>Keşfet bölümündeki kalp simgesine dokun.</Text></View>}</ScrollView></SafeAreaView>;
 }
 
-function Profile() {
-  return <SafeAreaView style={styles.plainPage}><ScrollView contentContainerStyle={styles.plainHeader}><Text style={styles.eyebrow}>YOLCULUK PROFİLİ</Text><Text style={styles.sectionTitle}>Merhaba Gezgin</Text><Text style={styles.plainCopy}>Kişiselleştirilmiş rota, çevrimdışı şehir paketleri ve gezi geçmişi sonraki sürümlerde burada olacak.</Text><View style={styles.statRow}><View style={styles.stat}><Text style={styles.statNumber}>1</Text><Text style={styles.statLabel}>Keşfedilen il</Text></View><View style={styles.stat}><Text style={styles.statNumber}>5</Text><Text style={styles.statLabel}>Hazır öneri</Text></View><View style={styles.stat}><Text style={styles.statNumber}>81</Text><Text style={styles.statLabel}>Hedef şehir</Text></View></View><View style={styles.roadmap}><Text style={styles.roadmapTitle}>Yakında</Text>{['Çevrimdışı şehir indirme','Akıllı günlük rota','Konuma göre yakındakiler','Gezi notları ve listeler'].map((item, index) => <View key={item} style={styles.roadmapItem}><Text style={styles.roadmapIndex}>0{index + 1}</Text><Text style={styles.roadmapText}>{item}</Text></View>)}</View></ScrollView></SafeAreaView>;
+function Profile({ favoriteCount, planCount }: { favoriteCount: number; planCount: number }) {
+  const [name, setName] = useState('Gezgin');
+  const [travelStyle, setTravelStyle] = useState('Kültür & tarih');
+  const [bursaOffline, setBursaOffline] = useState(false);
+  const [istanbulOffline, setIstanbulOffline] = useState(false);
+  const travelStyles = ['Kültür & tarih', 'Doğa', 'Lezzet', 'Sahil', 'Aile'];
+  useEffect(() => {
+    Promise.all([
+      AsyncStorage.getItem('turkiye-rehberi-profil-adi'),
+      AsyncStorage.getItem('turkiye-rehberi-gezi-tarzi'),
+      AsyncStorage.getItem('turkiye-rehberi-offline-bursa'),
+      AsyncStorage.getItem('turkiye-rehberi-offline-istanbul'),
+    ]).then(([savedName, savedStyle, bursaSaved, istanbulSaved]) => {
+      if (savedName) setName(savedName);
+      if (savedStyle) setTravelStyle(savedStyle);
+      setBursaOffline(bursaSaved === 'ready');
+      setIstanbulOffline(istanbulSaved === 'ready');
+    }).catch(() => {});
+  }, []);
+  const saveName = (value: string) => {
+    const next = value.slice(0, 28);
+    setName(next);
+    AsyncStorage.setItem('turkiye-rehberi-profil-adi', next.trim() || 'Gezgin').catch(() => {});
+  };
+  const selectStyle = (value: string) => {
+    setTravelStyle(value);
+    AsyncStorage.setItem('turkiye-rehberi-gezi-tarzi', value).catch(() => {});
+  };
+  return <SafeAreaView style={styles.plainPage}><ScrollView contentContainerStyle={styles.profileContent} showsVerticalScrollIndicator={false}><Text style={styles.eyebrow}>YOLCULUK PROFİLİ</Text><Text style={styles.sectionTitle}>Merhaba {name.trim() || 'Gezgin'}</Text><Text style={styles.plainCopy}>Tercihlerin yalnızca bu cihazda saklanır; hesap açmadan kişisel gezi alanını kullanabilirsin.</Text><View style={styles.profileCard}><Text style={styles.profileLabel}>GÖRÜNEN ADIN</Text><TextInput value={name} onChangeText={saveName} placeholder="Gezgin" placeholderTextColor="#8A9691" style={styles.profileInput} maxLength={28} /><Text style={styles.profileLabel}>GEZİ TARZIN</Text><View style={styles.profileChips}>{travelStyles.map(item => <Pressable key={item} onPress={() => selectStyle(item)} style={[styles.profileChip, travelStyle === item && styles.profileChipActive]}><Text style={[styles.profileChipText, travelStyle === item && styles.profileChipTextActive]}>{item}</Text></Pressable>)}</View></View><View style={styles.statRow}><View style={styles.stat}><Text style={styles.statNumber}>{favoriteCount}</Text><Text style={styles.statLabel}>Favori</Text></View><View style={styles.stat}><Text style={styles.statNumber}>{planCount}</Text><Text style={styles.statLabel}>Planlanan durak</Text></View><View style={styles.stat}><Text style={styles.statNumber}>2</Text><Text style={styles.statLabel}>Hazır şehir</Text></View></View><View style={styles.roadmap}><Text style={styles.roadmapTitle}>Çevrimdışı rehberler</Text>{[['16', 'Bursa', bursaOffline], ['34', 'İstanbul', istanbulOffline]].map(([plate, city, ready]) => <View key={String(city)} style={styles.roadmapItem}><Text style={styles.roadmapIndex}>{plate}</Text><View style={styles.profileOfflineBody}><Text style={styles.roadmapText}>{city}</Text><Text style={styles.profileOfflineText}>{ready ? 'Bu cihazda hazır' : 'Şehir sayfasından indirilebilir'}</Text></View><Text style={[styles.profileStatus, ready && styles.profileStatusReady]}>{ready ? '✓' : '○'}</Text></View>)}</View><View style={styles.profileNote}><Text style={styles.profileNoteTitle}>Gizlilik</Text><Text style={styles.profileNoteText}>Profil adı, gezi tarzı, favoriler ve planların cihazında tutulur. Bu sürümde sunucuya gönderilmez ve herkese açık profil oluşturulmaz.</Text></View></ScrollView></SafeAreaView>;
+}
+
+function AppMenu({ visible, activeCity, favoriteCount, planCount, onClose, onNavigate, onCity }: { visible: boolean; activeCity: 'bursa' | 'istanbul'; favoriteCount: number; planCount: number; onClose: () => void; onNavigate: (tab: Tab) => void; onCity: (city: 'bursa' | 'istanbul') => void }) {
+  const links: Array<[string, string, Tab, number?]> = [['⌂', 'Ana sayfa', 'home'], ['⌕', 'Tüm şehirler', 'explore'], ['⌖', 'Gezi planım', 'plan', planCount], ['♡', 'Favorilerim', 'favorites', favoriteCount], ['○', 'Profilim', 'profile']];
+  return <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}><View style={styles.menuBackdrop}><Pressable accessibilityLabel="Menüyü kapat" onPress={onClose} style={StyleSheet.absoluteFill} /><SafeAreaView style={styles.menuSheet}><View style={styles.menuHeader}><View><Text style={styles.menuKicker}>TÜRKİYE GEZİ REHBERİ</Text><Text style={styles.menuTitle}>Menü</Text></View><Pressable accessibilityRole="button" accessibilityLabel="Menüyü kapat" onPress={onClose} style={styles.menuClose}><Text style={styles.menuCloseText}>×</Text></Pressable></View><Text style={styles.menuSectionLabel}>ŞEHİRLER</Text><View style={styles.menuCityRow}><Pressable onPress={() => onCity('bursa')} style={[styles.menuCity, activeCity === 'bursa' && styles.menuCityActive]}><Text style={styles.menuCityPlate}>16</Text><Text style={styles.menuCityName}>Bursa</Text></Pressable><Pressable onPress={() => onCity('istanbul')} style={[styles.menuCity, activeCity === 'istanbul' && styles.menuCityActive]}><Text style={styles.menuCityPlate}>34</Text><Text style={styles.menuCityName}>İstanbul</Text></Pressable></View><Text style={styles.menuSectionLabel}>KISAYOLLAR</Text>{links.map(([icon, label, target, count]) => <Pressable key={target} onPress={() => onNavigate(target)} style={styles.menuLink}><Text style={styles.menuLinkIcon}>{icon}</Text><Text style={styles.menuLinkText}>{label}</Text>{Boolean(count) && <Text style={styles.menuLinkCount}>{count}</Text>}<Text style={styles.menuLinkArrow}>›</Text></Pressable>)}<Text style={styles.menuFooter}>Sürüm 1.0 · Bursa ve İstanbul rehberleri</Text></SafeAreaView></View></Modal>;
 }
 
 function PlanScreen({ districtNames, spiritualIds, bursaPlaceIds, istanbulPlaceIds, onRemoveDistrict, onRemoveSpiritual, onRemoveBursaPlace, onRemoveIstanbulPlace }: { districtNames: string[]; spiritualIds: string[]; bursaPlaceIds: string[]; istanbulPlaceIds: string[]; onRemoveDistrict: (name: string) => void; onRemoveSpiritual: (id: string) => void; onRemoveBursaPlace: (id: string) => void; onRemoveIstanbulPlace: (id: string) => void }) {
@@ -771,7 +807,7 @@ const istanbulStyles = {
   istanbulDetailOpen: { marginTop: 17, color: palette.moss, fontSize: 11, fontWeight: '900' }, istanbulDistrictModalCopy: { color: palette.muted, fontSize: 15, lineHeight: 23 }, istanbulCardPlanButton: { height: 48, marginHorizontal: 19, marginBottom: 19, alignItems: 'center', justifyContent: 'center', borderRadius: 16, borderWidth: 1, borderColor: palette.moss, backgroundColor: palette.paper }, istanbulCardPlanButtonActive: { backgroundColor: palette.moss }, istanbulCardPlanText: { color: palette.moss, fontSize: 12, fontWeight: '900' }, istanbulCardPlanTextActive: { color: palette.white }, planIstanbul: { backgroundColor: '#477A89' },
   stayEyebrow: { marginBottom: 5, color: '#8B6844', fontSize: 8, fontWeight: '900', letterSpacing: 1.2 }, stayIntro: { marginTop: -5, marginBottom: 12, color: palette.muted, fontSize: 12, lineHeight: 18 }, stayFilterRail: { gap: 8, paddingBottom: 15 }, stayFilter: { paddingHorizontal: 14, paddingVertical: 9, borderRadius: 18, borderWidth: 1, borderColor: '#D6CCBB', backgroundColor: palette.paper }, stayFilterActive: { borderColor: '#8B6844', backgroundColor: '#8B6844' }, stayFilterText: { color: '#76583B', fontSize: 10, fontWeight: '800' }, stayFilterTextActive: { color: palette.white }, stayRail: { gap: 12, paddingRight: 20 }, stayCard: { width: 285, minHeight: 285, padding: 21, borderRadius: 26, backgroundColor: '#DCEAE4' }, stayCardAlt: { backgroundColor: '#E9DED0' }, stayTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, stayDistrict: { color: palette.moss, fontSize: 9, fontWeight: '900', letterSpacing: 1.1 }, stayLevel: { paddingHorizontal: 10, paddingVertical: 6, overflow: 'hidden', borderRadius: 13, color: '#76583B', fontSize: 8, fontWeight: '900', backgroundColor: 'rgba(255,255,255,.7)' }, stayArea: { marginTop: 25, color: palette.ink, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 28, fontWeight: '600' }, stayBest: { marginTop: 9, color: palette.gold, fontSize: 8, fontWeight: '900', letterSpacing: .8 }, stayCharacter: { marginTop: 9, color: palette.muted, fontSize: 12, lineHeight: 18 }, stayOpen: { marginTop: 'auto', paddingTop: 18, color: palette.forest, fontSize: 10, fontWeight: '900' },
   cityTileActive: { borderColor: '#7FA99B', backgroundColor: '#E4EEE9' }, cityStatusDotActive: { backgroundColor: palette.moss }, cityTileStatusActive: { color: palette.moss },
-  istanbulPage: { flex: 1, backgroundColor: palette.cream }, istanbulContent: { paddingBottom: 110 }, istanbulHero: { height: 520, margin: 12, marginTop: Platform.OS === 'android' ? (NativeStatusBar.currentHeight ?? 24) + 8 : 10, overflow: 'hidden', borderRadius: 30, justifyContent: 'space-between' }, istanbulHeroImage: { borderRadius: 30 }, istanbulHeroShade: { position: 'absolute', inset: 0, backgroundColor: 'rgba(7,25,28,.48)' }, istanbulHeroTop: { padding: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }, istanbulLive: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 14, backgroundColor: palette.gold }, istanbulLiveText: { color: palette.ink, fontSize: 8, fontWeight: '900', letterSpacing: .8 }, istanbulHeroRegion: { color: palette.white, fontSize: 9, fontWeight: '900', letterSpacing: 1 }, istanbulHeroBody: { padding: 26, paddingBottom: 31 }, istanbulHeroKicker: { color: '#E6C78F', fontSize: 9, fontWeight: '900', letterSpacing: 1.4 }, istanbulHeroTitle: { marginTop: 7, color: palette.white, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 49, fontWeight: '600', letterSpacing: -1.5 }, istanbulHeroCopy: { marginTop: 10, maxWidth: 410, color: '#E5ECE9', fontSize: 14, lineHeight: 21 }, istanbulBody: { paddingHorizontal: 20 }, istanbulEyebrow: { marginBottom: 5, color: palette.gold, fontSize: 8, fontWeight: '900', letterSpacing: 1.2 }, istanbulDistrictRail: { gap: 11, paddingRight: 20 }, istanbulDistrictCard: { width: 230, minHeight: 230, padding: 20, borderRadius: 25 }, istanbulDistrictSide: { color: 'rgba(255,255,255,.65)', fontSize: 8, fontWeight: '900', letterSpacing: 1.1 }, istanbulDistrictName: { marginTop: 14, color: palette.white, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 28, fontWeight: '600' }, istanbulDistrictCopy: { marginTop: 9, color: 'rgba(255,255,255,.76)', fontSize: 11, lineHeight: 17 }, istanbulDistrictOpen: { marginTop: 'auto', paddingTop: 18, color: palette.white, fontSize: 10, fontWeight: '900' }, istanbulPlaceList: { gap: 15 }, istanbulPlaceCard: { overflow: 'hidden', borderRadius: 25, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.paper }, istanbulPlaceImage: { width: '100%', height: 235 }, istanbulPlaceBody: { padding: 19 }, istanbulPlaceMeta: { color: palette.gold, fontSize: 8, fontWeight: '900', letterSpacing: .8 }, istanbulPlaceName: { marginTop: 6, color: palette.ink, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 28, fontWeight: '600' }, istanbulPlaceCopy: { marginTop: 8, color: palette.muted, fontSize: 12, lineHeight: 18 }, istanbulPlaceActions: { marginTop: 17, gap: 12 }, istanbulMapButton: { height: 48, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: palette.forest }, istanbulMapButtonText: { color: palette.white, fontSize: 11, fontWeight: '900' }, istanbulCredit: { color: palette.muted, fontSize: 8, textAlign: 'center', textDecorationLine: 'underline' }, istanbulSource: { marginTop: 22, paddingHorizontal: 10, color: palette.muted, fontSize: 10, lineHeight: 16, textAlign: 'center' },
+  istanbulPage: { flex: 1, backgroundColor: palette.cream }, istanbulContent: { paddingBottom: 110 }, istanbulHero: { height: 520, margin: 12, marginTop: Platform.OS === 'android' ? (NativeStatusBar.currentHeight ?? 24) + 8 : 10, overflow: 'hidden', borderRadius: 30, justifyContent: 'space-between' }, istanbulHeroImage: { borderRadius: 30 }, istanbulHeroShade: { position: 'absolute', inset: 0, backgroundColor: 'rgba(7,25,28,.48)' }, istanbulHeroTop: { padding: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }, istanbulHeroActions: { flexDirection: 'row', alignItems: 'center', gap: 10 }, istanbulLive: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 14, backgroundColor: palette.gold }, istanbulLiveText: { color: palette.ink, fontSize: 8, fontWeight: '900', letterSpacing: .8 }, istanbulHeroRegion: { color: palette.white, fontSize: 9, fontWeight: '900', letterSpacing: 1 }, istanbulHeroBody: { padding: 26, paddingBottom: 31 }, istanbulHeroKicker: { color: '#E6C78F', fontSize: 9, fontWeight: '900', letterSpacing: 1.4 }, istanbulHeroTitle: { marginTop: 7, color: palette.white, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 49, fontWeight: '600', letterSpacing: -1.5 }, istanbulHeroCopy: { marginTop: 10, maxWidth: 410, color: '#E5ECE9', fontSize: 14, lineHeight: 21 }, istanbulBody: { paddingHorizontal: 20 }, istanbulEyebrow: { marginBottom: 5, color: palette.gold, fontSize: 8, fontWeight: '900', letterSpacing: 1.2 }, istanbulDistrictRail: { gap: 11, paddingRight: 20 }, istanbulDistrictCard: { width: 230, minHeight: 230, padding: 20, borderRadius: 25 }, istanbulDistrictSide: { color: 'rgba(255,255,255,.65)', fontSize: 8, fontWeight: '900', letterSpacing: 1.1 }, istanbulDistrictName: { marginTop: 14, color: palette.white, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 28, fontWeight: '600' }, istanbulDistrictCopy: { marginTop: 9, color: 'rgba(255,255,255,.76)', fontSize: 11, lineHeight: 17 }, istanbulDistrictOpen: { marginTop: 'auto', paddingTop: 18, color: palette.white, fontSize: 10, fontWeight: '900' }, istanbulPlaceList: { gap: 15 }, istanbulPlaceCard: { overflow: 'hidden', borderRadius: 25, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.paper }, istanbulPlaceImage: { width: '100%', height: 235 }, istanbulPlaceBody: { padding: 19 }, istanbulPlaceMeta: { color: palette.gold, fontSize: 8, fontWeight: '900', letterSpacing: .8 }, istanbulPlaceName: { marginTop: 6, color: palette.ink, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 28, fontWeight: '600' }, istanbulPlaceCopy: { marginTop: 8, color: palette.muted, fontSize: 12, lineHeight: 18 }, istanbulPlaceActions: { marginTop: 17, gap: 12 }, istanbulMapButton: { height: 48, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: palette.forest }, istanbulMapButtonText: { color: palette.white, fontSize: 11, fontWeight: '900' }, istanbulCredit: { color: palette.muted, fontSize: 8, textAlign: 'center', textDecorationLine: 'underline' }, istanbulSource: { marginTop: 22, paddingHorizontal: 10, color: palette.muted, fontSize: 10, lineHeight: 16, textAlign: 'center' },
 } as const;
 
 const styles = StyleSheet.create({
@@ -852,6 +888,41 @@ const styles = StyleSheet.create({
   districtServiceButton: { width: '48%', minHeight: 48, paddingHorizontal: 11, flexDirection: 'row', alignItems: 'center', gap: 8, borderRadius: 14, backgroundColor: '#EEF3F0' },
   districtServiceIcon: { width: 20, color: palette.gold, fontSize: 14, fontWeight: '900', textAlign: 'center' },
   districtServiceText: { flex: 1, color: palette.ink, fontSize: 10, fontWeight: '800' },
+  profileContent: { padding: 22, paddingTop: Platform.OS === 'android' ? (NativeStatusBar.currentHeight ?? 24) + 28 : 32, paddingBottom: 120 },
+  profileCard: { marginTop: 24, padding: 20, borderRadius: 24, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.paper },
+  profileLabel: { marginBottom: 9, color: palette.moss, fontSize: 9, fontWeight: '900', letterSpacing: 1.1 },
+  profileInput: { height: 52, marginBottom: 22, paddingHorizontal: 15, borderRadius: 16, borderWidth: 1, borderColor: palette.line, color: palette.ink, backgroundColor: palette.white, fontSize: 16, fontWeight: '700' },
+  profileChips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  profileChip: { paddingHorizontal: 13, paddingVertical: 10, borderRadius: 18, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.white },
+  profileChipActive: { borderColor: palette.forest, backgroundColor: palette.forest },
+  profileChipText: { color: palette.muted, fontSize: 10, fontWeight: '800' },
+  profileChipTextActive: { color: palette.white },
+  profileOfflineBody: { flex: 1 },
+  profileOfflineText: { marginTop: 3, color: '#AFC2BB', fontSize: 10 },
+  profileStatus: { color: '#AFC2BB', fontSize: 20, fontWeight: '900' },
+  profileStatusReady: { color: palette.gold },
+  profileNote: { marginTop: 20, padding: 18, borderRadius: 20, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.paper },
+  profileNoteTitle: { color: palette.ink, fontSize: 16, fontWeight: '900' },
+  profileNoteText: { marginTop: 7, color: palette.muted, fontSize: 12, lineHeight: 18 },
+  menuBackdrop: { flex: 1, alignItems: 'flex-end', backgroundColor: 'rgba(7,31,26,.56)' },
+  menuSheet: { width: '90%', maxWidth: 390, height: '100%', padding: 22, paddingTop: Platform.OS === 'android' ? (NativeStatusBar.currentHeight ?? 24) + 20 : 28, backgroundColor: palette.cream, shadowColor: '#071F1A', shadowOffset: { width: -12, height: 0 }, shadowOpacity: .28, shadowRadius: 24, elevation: 20 },
+  menuHeader: { marginBottom: 30, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  menuKicker: { color: palette.moss, fontSize: 8, fontWeight: '900', letterSpacing: 1.1 },
+  menuTitle: { marginTop: 5, color: palette.ink, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 35, fontWeight: '600' },
+  menuClose: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 22, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.paper },
+  menuCloseText: { color: palette.ink, fontSize: 28, lineHeight: 30 },
+  menuSectionLabel: { marginTop: 12, marginBottom: 10, color: palette.moss, fontSize: 9, fontWeight: '900', letterSpacing: 1.2 },
+  menuCityRow: { marginBottom: 18, flexDirection: 'row', gap: 9 },
+  menuCity: { flex: 1, minHeight: 78, padding: 14, borderRadius: 18, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.paper },
+  menuCityActive: { borderColor: palette.gold, backgroundColor: '#F2E4CB' },
+  menuCityPlate: { color: palette.gold, fontSize: 10, fontWeight: '900' },
+  menuCityName: { marginTop: 8, color: palette.ink, fontSize: 18, fontWeight: '900' },
+  menuLink: { minHeight: 56, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center', gap: 12, borderTopWidth: 1, borderTopColor: palette.line },
+  menuLinkIcon: { width: 25, color: palette.moss, fontSize: 22, textAlign: 'center' },
+  menuLinkText: { flex: 1, color: palette.ink, fontSize: 15, fontWeight: '800' },
+  menuLinkCount: { minWidth: 24, paddingHorizontal: 7, paddingVertical: 4, overflow: 'hidden', borderRadius: 12, color: palette.ink, backgroundColor: palette.gold, fontSize: 9, fontWeight: '900', textAlign: 'center' },
+  menuLinkArrow: { color: palette.muted, fontSize: 24 },
+  menuFooter: { marginTop: 'auto', paddingTop: 20, color: palette.muted, fontSize: 10, textAlign: 'center' },
   disabledButton: { opacity: .48 },
   beachSafetyNote: { marginTop: 12, color: palette.muted, fontSize: 11, lineHeight: 17, textAlign: 'center' },
 });
