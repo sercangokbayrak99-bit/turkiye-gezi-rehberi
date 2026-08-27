@@ -16,6 +16,9 @@ Uygulamanın ilk Bursa sürümündeki fotoğraflar Wikimedia Commons üzerinden 
 - Yalıköy plajı — CeeGee — CC BY-SA 4.0
 - Büyükçekmece Halk Plajı — buzkozan — CC BY 3.0
 - Gürpınar Halk Plajı — buzkozan — CC BY-SA 3.0
+- Çilingoz Plajı — ClairDeLune9630 — CC BY-SA 4.0
+- Gümüşyaka Sahili — by rock — CC BY 3.0
+- Kumburgaz Plajı — Defnealamutt — CC BY-SA 4.0
 - Riva kıyısı ve Riva Deresi — Nevit Dilmen — GFDL / CC BY-SA 3.0
 - İmrenli kıyısı — Thafer — CC BY 3.0
 - Alacalı Plajı — Aniosgel — CC BY-SA 3.0
