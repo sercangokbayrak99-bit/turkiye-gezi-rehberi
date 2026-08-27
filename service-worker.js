@@ -1,6 +1,6 @@
-const CACHE_NAME = 'turkiye-rehberi-1787831973802';
+const CACHE_NAME = 'turkiye-rehberi-1787832184074';
 const APP_ASSETS = [
-  "./_expo/static/js/web/AppEntry-afc3342f8e35ffc9bed7847d16d2f266.js",
+  "./_expo/static/js/web/AppEntry-31e921049ced7ac61cf6349d7a949f8f.js",
   "./assets/assets/baths/emir-sultan-hamam.13bd41db784754b82f232221cc4a963e.jpg",
   "./assets/assets/baths/eski-kaplica.1ea83cf46b353d2d85249db3024e257b.jpg",
   "./assets/assets/baths/muradiye-hamam.1d48358fb4ec87be3cda0ab4a1d4f2fc.jpg",
@@ -38,11 +38,13 @@ const APP_ASSETS = [
   "./assets/assets/istanbul/beaches/kinaliada-coast.32c40f43af53be9dee979c5f0736685e.jpg",
   "./assets/assets/istanbul/beaches/kumburgaz.2475d87b027782cb100fc9a3e9b35c4f.jpg",
   "./assets/assets/istanbul/beaches/menekse.67b9dfb4c1986151d8d9fe4e5c0c63cc.jpg",
+  "./assets/assets/istanbul/beaches/mimarsinan.0366bd32dd3f8a8fe00d790e7c95575b.jpg",
   "./assets/assets/istanbul/beaches/ormanli.df54572ba60d52d7e697bd4473d95357.jpg",
   "./assets/assets/istanbul/beaches/rumeli-feneri.ee1a06c97bb9bead256a026b9d55f2e5.jpg",
   "./assets/assets/istanbul/beaches/rumeli-kavagi.6f69e1c407395bed65d06e7a41f59294.jpg",
   "./assets/assets/istanbul/beaches/semizkum.d8a44aae462c55e1ed672f16ff5fa3e6.jpg",
   "./assets/assets/istanbul/beaches/sile-beach.e7635aab8a69562bf0c79c8aa53cc2da.jpg",
+  "./assets/assets/istanbul/beaches/tarabya.ab987bb6cff140327debb0974bf68ec8.jpg",
   "./assets/assets/istanbul/beaches/tirmata.341275c0ba5d2c2cce165fbc072cb006.jpg",
   "./assets/assets/istanbul/beaches/tuzla-sahil.4b06799af125bd7fe030fd4202669611.jpg",
   "./assets/assets/istanbul/beaches/yalikoy.21c5884150aed4c96b929b8ce7c8dc82.jpg",
