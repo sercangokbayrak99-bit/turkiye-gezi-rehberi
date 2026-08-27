@@ -1,6 +1,6 @@
-const CACHE_NAME = 'turkiye-rehberi-1787822540403';
+const CACHE_NAME = 'turkiye-rehberi-1787822909571';
 const APP_ASSETS = [
-  "./_expo/static/js/web/AppEntry-886f10d20b4bbf2e5682f2f28c1057de.js",
+  "./_expo/static/js/web/AppEntry-85f585753326eac205af24238cff4592.js",
   "./assets/assets/baths/emir-sultan-hamam.13bd41db784754b82f232221cc4a963e.jpg",
   "./assets/assets/baths/eski-kaplica.1ea83cf46b353d2d85249db3024e257b.jpg",
   "./assets/assets/baths/muradiye-hamam.1d48358fb4ec87be3cda0ab4a1d4f2fc.jpg",
@@ -16,6 +16,7 @@ const APP_ASSETS = [
   "./assets/assets/istanbul/anadolu-kavagi.2862cf376d0bf5c14493dce30a66d392.jpg",
   "./assets/assets/istanbul/archaeology-museum.3357b03328a999e596d3be8ea12feb38.jpg",
   "./assets/assets/istanbul/balat.27dab1647f8c0fd15d7d91131b02863b.jpg",
+  "./assets/assets/istanbul/beaches/kinaliada-coast.32c40f43af53be9dee979c5f0736685e.jpg",
   "./assets/assets/istanbul/beaches/sile-beach.e7635aab8a69562bf0c79c8aa53cc2da.jpg",
   "./assets/assets/istanbul/belgrad-forest-new.ad9b23b5de4791b443ebf24431834000.jpg",
   "./assets/assets/istanbul/beylerbeyi.f6af08b814cdb2c8329b5e45e65c1ee6.jpg",
