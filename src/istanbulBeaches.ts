@@ -54,6 +54,9 @@ export type IstanbulBeach = {
 
 const placeholder = require('../assets/bursa/beach-placeholder.jpg');
 const beachPhotos: Record<string, { image: ImageSourcePropType; credit: string; page: string }> = {
+  'karaburun-halk': { image: require('../assets/istanbul/beaches/karaburun-halk.jpg'), credit: 'KabloGruplama · CC BY-SA 4.0', page: 'https://commons.wikimedia.org/wiki/File:Karaburun_halk_plaj%C4%B1.jpg' },
+  'karaburun-sahil': { image: require('../assets/istanbul/beaches/karaburun-port.jpg'), credit: 'Khutuck · CC BY-SA 3.0', page: 'https://commons.wikimedia.org/wiki/File:Port_of_Karaburun.jpg' },
+  ormanli: { image: require('../assets/istanbul/beaches/ormanli.jpg'), credit: 'nami yildirim · CC BY 3.0', page: 'https://commons.wikimedia.org/wiki/File:Ormanl%C4%B1_sahili_-_yama%C3%A7_para%C5%9F%C3%BCt%C3%BC_-_panoramio.jpg' },
   'kilyos-halk': { image: require('../assets/istanbul/kilyos.jpg'), credit: 'eleesege · CC BY 3.0', page: 'https://commons.wikimedia.org/wiki/File:Kylyos_Beach_on_the_Black_Sea,_Turkey_-_panoramio.jpg' },
   ayazma: { image: require('../assets/istanbul/beaches/sile-beach.jpg'), credit: 'Özgür Okkalı · CC BY-SA 2.5', page: 'https://commons.wikimedia.org/wiki/File:Silebeach.JPG' },
   'caddebostan-1': { image: require('../assets/istanbul/caddebostan.jpg'), credit: 'Raicem · CC BY-SA 4.0', page: 'https://commons.wikimedia.org/wiki/File:Caddebostan_Coastal_Park.jpg' },
