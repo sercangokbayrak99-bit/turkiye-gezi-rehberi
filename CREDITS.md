@@ -21,6 +21,9 @@ Uygulamanın ilk Bursa sürümündeki fotoğraflar Wikimedia Commons üzerinden 
 - Kumburgaz Plajı — Defnealamutt — CC BY-SA 4.0
 - Menekşe Plajı — buzkozan — CC BY 3.0
 - Semizkum kıyısı — Maderibeyza — CC BY-SA 3.0
+- Burç Beach — VikiPicture — CC BY-SA 3.0
+- Dalya Plajı — Ozan Kilic — CC BY 2.0
+- Tırmata Beach — Ersin Biçer — CC BY-SA 3.0
 - Riva kıyısı ve Riva Deresi — Nevit Dilmen — GFDL / CC BY-SA 3.0
 - İmrenli kıyısı — Thafer — CC BY 3.0
 - Alacalı Plajı — Aniosgel — CC BY-SA 3.0
