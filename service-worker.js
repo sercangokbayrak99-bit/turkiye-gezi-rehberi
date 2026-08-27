@@ -1,6 +1,6 @@
-const CACHE_NAME = 'turkiye-rehberi-1787831737622';
+const CACHE_NAME = 'turkiye-rehberi-1787831973802';
 const APP_ASSETS = [
-  "./_expo/static/js/web/AppEntry-92f13775b62134c927abd78b65c5c748.js",
+  "./_expo/static/js/web/AppEntry-afc3342f8e35ffc9bed7847d16d2f266.js",
   "./assets/assets/baths/emir-sultan-hamam.13bd41db784754b82f232221cc4a963e.jpg",
   "./assets/assets/baths/eski-kaplica.1ea83cf46b353d2d85249db3024e257b.jpg",
   "./assets/assets/baths/muradiye-hamam.1d48358fb4ec87be3cda0ab4a1d4f2fc.jpg",
@@ -23,6 +23,7 @@ const APP_ASSETS = [
   "./assets/assets/istanbul/beaches/burc-beach.69318e1dad18acde746ef2e985ebc5e2.jpg",
   "./assets/assets/istanbul/beaches/burgazada-marina.2e9d2c579b17da150a1dc9aac0699374.jpg",
   "./assets/assets/istanbul/beaches/buyukcekmece.c769c416553c71a6bb01e63de0551f74.jpg",
+  "./assets/assets/istanbul/beaches/cam-limani.319db6b7f224affd16855486092ad1b6.jpg",
   "./assets/assets/istanbul/beaches/cilingoz.d860c8c844785f7731fcad3f88acf8aa.jpg",
   "./assets/assets/istanbul/beaches/dalya.2cdc60012269e946d816ce236d9140cc.jpg",
   "./assets/assets/istanbul/beaches/degirmenburnu.6a3b1e508c9995113ccf7a4425b74f40.jpg",
