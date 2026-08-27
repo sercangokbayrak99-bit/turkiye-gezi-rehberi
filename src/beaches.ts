@@ -16,7 +16,7 @@ export type BursaBeach = {
   latitude: number | null;
   longitude: number | null;
   image: ImageSourcePropType;
-  imageIsPlaceholder: true;
+  imageIsPlaceholder: boolean;
   surface: 'Kum' | 'Çakıl' | 'Karışık' | null;
   access: 'Ücretsiz' | 'Ücretli' | null;
   parking: BeachFacility;
@@ -98,10 +98,10 @@ export const bursaBeaches: BursaBeach[] = seeds.map(([id, name, district, area, 
   surface: null,
   access: null,
   parking: null,
-  toilet: blueFlag ? true : null,
-  shower: monitored ? true : null,
-  changingRoom: monitored ? true : null,
-  sunbed: blueFlag ? true : null,
+  toilet: null,
+  shower: null,
+  changingRoom: null,
+  sunbed: null,
   umbrella: null,
   food: null,
   familyFriendly: null,

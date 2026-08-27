@@ -79,7 +79,6 @@ export const bursa: City = {
 };
 
 export const comingCities = [
-  { name: 'İstanbul', region: 'Marmara', tone: '#9B5C42' },
   { name: 'İzmir', region: 'Ege', tone: '#397C86' },
   { name: 'Antalya', region: 'Akdeniz', tone: '#C57645' },
   { name: 'Trabzon', region: 'Karadeniz', tone: '#486F59' },
