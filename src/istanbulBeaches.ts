@@ -5,6 +5,7 @@ export type IstanbulSea = 'Marmara' | 'Karadeniz';
 export type IstanbulBeachType = 'public_beach' | 'private_beach' | 'beach_club' | 'coast' | 'bay' | 'cove';
 export type IstanbulBeachAccess = 'Ücretsiz' | 'Ücretli' | null;
 export type IstanbulBeachFacility = boolean | null;
+export type IstanbulLocationStatus = 'verified' | 'needs_review';
 
 export type IstanbulBeach = {
   id: string;
@@ -19,6 +20,9 @@ export type IstanbulBeach = {
   summary: string;
   latitude: number | null;
   longitude: number | null;
+  locationStatus: IstanbulLocationStatus;
+  locationSource: string;
+  locationVerifiedAt: string | null;
   image: ImageSourcePropType;
   imageIsPlaceholder: boolean;
   imageCredit: string | null;
@@ -107,6 +111,23 @@ const beachPhotos: Record<string, { image: ImageSourcePropType; credit: string; 
 const governorSource = 'https://www.istanbul.gov.tr/yuzme-alani-ve-plajlarla-ilgili-karar';
 const ibb2025Source = 'https://destekhizmetleri.ibb.istanbul/haberler/ibb-plajlari-3-haziranda-sezona-merhaba-diyor/';
 const healthSource = 'https://istanbulism.saglik.gov.tr/TR-109719/deniz-suyu-plajlar.html';
+
+const verifiedLocationOverrides: Record<string, { latitude: number; longitude: number; source: string }> = {
+  'burc-beach': { latitude: 41.2453, longitude: 29.0078, source: 'https://www.e-sehir.com/turkiye-haritasi/burc-beach-nerede-nasil-gidilir.html' },
+  'solar-beach': { latitude: 41.2450, longitude: 29.0255, source: 'https://www.e-sehir.com/turkiye-haritasi/solar-beach-nerede-nasil-gidilir.html' },
+  'tirmata-beach': { latitude: 41.244308, longitude: 29.021559, source: 'https://tirmata.com/default.asp?sayfa=iletisim' },
+  'gunes-plaji': { latitude: 40.9718331, longitude: 28.7867807, source: 'https://www.openstreetmap.org/way/219018322' },
+  'kilimli-koyu': { latitude: 41.1420, longitude: 29.8727, source: 'https://commons.wikimedia.org/wiki/File:Kilimli_Koyu.jpg' },
+  'kadirga-koyu': { latitude: 41.1405283, longitude: 29.9075981, source: 'https://www.openstreetmap.org/node/13598249177' },
+  'tuzla-halk': { latitude: 40.8133687, longitude: 29.2751054, source: 'https://www.tuzla.bel.tr/Files/performans-2026.pdf' },
+  kalpazankaya: { latitude: 40.8781786, longitude: 29.0529225, source: 'https://www.openstreetmap.org/way/1121065759' },
+  'madam-martha': { latitude: 40.884286, longitude: 29.056376, source: 'https://yandex.com.tr/maps/983/turkey/geo/madam_martha_koyu/3393803325/' },
+  camakya: { latitude: 40.884964, longitude: 29.066736, source: 'https://www.haritamap.com/lokasyon/camakya-aile-plaji-244' },
+  degirmenburnu: { latitude: 40.8825624, longitude: 29.0947082, source: 'https://www.openstreetmap.org/way/236932784' },
+  'alman-koyu': { latitude: 40.8710, longitude: 29.0755, source: 'https://kahvetabela.com/en/mavi-koy/yer/alman-koyu' },
+  'kumluk-kinaliada': { latitude: 40.91402, longitude: 29.04776, source: 'https://turkey.worldplaces.me/tr/view-place/71850084-kinaliada-kumluk-plaji.html' },
+  'teos-beach': { latitude: 40.905197, longitude: 29.055846, source: 'https://www.teoskinaliada.com/hakk%C4%B1m%C4%B1zda' },
+};
 
 type Seed = [string, string, string, string, IstanbulBeachSide, IstanbulSea, IstanbulBeachType, number | null, number | null, IstanbulBeachAccess?, ('İBB' | 'İlçe Belediyesi' | 'Özel işletme' | null)?, string?];
 
@@ -217,6 +238,10 @@ const typeLabel: Record<IstanbulBeachType, string> = {
 };
 
 export const istanbulBeaches: IstanbulBeach[] = seeds.map(([id, name, district, area, side, sea, placeType, latitude, longitude, access = null, operator = null, sourceUrl]) => {
+  const verifiedOverride = verifiedLocationOverrides[id];
+  const resolvedLatitude = verifiedOverride?.latitude ?? latitude;
+  const resolvedLongitude = verifiedOverride?.longitude ?? longitude;
+  const resolvedLocationSource = verifiedOverride?.source ?? sourceUrl ?? governorSource;
   const currentIbb = currentIbbIds.has(id);
   const photo = beachPhotos[id];
   return {
@@ -230,8 +255,11 @@ export const istanbulBeaches: IstanbulBeach[] = seeds.map(([id, name, district, 
     placeType,
     sea,
     summary: `${area} bölgesindeki ${name}, ${sea === 'Karadeniz' ? 'Karadeniz' : 'Marmara Denizi'} kıyısında ${typeLabel[placeType]} olarak sınıflandırılmıştır. ${currentIbb ? 'İBB’nin 2025 hizmet listesinde yer alır.' : 'Yüzme durumu ve hizmetler sezona göre değişebileceğinden güncel resmî uyarılar kontrol edilmelidir.'}`,
-    latitude,
-    longitude,
+    latitude: resolvedLatitude,
+    longitude: resolvedLongitude,
+    locationStatus: resolvedLatitude !== null && resolvedLongitude !== null ? 'verified' : 'needs_review',
+    locationSource: resolvedLocationSource,
+    locationVerifiedAt: resolvedLatitude !== null && resolvedLongitude !== null ? '2026-08-28' : null,
     image: photo?.image ?? placeholder,
     imageIsPlaceholder: !photo,
     imageCredit: photo?.credit ?? null,

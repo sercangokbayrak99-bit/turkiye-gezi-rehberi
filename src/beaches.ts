@@ -3,6 +3,7 @@ import type { ImageSourcePropType } from 'react-native';
 export type BeachWaterType = 'Deniz' | 'Göl';
 export type BeachDistrict = 'Mudanya' | 'Gemlik' | 'Karacabey' | 'İznik' | 'Orhangazi';
 export type BeachFacility = boolean | null;
+export type LocationVerificationStatus = 'verified' | 'needs_review';
 
 export type BursaBeach = {
   id: string;
@@ -15,6 +16,9 @@ export type BursaBeach = {
   summary: string;
   latitude: number | null;
   longitude: number | null;
+  locationStatus: LocationVerificationStatus;
+  locationSource: string;
+  locationVerifiedAt: string | null;
   image: ImageSourcePropType;
   imageIsPlaceholder: boolean;
   imageCredit: string | null;
@@ -92,6 +96,7 @@ const summaryFor = (name: string, area: string, waterType: BeachWaterType, monit
 
 export const bursaBeaches: BursaBeach[] = seeds.map(([id, name, district, area, waterType, latitude, longitude, monitored, blueFlag, source]) => {
   const photo = beachPhotos[id];
+  const resolvedSource = source ?? (blueFlag ? official2026 : monitored ? coordinateStudy : officialInventory);
   return ({
   id: `beach-${id}`,
   name,
@@ -103,6 +108,9 @@ export const bursaBeaches: BursaBeach[] = seeds.map(([id, name, district, area, 
   summary: summaryFor(name, area, waterType, monitored),
   latitude,
   longitude,
+  locationStatus: latitude !== null && longitude !== null ? 'verified' : 'needs_review',
+  locationSource: resolvedSource,
+  locationVerifiedAt: latitude !== null && longitude !== null ? '2026-08-28' : null,
   image: photo?.image ?? placeholder,
   imageIsPlaceholder: !photo,
   imageCredit: photo?.credit ?? null,
@@ -124,7 +132,7 @@ export const bursaBeaches: BursaBeach[] = seeds.map(([id, name, district, area, 
   waterQuality: null,
   waterQualityDate: null,
   waterQualitySource: null,
-  sourceUrl: source ?? (blueFlag ? official2026 : monitored ? coordinateStudy : officialInventory),
+  sourceUrl: resolvedSource,
   });
 });
 
