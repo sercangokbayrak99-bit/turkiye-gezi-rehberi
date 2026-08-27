@@ -35,6 +35,8 @@ Uygulamanın ilk Bursa sürümündeki fotoğraflar Wikimedia Commons üzerinden 
 - Rumeli Feneri kıyısı — Robin.r — CC0
 - Rumeli Kavağı kıyısı — Canercangul — CC BY-SA 4.0
 - Tuzla sahili — Tuzla Belediyesi — CC BY-SA 4.0
+- Burgazada marina kıyısı — Barış Tarim — Kamu malı
+- Değirmenburnu Tabiat Parkı — Ceyda Turus — CC BY-SA 4.0
 - Riva kıyısı ve Riva Deresi — Nevit Dilmen — GFDL / CC BY-SA 3.0
 - İmrenli kıyısı — Thafer — CC BY 3.0
 - Alacalı Plajı — Aniosgel — CC BY-SA 3.0
