@@ -32,6 +32,9 @@ Uygulamanın ilk Bursa sürümündeki fotoğraflar Wikimedia Commons üzerinden 
 - Denizköşkler / Avcılar kıyısı — Karacehennem — CC BY-SA 4.0
 - Albatros Halk Plajı — buzkozan — CC BY 3.0
 - Yeşilköy Çiroz kıyısı — alafortanfuni — CC BY-SA 3.0
+- Rumeli Feneri kıyısı — Robin.r — CC0
+- Rumeli Kavağı kıyısı — Canercangul — CC BY-SA 4.0
+- Tuzla sahili — Tuzla Belediyesi — CC BY-SA 4.0
 - Riva kıyısı ve Riva Deresi — Nevit Dilmen — GFDL / CC BY-SA 3.0
 - İmrenli kıyısı — Thafer — CC BY 3.0
 - Alacalı Plajı — Aniosgel — CC BY-SA 3.0
