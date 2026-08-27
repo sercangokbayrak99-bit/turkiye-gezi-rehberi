@@ -1,6 +1,6 @@
-const CACHE_NAME = 'turkiye-rehberi-1787830453605';
+const CACHE_NAME = 'turkiye-rehberi-1787830714916';
 const APP_ASSETS = [
-  "./_expo/static/js/web/AppEntry-5a06292c1928a670e74adccba1fcaae0.js",
+  "./_expo/static/js/web/AppEntry-1eccda01ae6972e3dbd5764e4c017bd0.js",
   "./assets/assets/baths/emir-sultan-hamam.13bd41db784754b82f232221cc4a963e.jpg",
   "./assets/assets/baths/eski-kaplica.1ea83cf46b353d2d85249db3024e257b.jpg",
   "./assets/assets/baths/muradiye-hamam.1d48358fb4ec87be3cda0ab4a1d4f2fc.jpg",
@@ -27,10 +27,13 @@ const APP_ASSETS = [
   "./assets/assets/istanbul/beaches/gurpinar.9a66743c3b521c75a33dc236b10eed9b.jpg",
   "./assets/assets/istanbul/beaches/imrenli.841f57eed11d598484724faecda6a770.jpg",
   "./assets/assets/istanbul/beaches/kadirga-koyu.c6a03491a28c12f6305b7916cf207233.jpg",
+  "./assets/assets/istanbul/beaches/karaburun-halk.0afb937e25709be8e9249924ba819aae.jpg",
+  "./assets/assets/istanbul/beaches/karaburun-port.cc0ae8137da95a719fd08a1c1e820830.jpg",
   "./assets/assets/istanbul/beaches/kilimli-koyu.9eb671284d36d790396aa3133325e06a.jpg",
   "./assets/assets/istanbul/beaches/kinaliada-coast.32c40f43af53be9dee979c5f0736685e.jpg",
   "./assets/assets/istanbul/beaches/kumburgaz.2475d87b027782cb100fc9a3e9b35c4f.jpg",
   "./assets/assets/istanbul/beaches/menekse.67b9dfb4c1986151d8d9fe4e5c0c63cc.jpg",
+  "./assets/assets/istanbul/beaches/ormanli.df54572ba60d52d7e697bd4473d95357.jpg",
   "./assets/assets/istanbul/beaches/semizkum.d8a44aae462c55e1ed672f16ff5fa3e6.jpg",
   "./assets/assets/istanbul/beaches/sile-beach.e7635aab8a69562bf0c79c8aa53cc2da.jpg",
   "./assets/assets/istanbul/beaches/tirmata.341275c0ba5d2c2cce165fbc072cb006.jpg",
