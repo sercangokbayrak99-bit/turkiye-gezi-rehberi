@@ -63,6 +63,16 @@ const istanbulFavoritePlaces: Place[] = istanbulPlaces.map(place => ({
   imagePage: place.imagePage,
 }));
 const allIstanbulPlanPlaces = [...istanbulPlaces, ...istanbulBeachPlaceAdapters];
+const istanbulNearbySearches = [
+  { label: 'Gezilecek yer', icon: '⌖', query: 'gezilecek yerler' },
+  { label: 'Kafe', icon: '☕', query: 'kafeler' },
+  { label: 'Restoran', icon: '🍴', query: 'restoranlar' },
+  { label: 'Müze', icon: '▣', query: 'müzeler' },
+  { label: 'Eczane', icon: '+', query: 'eczaneler' },
+  { label: 'Hastane', icon: 'H', query: 'hastaneler' },
+  { label: 'AVM', icon: '⌂', query: 'alışveriş merkezleri' },
+  { label: 'Otopark', icon: 'P', query: 'otoparklar' },
+];
 
 export default function App() {
   const [tab, setTab] = useState<Tab>('home');
@@ -259,6 +269,7 @@ function IstanbulGuide({ plannedPlaceIds, favorites, onFavorite, onTogglePlan }:
       <View style={styles.infoCard}><Text style={styles.infoLabel}>İSTANBULKART & AKTARMA</Text><Text style={styles.infoTitle}>Tek kartla farklı ulaşım türleri</Text><Text style={styles.infoCopy}>Metro, Marmaray, tramvay, otobüs ve şehir hatları arasında geçiş yapabilirsin. Sefer saatleri ve ücretler değişebildiği için yolculuk öncesinde resmî ulaşım kanallarını kontrol et.</Text></View>
       <View style={styles.moduleHeading}><View><Text style={styles.istanbulEyebrow}>ŞEHİRDE İHTİYACIN OLAN</Text><Text style={styles.moduleTitle}>Temel hizmetler</Text></View></View>
       <View style={styles.serviceGrid}>{services.map(([icon, name, mapQuery]) => <Pressable key={name} onPress={() => openMap(mapQuery)} style={styles.serviceCard}><View style={styles.serviceIcon}><Text style={styles.serviceIconText}>{icon}</Text></View><Text style={styles.serviceKind}>YAKINDA ARA</Text><Text style={styles.serviceName}>{name}</Text><Text style={styles.serviceCopy}>Güncel konumları ve yol seçeneklerini haritada görüntüle.</Text><Text style={styles.serviceOpen}>Haritada aç  ↗</Text></Pressable>)}</View>
+      <NearbySection city="İstanbul" items={istanbulNearbySearches} />
       <View style={styles.offlineCard}><View style={styles.offlineTop}><View style={styles.offlineIcon}><Text style={styles.offlineIconText}>↓</Text></View><View style={styles.offlineBody}><Text style={styles.offlineEyebrow}>İNTERNETSİZ KULLANIM</Text><Text style={styles.offlineTitle}>İstanbul rehberini indir</Text><Text style={styles.offlineCopy}>Rehber içeriğini çevrimdışı kullanıma hazır olarak işaretle. Canlı harita ve yol bilgisi için internet gerekir.</Text></View></View><Pressable onPress={toggleOffline} style={[styles.offlineButton, offline && styles.offlineButtonReady]}><Text style={[styles.offlineButtonText, offline && styles.offlineButtonTextReady]}>{offline ? '✓  Çevrimdışı rehber hazır' : 'Rehberi bu cihaza indir'}</Text></Pressable></View>
       <Text style={styles.istanbulSource}>İlçe yapısı İstanbul İl Kültür ve Turizm Müdürlüğü ile İBB kaynaklarına dayanır. Fotoğraflar Wikimedia Commons lisanslarıyla belirtilmiştir; çalışma saatlerini ziyaret öncesinde doğrulayın.</Text></>}
     </View>
@@ -557,7 +568,7 @@ function CityToolkit() {
     <View style={styles.moduleHeading}><Text style={styles.moduleTitle}>Bursa fotoğraf günlüğü</Text><Text style={styles.moduleHint}>{bursaGuideModules.gallery.length} kare</Text></View>
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.galleryRail}>{bursaGuideModules.gallery.map(item => <View key={item.title} style={styles.galleryCard}><Image source={item.image} style={styles.galleryImage} /><View style={styles.galleryShade} /><View style={styles.galleryCaption}><Text style={styles.galleryDistrict}>{item.district.toUpperCase()}</Text><Text style={styles.galleryTitle}>{item.title}</Text></View></View>)}</ScrollView>
 
-    <View style={styles.nearbyPanel}><Text style={styles.nearbyEyebrow}>YAKINIMDA</Text><Text style={styles.nearbyTitle}>Şu anda çevrende ne var?</Text><Text style={styles.nearbyCopy}>Haritalar konum izninle yakınındaki güncel sonuçları gösterir.</Text><View style={styles.nearbyGrid}>{bursaGuideModules.nearbySearches.map(item => <Pressable key={item.label} onPress={() => openMapSearch(`${item.query} yakınımda`)} style={styles.nearbyButton}><Text style={styles.nearbyIcon}>{item.icon}</Text><Text style={styles.nearbyLabel}>{item.label}</Text></Pressable>)}</View></View>
+    <NearbySection city="Bursa" items={bursaGuideModules.nearbySearches} />
 
     <View style={styles.offlineCard}><View style={styles.offlineTop}><View style={styles.offlineIcon}><Text style={styles.offlineIconText}>↓</Text></View><View style={styles.offlineBody}><Text style={styles.offlineEyebrow}>İNTERNETSİZ KULLANIM</Text><Text style={styles.offlineTitle}>Bursa şehir rehberi</Text><Text style={styles.offlineCopy}>İçerik, rotalar ve uygulamaya eklenen fotoğraflar cihazında hazır tutulur. Canlı harita ve işletme sonuçları internet gerektirir.</Text></View></View><Pressable onPress={saveOffline} style={[styles.offlineButton, offlineReady && styles.offlineButtonReady]}><Text style={[styles.offlineButtonText, offlineReady && styles.offlineButtonTextReady]}>{offlineReady ? '✓  Çevrimdışı rehber hazır' : 'Bursa rehberini indir'}</Text></Pressable></View>
   </>;
@@ -569,6 +580,31 @@ function AccommodationSection({ city, items }: { city: string; items: Accommodat
   const categories = ['Tümü', ...items.map(item => item.category)];
   const visibleItems = selectedCategory === 'Tümü' ? items : items.filter(item => item.category === selectedCategory);
   return <><View style={styles.moduleHeading}><View><Text style={styles.stayEyebrow}>KONAKLAMA REHBERİ</Text><Text style={styles.moduleTitle}>Nerede kalmalı?</Text></View><Text style={styles.moduleHint}>{visibleItems.length} bölge</Text></View><Text style={styles.stayIntro}>Gezi tarzını seç; {city}’de sana en uygun konaklama bölgesini karşılaştır.</Text><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.stayFilterRail}>{categories.map(category => <Pressable key={category} onPress={() => setSelectedCategory(category)} style={[styles.stayFilter, selectedCategory === category && styles.stayFilterActive]}><Text style={[styles.stayFilterText, selectedCategory === category && styles.stayFilterTextActive]}>{category}</Text></Pressable>)}</ScrollView><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.stayRail}>{visibleItems.map((item, index) => <Pressable key={item.area} onPress={() => openMap(item.mapQuery)} style={[styles.stayCard, index % 2 === 1 && styles.stayCardAlt]}><View style={styles.stayTop}><Text style={styles.stayDistrict}>{item.district.toUpperCase()}</Text><Text style={styles.stayLevel}>{item.level}</Text></View><Text style={styles.stayArea}>{item.area}</Text><Text style={styles.stayBest}>{item.category.toUpperCase()} · {item.bestFor}</Text><Text style={styles.stayCharacter}>{item.character}</Text><Text style={styles.stayOpen}>{city} konaklamalarını göster  ↗</Text></Pressable>)}</ScrollView></>;
+}
+
+function NearbySection({ city, items }: { city: string; items: { label: string; icon: string; query: string }[] }) {
+  const [status, setStatus] = useState<'idle' | 'locating' | 'fallback'>('idle');
+  const openNearby = (query: string) => {
+    const fallback = () => {
+      setStatus('fallback');
+      Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${query} ${city}`)}`);
+    };
+    if (Platform.OS !== 'web' || typeof navigator === 'undefined' || !navigator.geolocation) {
+      fallback();
+      return;
+    }
+    setStatus('locating');
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        setStatus('idle');
+        const { latitude, longitude } = position.coords;
+        Linking.openURL(`https://www.google.com/maps/search/${encodeURIComponent(query)}/@${latitude},${longitude},15z`);
+      },
+      fallback,
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 },
+    );
+  };
+  return <View style={styles.nearbyPanel}><Text style={styles.nearbyEyebrow}>KONUMUNA GÖRE</Text><Text style={styles.nearbyTitle}>Şu anda çevrende ne var?</Text><Text style={styles.nearbyCopy}>Bir kategori seç. İzin verirsen konumun yalnızca yakınındaki güncel harita sonuçlarını açmak için kullanılır.</Text>{status === 'locating' && <Text style={styles.nearbyStatus}>Konumun alınıyor…</Text>}{status === 'fallback' && <Text style={styles.nearbyStatus}>Konum alınamadı; {city} geneli gösteriliyor.</Text>}<View style={styles.nearbyGrid}>{items.map(item => <Pressable key={item.label} disabled={status === 'locating'} onPress={() => openNearby(item.query)} style={[styles.nearbyButton, status === 'locating' && styles.disabledButton]}><Text style={styles.nearbyIcon}>{item.icon}</Text><Text style={styles.nearbyLabel}>{item.label}</Text></Pressable>)}</View></View>;
 }
 
 function Hero() {
@@ -757,6 +793,7 @@ const styles = StyleSheet.create({
   beachFeatureBody: { flex: 1 },
   beachFeatureLabel: { color: palette.muted, fontSize: 9, fontWeight: '800' },
   beachFeatureValue: { marginTop: 4, color: palette.ink, fontSize: 11, lineHeight: 15, fontWeight: '800' },
+  nearbyStatus: { marginTop: 10, color: palette.moss, fontSize: 11, fontWeight: '800' },
   disabledButton: { opacity: .48 },
   beachSafetyNote: { marginTop: 12, color: palette.muted, fontSize: 11, lineHeight: 17, textAlign: 'center' },
 });
