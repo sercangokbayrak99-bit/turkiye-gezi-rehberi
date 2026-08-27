@@ -74,6 +74,30 @@ const istanbulNearbySearches = [
   { label: 'Otopark', icon: 'P', query: 'otoparklar' },
 ];
 
+type OfflineStatus = 'idle' | 'downloading' | 'ready' | 'error';
+
+async function downloadOfflineGuide(storageKey: string) {
+  if (Platform.OS !== 'web') {
+    await AsyncStorage.setItem(storageKey, 'ready');
+    return;
+  }
+  if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) throw new Error('Çevrimdışı kullanım desteklenmiyor');
+  const registration = await navigator.serviceWorker.ready;
+  const worker = registration.active ?? registration.waiting ?? registration.installing;
+  if (!worker) throw new Error('Çevrimdışı servis hazır değil');
+  await new Promise<void>((resolve, reject) => {
+    const channel = new MessageChannel();
+    const timeout = setTimeout(() => reject(new Error('İndirme zaman aşımına uğradı')), 120000);
+    channel.port1.onmessage = event => {
+      clearTimeout(timeout);
+      if (event.data?.ok) resolve();
+      else reject(new Error('Çevrimdışı paket tamamlanamadı'));
+    };
+    worker.postMessage({ type: 'CACHE_APP' }, [channel.port2]);
+  });
+  await AsyncStorage.setItem(storageKey, 'ready');
+}
+
 export default function App() {
   const [tab, setTab] = useState<Tab>('home');
   const [activeCity, setActiveCity] = useState<'bursa' | 'istanbul'>('bursa');
@@ -89,6 +113,9 @@ export default function App() {
   const [plannedBursaPlaces, setPlannedBursaPlaces] = useState<string[]>([]);
 
   useEffect(() => {
+    if (Platform.OS === 'web' && typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+    }
     AsyncStorage.getItem('turkiye-rehberi-favoriler').then(value => {
       if (value) setFavorites(JSON.parse(value));
     }).catch(() => {});
@@ -211,7 +238,7 @@ function IstanbulGuide({ plannedPlaceIds, favorites, onFavorite, onTogglePlan }:
   const [query, setQuery] = useState('');
   const [mode, setMode] = useState<'rehber' | 'plajlar'>('rehber');
   const [category, setCategory] = useState<ExploreCategory>('Tümü');
-  const [offline, setOffline] = useState(false);
+  const [offlineStatus, setOfflineStatus] = useState<OfflineStatus>('idle');
   const [selectedDistrict, setSelectedDistrict] = useState<IstanbulDistrict | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<IstanbulPlace | null>(null);
   const normalized = query.trim().toLocaleLowerCase('tr-TR');
@@ -221,8 +248,17 @@ function IstanbulGuide({ plannedPlaceIds, favorites, onFavorite, onTogglePlan }:
   const openRoute = (stops: string[]) => Linking.openURL(`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(`${stops[0]} İstanbul`)}&destination=${encodeURIComponent(`${stops[stops.length - 1]} İstanbul`)}&waypoints=${encodeURIComponent(stops.slice(1, -1).map(stop => `${stop} İstanbul`).join('|'))}`);
   const services: [string, string, string][] = [['AVM', 'Alışveriş merkezleri', 'İstanbul alışveriş merkezleri'], ['H', 'Hastaneler', 'İstanbul hastaneleri'], ['+', 'Nöbetçi eczaneler', 'İstanbul nöbetçi eczane'], ['↔', 'Ulaşım merkezleri', 'İstanbul metro marmaray vapur durakları']];
 
-  useEffect(() => { AsyncStorage.getItem('turkiye-rehberi-offline-istanbul').then(value => setOffline(value === 'ready')).catch(() => {}); }, []);
-  const toggleOffline = () => { const next = !offline; setOffline(next); AsyncStorage.setItem('turkiye-rehberi-offline-istanbul', next ? 'ready' : 'none').catch(() => {}); };
+  useEffect(() => { AsyncStorage.getItem('turkiye-rehberi-offline-istanbul').then(value => setOfflineStatus(value === 'ready' ? 'ready' : 'idle')).catch(() => {}); }, []);
+  const saveOffline = async () => {
+    if (offlineStatus === 'ready' || offlineStatus === 'downloading') return;
+    setOfflineStatus('downloading');
+    try {
+      await downloadOfflineGuide('turkiye-rehberi-offline-istanbul');
+      setOfflineStatus('ready');
+    } catch {
+      setOfflineStatus('error');
+    }
+  };
   if (mode === 'plajlar') return <IstanbulBeachGuide query={query} setQuery={setQuery} favorites={favorites} plannedPlaceIds={plannedPlaceIds} onFavorite={onFavorite} onTogglePlan={onTogglePlan} onBack={() => { setMode('rehber'); setCategory('Tümü'); }} />;
   const renderPlaces = (title: string, kicker: string, categories: string[]) => {
     const items = visiblePlaces.filter(place => categories.includes(place.category));
@@ -270,7 +306,7 @@ function IstanbulGuide({ plannedPlaceIds, favorites, onFavorite, onTogglePlan }:
       <View style={styles.moduleHeading}><View><Text style={styles.istanbulEyebrow}>ŞEHİRDE İHTİYACIN OLAN</Text><Text style={styles.moduleTitle}>Temel hizmetler</Text></View></View>
       <View style={styles.serviceGrid}>{services.map(([icon, name, mapQuery]) => <Pressable key={name} onPress={() => openMap(mapQuery)} style={styles.serviceCard}><View style={styles.serviceIcon}><Text style={styles.serviceIconText}>{icon}</Text></View><Text style={styles.serviceKind}>YAKINDA ARA</Text><Text style={styles.serviceName}>{name}</Text><Text style={styles.serviceCopy}>Güncel konumları ve yol seçeneklerini haritada görüntüle.</Text><Text style={styles.serviceOpen}>Haritada aç  ↗</Text></Pressable>)}</View>
       <NearbySection city="İstanbul" items={istanbulNearbySearches} />
-      <View style={styles.offlineCard}><View style={styles.offlineTop}><View style={styles.offlineIcon}><Text style={styles.offlineIconText}>↓</Text></View><View style={styles.offlineBody}><Text style={styles.offlineEyebrow}>İNTERNETSİZ KULLANIM</Text><Text style={styles.offlineTitle}>İstanbul rehberini indir</Text><Text style={styles.offlineCopy}>Rehber içeriğini çevrimdışı kullanıma hazır olarak işaretle. Canlı harita ve yol bilgisi için internet gerekir.</Text></View></View><Pressable onPress={toggleOffline} style={[styles.offlineButton, offline && styles.offlineButtonReady]}><Text style={[styles.offlineButtonText, offline && styles.offlineButtonTextReady]}>{offline ? '✓  Çevrimdışı rehber hazır' : 'Rehberi bu cihaza indir'}</Text></Pressable></View>
+      <View style={styles.offlineCard}><View style={styles.offlineTop}><View style={styles.offlineIcon}><Text style={styles.offlineIconText}>↓</Text></View><View style={styles.offlineBody}><Text style={styles.offlineEyebrow}>İNTERNETSİZ KULLANIM</Text><Text style={styles.offlineTitle}>İstanbul rehberini indir</Text><Text style={styles.offlineCopy}>Uygulama içeriği ve yerel fotoğraflar cihazına kaydedilir. Canlı harita ve yol bilgisi için internet gerekir.</Text></View></View>{offlineStatus === 'error' && <Text style={styles.offlineError}>Paket indirilemedi. İnternet bağlantını kontrol edip yeniden dene.</Text>}<Pressable disabled={offlineStatus === 'downloading'} onPress={saveOffline} style={[styles.offlineButton, offlineStatus === 'ready' && styles.offlineButtonReady, offlineStatus === 'downloading' && styles.disabledButton]}><Text style={[styles.offlineButtonText, offlineStatus === 'ready' && styles.offlineButtonTextReady]}>{offlineStatus === 'ready' ? '✓  Çevrimdışı rehber hazır' : offlineStatus === 'downloading' ? 'Rehber indiriliyor…' : 'Rehberi bu cihaza indir'}</Text></Pressable></View>
       <Text style={styles.istanbulSource}>İlçe yapısı İstanbul İl Kültür ve Turizm Müdürlüğü ile İBB kaynaklarına dayanır. Fotoğraflar Wikimedia Commons lisanslarıyla belirtilmiştir; çalışma saatlerini ziyaret öncesinde doğrulayın.</Text></>}
     </View>
   </ScrollView><IstanbulPlaceModal place={selectedPlace} favorite={selectedPlace ? favorites.includes(selectedPlace.id) : false} planned={selectedPlace ? plannedPlaceIds.includes(selectedPlace.id) : false} onFavorite={onFavorite} onTogglePlan={onTogglePlan} onClose={() => setSelectedPlace(null)} /><IstanbulDistrictModal district={selectedDistrict} onClose={() => setSelectedDistrict(null)} /></SafeAreaView>;
@@ -522,9 +558,9 @@ function BeachCard({ beach, favorite, planned, onFavorite, onPlan, onOpen }: { b
 }
 
 function CityToolkit() {
-  const [offlineReady, setOfflineReady] = useState(false);
+  const [offlineStatus, setOfflineStatus] = useState<OfflineStatus>('idle');
   useEffect(() => {
-    AsyncStorage.getItem('turkiye-rehberi-offline-bursa').then(value => setOfflineReady(value === 'ready')).catch(() => {});
+    AsyncStorage.getItem('turkiye-rehberi-offline-bursa').then(value => setOfflineStatus(value === 'ready' ? 'ready' : 'idle')).catch(() => {});
   }, []);
   const openMapSearch = (query: string) => Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`);
   const openRoute = (route: DailyRoute) => {
@@ -534,10 +570,15 @@ function CityToolkit() {
     const waypoints = route.stops.slice(1, -1).map(stop => `${stop} Bursa`).join('|');
     Linking.openURL(`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(`${origin} Bursa`)}&destination=${encodeURIComponent(`${destination} Bursa`)}${waypoints ? `&waypoints=${encodeURIComponent(waypoints)}` : ''}`);
   };
-  const saveOffline = () => {
-    const next = !offlineReady;
-    setOfflineReady(next);
-    AsyncStorage.setItem('turkiye-rehberi-offline-bursa', next ? 'ready' : 'none').catch(() => {});
+  const saveOffline = async () => {
+    if (offlineStatus === 'ready' || offlineStatus === 'downloading') return;
+    setOfflineStatus('downloading');
+    try {
+      await downloadOfflineGuide('turkiye-rehberi-offline-bursa');
+      setOfflineStatus('ready');
+    } catch {
+      setOfflineStatus('error');
+    }
   };
   return <>
     <View style={styles.toolkitHeader}><Text style={styles.eyebrow}>ŞEHİR ASİSTANI</Text><Text style={styles.toolkitTitle}>Bursa’da aradığın her şey.</Text><Text style={styles.toolkitCopy}>Yeme içmeden sağlık ve ulaşıma, hazır rotalardan yakındaki noktalara kadar tek yerde.</Text></View>
@@ -570,7 +611,7 @@ function CityToolkit() {
 
     <NearbySection city="Bursa" items={bursaGuideModules.nearbySearches} />
 
-    <View style={styles.offlineCard}><View style={styles.offlineTop}><View style={styles.offlineIcon}><Text style={styles.offlineIconText}>↓</Text></View><View style={styles.offlineBody}><Text style={styles.offlineEyebrow}>İNTERNETSİZ KULLANIM</Text><Text style={styles.offlineTitle}>Bursa şehir rehberi</Text><Text style={styles.offlineCopy}>İçerik, rotalar ve uygulamaya eklenen fotoğraflar cihazında hazır tutulur. Canlı harita ve işletme sonuçları internet gerektirir.</Text></View></View><Pressable onPress={saveOffline} style={[styles.offlineButton, offlineReady && styles.offlineButtonReady]}><Text style={[styles.offlineButtonText, offlineReady && styles.offlineButtonTextReady]}>{offlineReady ? '✓  Çevrimdışı rehber hazır' : 'Bursa rehberini indir'}</Text></Pressable></View>
+    <View style={styles.offlineCard}><View style={styles.offlineTop}><View style={styles.offlineIcon}><Text style={styles.offlineIconText}>↓</Text></View><View style={styles.offlineBody}><Text style={styles.offlineEyebrow}>İNTERNETSİZ KULLANIM</Text><Text style={styles.offlineTitle}>Bursa şehir rehberi</Text><Text style={styles.offlineCopy}>İçerik, rotalar ve uygulamaya eklenen fotoğraflar cihazına kaydedilir. Canlı harita ve işletme sonuçları internet gerektirir.</Text></View></View>{offlineStatus === 'error' && <Text style={styles.offlineError}>Paket indirilemedi. İnternet bağlantını kontrol edip yeniden dene.</Text>}<Pressable disabled={offlineStatus === 'downloading'} onPress={saveOffline} style={[styles.offlineButton, offlineStatus === 'ready' && styles.offlineButtonReady, offlineStatus === 'downloading' && styles.disabledButton]}><Text style={[styles.offlineButtonText, offlineStatus === 'ready' && styles.offlineButtonTextReady]}>{offlineStatus === 'ready' ? '✓  Çevrimdışı rehber hazır' : offlineStatus === 'downloading' ? 'Rehber indiriliyor…' : 'Bursa rehberini indir'}</Text></Pressable></View>
   </>;
 }
 
@@ -794,6 +835,7 @@ const styles = StyleSheet.create({
   beachFeatureLabel: { color: palette.muted, fontSize: 9, fontWeight: '800' },
   beachFeatureValue: { marginTop: 4, color: palette.ink, fontSize: 11, lineHeight: 15, fontWeight: '800' },
   nearbyStatus: { marginTop: 10, color: palette.moss, fontSize: 11, fontWeight: '800' },
+  offlineError: { marginTop: 13, color: '#A04432', fontSize: 11, lineHeight: 16, fontWeight: '700' },
   disabledButton: { opacity: .48 },
   beachSafetyNote: { marginTop: 12, color: palette.muted, fontSize: 11, lineHeight: 17, textAlign: 'center' },
 });
