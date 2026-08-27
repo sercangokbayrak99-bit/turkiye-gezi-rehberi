@@ -1,7 +1,7 @@
 import type { ImageSourcePropType } from 'react-native';
 
 export type IstanbulPlace = { id: string; name: string; district: string; category: string; summary: string; image: ImageSourcePropType; mapQuery: string; credit: string; imagePage: string };
-export type IstanbulDistrict = { name: string; side: 'Avrupa' | 'Anadolu' | 'Adalar'; signature: string; mapQuery: string };
+export type IstanbulDistrict = { name: string; side: 'Avrupa' | 'Anadolu' | 'Adalar'; signature: string; highlights: string[]; mapQuery: string };
 
 const european = ['Arnavutköy','Avcılar','Bağcılar','Bahçelievler','Bakırköy','Başakşehir','Bayrampaşa','Beşiktaş','Beylikdüzü','Beyoğlu','Büyükçekmece','Çatalca','Esenler','Esenyurt','Eyüpsultan','Fatih','Gaziosmanpaşa','Güngören','Kağıthane','Küçükçekmece','Sarıyer','Silivri','Sultangazi','Şişli','Zeytinburnu'];
 const asian = ['Ataşehir','Beykoz','Çekmeköy','Kadıköy','Kartal','Maltepe','Pendik','Sancaktepe','Sultanbeyli','Şile','Tuzla','Ümraniye','Üsküdar'];
@@ -46,7 +46,48 @@ const signatures: Record<string, string> = {
   Üsküdar: 'Kız Kulesi, camiler ve Boğaz silüeti',
   Zeytinburnu: 'Kara surları, tarihî yapılar ve sahil parkları',
 };
-const district = (name: string, side: IstanbulDistrict['side']): IstanbulDistrict => ({ name, side, signature: signatures[name] ?? (side === 'Avrupa' ? 'Avrupa Yakası kent yaşamı ve yerel keşifler' : side === 'Anadolu' ? 'Anadolu Yakası mahalleleri ve sahil rotaları' : 'Ada yaşamı ve deniz rotaları'), mapQuery: `${name} İstanbul` });
+const districtHighlights: Record<string, string[]> = {
+  Adalar: ['Büyükada', 'Heybeliada', 'Burgazada ve Kınalıada'],
+  Arnavutköy: ['Karaburun Sahili', 'Terkos Gölü', 'Durusu'],
+  Ataşehir: ['İstanbul Finans Merkezi', 'Kayışdağı Ormanı', 'Nezahat Gökyiğit Botanik Bahçesi'],
+  Avcılar: ['Avcılar Sahili', 'Küçükçekmece Gölü kıyısı', 'Haluk Perk Müzesi'],
+  Bağcılar: ['Bağcılar Meydanı', 'Nostalji Bahçeleri', 'Bağcılar Kültür Merkezi'],
+  Bahçelievler: ['Milli Egemenlik Parkı', 'Siyavuşpaşa Kasrı', 'Şirinevler Meydanı'],
+  Bakırköy: ['Florya Atatürk Deniz Köşkü', 'Yeşilköy Sahili', 'İstanbul Akvaryum'],
+  Başakşehir: ['Başakşehir Millet Bahçesi', 'Şamlar Tabiat Parkı', 'Sular Vadisi'],
+  Bayrampaşa: ['Bayrampaşa Şehir Parkı', 'Forum İstanbul', 'Kocatepe Meydanı'],
+  Beşiktaş: ['Dolmabahçe Sarayı', 'Yıldız Parkı', 'Ortaköy Meydanı'],
+  Beykoz: ['Anadolu Hisarı', 'Hidiv Kasrı', 'Anadolu Kavağı'],
+  Beylikdüzü: ['Yaşam Vadisi', 'Gürpınar Sahili', 'Kavaklı Sahili'],
+  Beyoğlu: ['Galata Kulesi', 'İstiklal Caddesi', 'Karaköy'],
+  Büyükçekmece: ['Kanuni Sultan Süleyman Köprüsü', 'Büyükçekmece Sahili', 'Kültürpark'],
+  Çatalca: ['Çilingoz Tabiat Parkı', 'İnceğiz Mağaraları', 'Yalıköy'],
+  Çekmeköy: ['Taşdelen Mesire Alanı', 'Reşadiye Mesire Alanı', 'Ömerli Barajı çevresi'],
+  Esenler: ['Dörtyol Meydanı', '15 Temmuz Millet Bahçesi', 'Dr. Kadir Topbaş Kültür Sanat Merkezi'],
+  Esenyurt: ['Şehitler Parkı', 'Recep Tayyip Erdoğan Parkı', 'Esenyurt Kültür Merkezi'],
+  Eyüpsultan: ['Eyüp Sultan Camii ve Türbesi', 'Pierre Loti Tepesi', 'Göktürk Göleti'],
+  Fatih: ['Ayasofya', 'Topkapı Sarayı', 'Sultanahmet Meydanı'],
+  Gaziosmanpaşa: ['Gaziosmanpaşa Meydanı', 'Küçükköy Meydanı', 'Şehir Tiyatroları Gaziosmanpaşa Sahnesi'],
+  Güngören: ['Güngören Parkı', 'Haznedar Meydanı', 'Köyiçi çarşısı'],
+  Kadıköy: ['Kadıköy Çarşısı', 'Moda Sahili', 'Caddebostan Sahili'],
+  Kağıthane: ['Sadabad', 'Hasbahçe Mesire Alanı', 'Kağıthane Deresi yürüyüş yolu'],
+  Kartal: ['Dragos Tepesi', 'Kartal Sahili', 'Aydos Ormanı'],
+  Küçükçekmece: ['Küçükçekmece Gölü', 'Tarihî Küçükçekmece Köprüsü', 'Menekşe Sahili'],
+  Maltepe: ['Maltepe Sahil Parkı', 'Başıbüyük Ormanı', 'Beşçeşmeler'],
+  Pendik: ['Pendik Marina', 'Pendik Sahili', 'Aydos Ormanı'],
+  Sancaktepe: ['Aydos Ormanı', 'Paşaköy Mesire Alanı', 'Sancaktepe Kent Ormanı'],
+  Sarıyer: ['Rumeli Hisarı', 'Emirgan Korusu', 'Belgrad Ormanı'],
+  Silivri: ['Silivri Sahili', 'Mimar Sinan Köprüsü', 'Selimpaşa'],
+  Sultanbeyli: ['Aydos Kalesi', 'Sultanbeyli Göleti', 'Aydos Ormanı'],
+  Sultangazi: ['Mimar Sinan Kent Ormanı', 'Hacı Bektaş-ı Veli Kent Ormanı', 'Sultangazi Şehir Ormanı'],
+  Şile: ['Şile Feneri', 'Ağva', 'Kilimli Koyu'],
+  Şişli: ['Atatürk Müzesi', 'Maçka Demokrasi Parkı', 'Nişantaşı'],
+  Tuzla: ['Tuzla Marina', 'Tuzla Sahili', 'Şelale Eğitim Parkı'],
+  Ümraniye: ['Ümraniye Millet Bahçesi', 'Dudullu Tepesi', 'Ümraniye Çarşısı'],
+  Üsküdar: ['Kız Kulesi', 'Beylerbeyi Sarayı', 'Kuzguncuk'],
+  Zeytinburnu: ['Panorama 1453 Tarih Müzesi', 'Merkezefendi Külliyesi', 'Zeytinburnu Sahili'],
+};
+const district = (name: string, side: IstanbulDistrict['side']): IstanbulDistrict => ({ name, side, signature: signatures[name] ?? (side === 'Avrupa' ? 'Avrupa Yakası kent yaşamı ve yerel keşifler' : side === 'Anadolu' ? 'Anadolu Yakası mahalleleri ve sahil rotaları' : 'Ada yaşamı ve deniz rotaları'), highlights: districtHighlights[name] ?? [], mapQuery: `${name} İstanbul` });
 
 export const istanbulDistricts: IstanbulDistrict[] = [district('Adalar', 'Adalar'), ...european.map(name => district(name, 'Avrupa')), ...asian.map(name => district(name, 'Anadolu'))].sort((a, b) => a.name.localeCompare(b.name, 'tr'));
 
