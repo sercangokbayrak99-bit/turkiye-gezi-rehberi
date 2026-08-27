@@ -24,6 +24,8 @@ Uygulamanın ilk Bursa sürümündeki fotoğraflar Wikimedia Commons üzerinden 
 - Burç Beach — VikiPicture — CC BY-SA 3.0
 - Dalya Plajı — Ozan Kilic — CC BY 2.0
 - Tırmata Beach — Ersin Biçer — CC BY-SA 3.0
+- Ağlayankaya Plajı ve Ağlayankaya Life Beach — Sakaerka — CC BY-SA 4.0
+- Ağva Halk Plajı ve Ağva Mendirek Yanı Plajı — Cemal — CC BY-SA 2.0
 - Riva kıyısı ve Riva Deresi — Nevit Dilmen — GFDL / CC BY-SA 3.0
 - İmrenli kıyısı — Thafer — CC BY 3.0
 - Alacalı Plajı — Aniosgel — CC BY-SA 3.0
