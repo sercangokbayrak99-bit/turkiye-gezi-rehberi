@@ -59,6 +59,9 @@ const beachPhotos: Record<string, { image: ImageSourcePropType; credit: string; 
   'caddebostan-1': { image: require('../assets/istanbul/caddebostan.jpg'), credit: 'Raicem · CC BY-SA 4.0', page: 'https://commons.wikimedia.org/wiki/File:Caddebostan_Coastal_Park.jpg' },
   'caddebostan-2': { image: require('../assets/istanbul/caddebostan.jpg'), credit: 'Raicem · CC BY-SA 4.0', page: 'https://commons.wikimedia.org/wiki/File:Caddebostan_Coastal_Park.jpg' },
   'caddebostan-3': { image: require('../assets/istanbul/caddebostan.jpg'), credit: 'Raicem · CC BY-SA 4.0', page: 'https://commons.wikimedia.org/wiki/File:Caddebostan_Coastal_Park.jpg' },
+  'kinaliada-su-sporlari': { image: require('../assets/istanbul/beaches/kinaliada-coast.jpg'), credit: 'Jorge Franganillo · CC BY 4.0', page: 'https://commons.wikimedia.org/wiki/File:Istanbul_-_K%C4%B1nal%C4%B1ada_(55108238871).jpg' },
+  'kinaliada-iskele-sag': { image: require('../assets/istanbul/beaches/kinaliada-coast.jpg'), credit: 'Jorge Franganillo · CC BY 4.0', page: 'https://commons.wikimedia.org/wiki/File:Istanbul_-_K%C4%B1nal%C4%B1ada_(55108238871).jpg' },
+  'kinaliada-iskele-sol': { image: require('../assets/istanbul/beaches/kinaliada-coast.jpg'), credit: 'Jorge Franganillo · CC BY 4.0', page: 'https://commons.wikimedia.org/wiki/File:Istanbul_-_K%C4%B1nal%C4%B1ada_(55108238871).jpg' },
 };
 const governorSource = 'https://www.istanbul.gov.tr/yuzme-alani-ve-plajlarla-ilgili-karar';
 const ibb2025Source = 'https://destekhizmetleri.ibb.istanbul/haberler/ibb-plajlari-3-haziranda-sezona-merhaba-diyor/';

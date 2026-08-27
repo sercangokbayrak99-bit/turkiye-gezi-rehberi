@@ -13,5 +13,6 @@ Uygulamanın ilk Bursa sürümündeki fotoğraflar Wikimedia Commons üzerinden 
 - Kilyos Halk Plajı — eleesege — CC BY 3.0
 - Şile Plajı / Ayazma — Özgür Okkalı — CC BY-SA 2.5
 - Caddebostan kıyısı — Raicem — CC BY-SA 4.0
+- Kınalıada kıyısı — Jorge Franganillo — CC BY 4.0
 
 Uygulama simgesi, Bursa Ulu Cami fotoğrafından kırpılmıştır.
