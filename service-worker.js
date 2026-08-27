@@ -1,6 +1,6 @@
-const CACHE_NAME = 'turkiye-rehberi-1787829782565';
+const CACHE_NAME = 'turkiye-rehberi-1787830453605';
 const APP_ASSETS = [
-  "./_expo/static/js/web/AppEntry-dff477f3aa204dee09c21360412889f7.js",
+  "./_expo/static/js/web/AppEntry-5a06292c1928a670e74adccba1fcaae0.js",
   "./assets/assets/baths/emir-sultan-hamam.13bd41db784754b82f232221cc4a963e.jpg",
   "./assets/assets/baths/eski-kaplica.1ea83cf46b353d2d85249db3024e257b.jpg",
   "./assets/assets/baths/muradiye-hamam.1d48358fb4ec87be3cda0ab4a1d4f2fc.jpg",
@@ -16,6 +16,8 @@ const APP_ASSETS = [
   "./assets/assets/istanbul/anadolu-kavagi.2862cf376d0bf5c14493dce30a66d392.jpg",
   "./assets/assets/istanbul/archaeology-museum.3357b03328a999e596d3be8ea12feb38.jpg",
   "./assets/assets/istanbul/balat.27dab1647f8c0fd15d7d91131b02863b.jpg",
+  "./assets/assets/istanbul/beaches/aglayankaya.83ab151f6d476d93b225d41c3503b808.jpg",
+  "./assets/assets/istanbul/beaches/agva-coast.e38bb71f33b3c295e06ee17a013f294b.jpg",
   "./assets/assets/istanbul/beaches/alacali.7a680bb19756dd83293354617bdeb3cb.jpg",
   "./assets/assets/istanbul/beaches/burc-beach.69318e1dad18acde746ef2e985ebc5e2.jpg",
   "./assets/assets/istanbul/beaches/buyukcekmece.c769c416553c71a6bb01e63de0551f74.jpg",
