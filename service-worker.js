@@ -1,6 +1,6 @@
-const CACHE_NAME = 'turkiye-rehberi-1787820996162';
+const CACHE_NAME = 'turkiye-rehberi-1787821580489';
 const APP_ASSETS = [
-  "./_expo/static/js/web/AppEntry-470ad8276dc554329129f7dac0066018.js",
+  "./_expo/static/js/web/AppEntry-02dc86f5a09545bb89f641df1502137b.js",
   "./assets/assets/baths/emir-sultan-hamam.13bd41db784754b82f232221cc4a963e.jpg",
   "./assets/assets/baths/eski-kaplica.1ea83cf46b353d2d85249db3024e257b.jpg",
   "./assets/assets/baths/muradiye-hamam.1d48358fb4ec87be3cda0ab4a1d4f2fc.jpg",
