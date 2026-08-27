@@ -8,8 +8,15 @@ Uygulamanın ilk Bursa sürümündeki fotoğraflar Wikimedia Commons üzerinden 
 - Gemlik ve Gemlik Körfezi — Sezenkerem — CC BY-SA 3.0
 - İskender kebap — Benreis — CC BY 3.0
 
+Bursa sahil ve plaj fotoğrafları:
+
+- Kumyaka kıyısı — Erdoğan Orçin — CC BY-SA 4.0
+- Tirilye / Zeytinbağı kıyısı — A. Kerim Şengel — CC BY 3.0
+- Büyükkumla kıyısı — Haluk Comertel — CC BY 3.0
+
 İstanbul sahil ve plaj fotoğrafları:
 
+- Florya kıyısı / Güneş Plajı çevresi — 07 — CC BY-SA 4.0
 - Kilyos Halk Plajı — eleesege — CC BY 3.0
 - Şile Plajı / Ayazma — Özgür Okkalı — CC BY-SA 2.5
 - Caddebostan kıyısı — Raicem — CC BY-SA 4.0

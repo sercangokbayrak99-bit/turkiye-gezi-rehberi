@@ -17,6 +17,8 @@ export type BursaBeach = {
   longitude: number | null;
   image: ImageSourcePropType;
   imageIsPlaceholder: boolean;
+  imageCredit: string | null;
+  imagePage: string | null;
   surface: 'Kum' | 'Çakıl' | 'Karışık' | null;
   access: 'Ücretsiz' | 'Ücretli' | null;
   parking: BeachFacility;
@@ -38,6 +40,12 @@ export type BursaBeach = {
 };
 
 const placeholder = require('../assets/bursa/beach-placeholder.jpg');
+const beachPhotos: Record<string, { image: ImageSourcePropType; credit: string; page: string }> = {
+  kumyaka: { image: require('../assets/bursa/beaches/kumyaka.jpg'), credit: 'Erdoğan Orçin · CC BY-SA 4.0', page: 'https://commons.wikimedia.org/wiki/File:Kumyaka_-_Si%C4%9Fi_-_Sygi.jpg' },
+  zeytinbagi: { image: require('../assets/bursa/beaches/tirilye.jpg'), credit: 'A. Kerim Şengel · CC BY 3.0', page: 'https://commons.wikimedia.org/wiki/File:Trilye%27de_g%C3%BCn_bat%C4%B1m%C4%B1_-_panoramio.jpg' },
+  'tirilye-sahili': { image: require('../assets/bursa/beaches/tirilye.jpg'), credit: 'A. Kerim Şengel · CC BY 3.0', page: 'https://commons.wikimedia.org/wiki/File:Trilye%27de_g%C3%BCn_bat%C4%B1m%C4%B1_-_panoramio.jpg' },
+  buyukkumla: { image: require('../assets/bursa/beaches/buyukkumla.jpg'), credit: 'Haluk Comertel · CC BY 3.0', page: 'https://commons.wikimedia.org/wiki/File:Bursa_,kumla_-_panoramio.jpg' },
+};
 const official2026 = 'https://www.bursa.bel.tr/haber/bursa-plajlari-yaza-hazir-37227';
 const officialInventory = 'https://webdosya.csb.gov.tr/db/bursa/duyurular/5000_plan-aciklama-raporu-20180320133117.pdf';
 const coordinateStudy = 'https://dergipark.org.tr/en/download/article-file/4653659';
@@ -82,7 +90,9 @@ const seeds: BeachSeed[] = [
 const summaryFor = (name: string, area: string, waterType: BeachWaterType, monitored: boolean) =>
   `${area} kıyısındaki ${name}, ${waterType === 'Deniz' ? 'Marmara Denizi' : 'İznik Gölü'} manzarası sunan ${monitored ? 'resmî olarak izlenen bir yüzme alanıdır' : 'bir sahil durağıdır'}. Tesisler ve yüzme koşulları sezona göre değişebileceğinden güncel uyarıları yerinde kontrol edin.`;
 
-export const bursaBeaches: BursaBeach[] = seeds.map(([id, name, district, area, waterType, latitude, longitude, monitored, blueFlag, source]) => ({
+export const bursaBeaches: BursaBeach[] = seeds.map(([id, name, district, area, waterType, latitude, longitude, monitored, blueFlag, source]) => {
+  const photo = beachPhotos[id];
+  return ({
   id: `beach-${id}`,
   name,
   city: 'Bursa',
@@ -93,8 +103,10 @@ export const bursaBeaches: BursaBeach[] = seeds.map(([id, name, district, area, 
   summary: summaryFor(name, area, waterType, monitored),
   latitude,
   longitude,
-  image: placeholder,
-  imageIsPlaceholder: true,
+  image: photo?.image ?? placeholder,
+  imageIsPlaceholder: !photo,
+  imageCredit: photo?.credit ?? null,
+  imagePage: photo?.page ?? null,
   surface: null,
   access: null,
   parking: null,
@@ -113,7 +125,8 @@ export const bursaBeaches: BursaBeach[] = seeds.map(([id, name, district, area, 
   waterQualityDate: null,
   waterQualitySource: null,
   sourceUrl: source ?? (blueFlag ? official2026 : monitored ? coordinateStudy : officialInventory),
-}));
+  });
+});
 
 export const beachDistricts: Array<'Tümü' | BeachDistrict> = ['Tümü', 'Mudanya', 'Gemlik', 'Karacabey', 'İznik', 'Orhangazi'];
 export const beachWaterTypes: Array<'Tümü' | BeachWaterType> = ['Tümü', 'Deniz', 'Göl'];
