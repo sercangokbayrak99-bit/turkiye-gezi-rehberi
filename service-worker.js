@@ -1,6 +1,6 @@
-const CACHE_NAME = 'turkiye-rehberi-1787863892684';
+const CACHE_NAME = 'turkiye-rehberi-1787864385548';
 const APP_ASSETS = [
-  "./_expo/static/js/web/AppEntry-51101d1792911e7580c9f12d70f62c14.js",
+  "./_expo/static/js/web/AppEntry-047a54debdd9d386e9eb368d1d83a263.js",
   "./assets/assets/baths/emir-sultan-hamam.13bd41db784754b82f232221cc4a963e.jpg",
   "./assets/assets/baths/eski-kaplica.1ea83cf46b353d2d85249db3024e257b.jpg",
   "./assets/assets/baths/muradiye-hamam.1d48358fb4ec87be3cda0ab4a1d4f2fc.jpg",
@@ -8,6 +8,9 @@ const APP_ASSETS = [
   "./assets/assets/bursa-hero.680bf7f3fc965645c8dcd3cb43a6f58c.jpg",
   "./assets/assets/bursa/arkeoloji-muzesi.05090b21dd62f25f0d3a33d95badefbb.jpg",
   "./assets/assets/bursa/beach-placeholder.21b1b7deadec03d2f5b2ce7de0a41d41.jpg",
+  "./assets/assets/bursa/beaches/buyukkumla.8f5165755d72485175b6964420264655.jpg",
+  "./assets/assets/bursa/beaches/kumyaka.66846b8e3378fbe2d3710d0a09dfa7c4.jpg",
+  "./assets/assets/bursa/beaches/tirilye.025a16536f34fff3ac11853335b00612.jpg",
   "./assets/assets/bursa/tofas-muzesi.f41411fb6bea1cae721ba285efe03754.jpg",
   "./assets/assets/cumalikizik.6d9f9436775b70337796b3b2ddd1674d.jpg",
   "./assets/assets/gemlik.566e31d4183b1b55ad0995935a8c4ec8.jpg",
@@ -28,6 +31,7 @@ const APP_ASSETS = [
   "./assets/assets/istanbul/beaches/dalya.2cdc60012269e946d816ce236d9140cc.jpg",
   "./assets/assets/istanbul/beaches/degirmenburnu.6a3b1e508c9995113ccf7a4425b74f40.jpg",
   "./assets/assets/istanbul/beaches/denizkoskler.6478f32965a3fba0f19a2f3561a3f97f.jpg",
+  "./assets/assets/istanbul/beaches/florya-sunset.7ee0c77b54308f2e09f26bd59b6c5ec5.jpg",
   "./assets/assets/istanbul/beaches/gumusyaka.15d23a4e8501af2d9fb84ca0080c7c9d.jpg",
   "./assets/assets/istanbul/beaches/gurpinar.9a66743c3b521c75a33dc236b10eed9b.jpg",
   "./assets/assets/istanbul/beaches/imrenli.841f57eed11d598484724faecda6a770.jpg",
