@@ -64,6 +64,7 @@ const istanbulFavoritePlaces: Place[] = istanbulPlaces.map(place => ({
 }));
 const istanbulDistrictPlanPlaces: IstanbulPlace[] = istanbulDistricts.map(district => ({ id: `istanbul-ilce-${district.name}`, name: district.name, district: 'İstanbul', category: 'İlçe', summary: district.signature, image: require('./assets/istanbul/hero.jpg'), mapQuery: district.mapQuery, credit: '', imagePage: '' }));
 const allIstanbulPlanPlaces = [...istanbulPlaces, ...istanbulBeachPlaceAdapters, ...istanbulDistrictPlanPlaces];
+const istanbulPlaceIds = new Set([...istanbulPlaces, ...istanbulBeaches].map(place => place.id));
 const istanbulNearbySearches = [
   { label: 'Gezilecek yer', icon: '⌖', query: 'gezilecek yerler' },
   { label: 'Kafe', icon: '☕', query: 'kafeler' },
@@ -171,6 +172,7 @@ export default function App() {
     AsyncStorage.setItem('turkiye-rehberi-bursa-mekan-plani', JSON.stringify(next)).catch(() => {});
     return next;
   });
+  const selectedIsIstanbul = selected ? istanbulPlaceIds.has(selected.id) : false;
 
   const content = tab === 'plan'
     ? <PlanScreen districtNames={plannedDistricts} spiritualIds={plannedSpiritual} bursaPlaceIds={plannedBursaPlaces} istanbulPlaceIds={plannedIstanbulPlaces} onRemoveDistrict={toggleDistrictPlan} onRemoveSpiritual={toggleSpiritualPlan} onRemoveBursaPlace={toggleBursaPlacePlan} onRemoveIstanbulPlace={toggleIstanbulPlacePlan} />
@@ -208,7 +210,7 @@ export default function App() {
       <StatusBar style="light" />
       {content}
       <BottomTabs tab={tab} setTab={setTab} favoriteCount={favorites.length} planCount={plannedDistricts.length + plannedSpiritual.length + plannedBursaPlaces.length + plannedIstanbulPlaces.length} />
-      <PlaceModal place={selected} favorite={selected ? favorites.includes(selected.id) : false} planned={selected ? plannedBursaPlaces.includes(selected.id) : false} onClose={() => setSelected(null)} onFavorite={toggleFavorite} onTogglePlan={toggleBursaPlacePlan} />
+      <PlaceModal place={selected} favorite={selected ? favorites.includes(selected.id) : false} planned={selected ? (selectedIsIstanbul ? plannedIstanbulPlaces : plannedBursaPlaces).includes(selected.id) : false} onClose={() => setSelected(null)} onFavorite={toggleFavorite} onTogglePlan={selectedIsIstanbul ? toggleIstanbulPlacePlan : toggleBursaPlacePlan} />
       <DistrictModal district={selectedDistrict} planned={selectedDistrict ? plannedDistricts.includes(selectedDistrict.name) : false} onClose={() => setSelectedDistrict(null)} onTogglePlan={toggleDistrictPlan} />
       <SpiritualModal site={selectedSpiritual} planned={selectedSpiritual ? plannedSpiritual.includes(selectedSpiritual.id) : false} onClose={() => setSelectedSpiritual(null)} onTogglePlan={toggleSpiritualPlan} />
       <AppMenu visible={menuOpen} activeCity={activeCity} favoriteCount={favorites.length} planCount={plannedDistricts.length + plannedSpiritual.length + plannedBursaPlaces.length + plannedIstanbulPlaces.length} onClose={() => setMenuOpen(false)} onNavigate={nextTab => { setMenuOpen(false); setTab(nextTab); }} onCity={city => { setActiveCity(city); setTab('home'); setMenuOpen(false); }} />
@@ -564,7 +566,7 @@ function verifiedBeachTags(beach: BursaBeach) {
 
 function BeachCard({ beach, favorite, planned, onFavorite, onPlan, onOpen }: { beach: BursaBeach; favorite: boolean; planned: boolean; onFavorite: (id: string) => void; onPlan: (id: string) => void; onOpen: () => void }) {
   return <Pressable onPress={onOpen} style={styles.placeCard}>
-    <View><Image source={beach.image} style={styles.placeImage} {...(Platform.OS === 'web' ? ({ loading: 'lazy' } as object) : {})} /><View style={styles.placeholderBadge}><Text style={styles.placeholderBadgeText}>TEMSİLİ GÖRSEL</Text></View><Pressable hitSlop={10} onPress={event => { event.stopPropagation(); onFavorite(beach.id); }} style={styles.favoriteButton}><Text style={[styles.favoriteIcon, favorite && styles.favoriteIconActive]}>{favorite ? '♥' : '♡'}</Text></Pressable></View>
+    <View><Image source={beach.image} style={styles.placeImage} {...(Platform.OS === 'web' ? ({ loading: 'lazy' } as object) : {})} />{beach.imageIsPlaceholder && <View style={styles.placeholderBadge}><Text style={styles.placeholderBadgeText}>TEMSİLİ GÖRSEL</Text></View>}<Pressable hitSlop={10} onPress={event => { event.stopPropagation(); onFavorite(beach.id); }} style={styles.favoriteButton}><Text style={[styles.favoriteIcon, favorite && styles.favoriteIconActive]}>{favorite ? '♥' : '♡'}</Text></Pressable></View>
     <View style={styles.placeBody}><View style={styles.placeMeta}><Text style={styles.placeCategory}>🏖️ SAHİL & PLAJ</Text><Text style={styles.placeDistrict}>📍 {beach.district} / Bursa</Text></View><Text style={styles.placeName}>{beach.name}</Text><Text style={styles.beachArea}>{beach.area}</Text><View style={styles.beachTags}>{verifiedBeachTags(beach).map(tag => <View key={tag} style={styles.beachTag}><Text style={styles.beachTagText}>{tag}</Text></View>)}</View><Text numberOfLines={2} style={styles.placeSummary}>{beach.summary}</Text><Text style={styles.cardOpen}>Detayı aç  →</Text><Pressable onPress={event => { event.stopPropagation(); onPlan(beach.id); }} style={[styles.bursaCardPlanButton, planned && styles.bursaCardPlanButtonActive]}><Text style={[styles.bursaCardPlanText, planned && styles.bursaCardPlanTextActive]}>{planned ? '✓  Planıma eklendi' : '+  Planıma ekle'}</Text></Pressable></View>
   </Pressable>;
 }
