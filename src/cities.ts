@@ -40,5 +40,5 @@ export const turkeyCities: TurkeyCity[] = cityRows.map(([plate, name, region]) =
   plate,
   name,
   region,
-  status: name === 'Bursa' || name === 'İstanbul' || name === 'Ankara' ? 'active' : nextCities.has(name) ? 'next' : 'planned',
+  status: name === 'Bursa' || name === 'İstanbul' || name === 'Ankara' || name === 'İzmir' ? 'active' : nextCities.has(name) ? 'next' : 'planned',
 }));

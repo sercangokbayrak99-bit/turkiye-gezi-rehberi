@@ -68,4 +68,33 @@ Ankara rehberi fotoğrafları:
 - Altınpark ana girişi — Dosseman — CC BY-SA 4.0
 - Ankara Kalesi, Augustus Tapınağı, Hacı Bayram Camii, Eymir Gölü, Soğuksu Millî Parkı, Nallıhan Kuş Cenneti ve Tuz Gölü — Wikimedia Commons; ayrıntılı eser ve lisans bağlantıları Ankara kartlarında verilmiştir.
 
+İzmir rehberi fotoğrafları:
+
+- İzmir Saat Kulesi — AnisKoutsi — CC BY-SA 4.0
+- Kemeraltı Çarşısı — Dosseman — CC BY-SA 4.0
+- Tarihî Asansör — Mach — CC BY-SA 3.0
+- Smyrna Agora — Didier Laroche — CC BY-SA 3.0
+- Efes / Celsus Kütüphanesi — Benh LIEU SONG — CC BY-SA 3.0
+- Bergama Akropolü — Ingo Mehling — CC BY-SA 3.0
+- Çeşme Kalesi — Gargarapalvin — CC BY-SA 4.0
+- Alaçatı Yel Değirmenleri — Justinianus — CC BY-SA 4.0
+- Sığacık Kaleiçi — BSRF — CC BY-SA 4.0
+- Teos Antik Kenti — Kadı — CC BY-SA 4.0
+- Eski Foça — Dosseman — CC BY-SA 4.0
+- Dikili kıyısı — Fatih Renkligil — CC BY-SA 4.0
+- Karaburun Bodrum Koyu — Faik Sarıkaya — Attribution
+- Birgi — Volker Höhfeld — CC BY-SA 4.0
+- İzmir Doğal Yaşam Parkı — VikiPicture — CC BY-SA 3.0
+- Gediz Deltası — Emoboy1331 — CC BY-SA 4.0
+- Meryem Ana Evi — Giorgio Galeotti — CC BY-SA 4.0
+- Ilıca Plajı — Nihat1988 — CC BY 3.0
+- Altınkum Plajı — Bir Ege Hikayesi — CC BY 3.0
+- Pırlanta Koyu — Justinianus — CC BY-SA 4.0
+- Ekmeksiz Plajı — Fivitria — CC BY-SA 4.0
+- Mordoğan — Bir Ege Hikayesi — CC BY 3.0
+- Gümüldür — BIG-K006 — CC BY 4.0
+- Özdere Plajı — CherryX — CC BY-SA 3.0
+
+İzmir kartlarındaki ayrıntılı eser sayfası ve bilgi kaynağı bağlantıları uygulama içinde ayrıca gösterilir.
+
 Uygulama simgesi, Bursa Ulu Cami fotoğrafından kırpılmıştır.
