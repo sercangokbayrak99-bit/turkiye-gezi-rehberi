@@ -17,11 +17,15 @@ export type IzmirBeach = {
   changingRoom: IzmirBeachFacility; food: IzmirBeachFacility; sunbed: IzmirBeachFacility;
   umbrella: IzmirBeachFacility; familyFriendly: IzmirBeachFacility; childFriendly: IzmirBeachFacility;
   lifeguardAvailable: IzmirBeachFacility; accessible: IzmirBeachFacility;
-  blueFlag: boolean; blueFlagYear: number | null; seaWarning: string | null; sourceUrl: string;
+  blueFlag: boolean | null; blueFlagYear: number | null; seaWarning: string | null; sourceUrl: string;
 };
 
 const tourism = 'https://izmir.ktb.gov.tr/TR-77213/plajlar.html';
 const seaTourism = 'https://izmir.ktb.gov.tr/TR-92450/deniz-turizmi.html';
+const seferihisar2026 = 'https://seferihisar.bel.tr/seferihisar-2026-sezonunda-10-mavi-bayragini-korudu';
+const cesme2026 = 'https://www.cesme.bel.tr/haberler/cesme-belediyesi-plajlari-bir-kez-daha-mavi-bayrak-kazandi';
+const aliaga2026 = 'https://www.aliaga.bel.tr/haber/aliaga-da-mavi-bayrakli-plaj-sayisi-3-e-yukseldi/1718';
+const openStreetMap = 'https://www.openstreetmap.org/';
 const placeholder = require('../assets/bursa/beach-placeholder.jpg');
 const photos: Record<string, { image: ImageSourcePropType; credit: string; page: string }> = {
   ilica: { image: require('../assets/izmir/ilica.jpg'), credit: 'Nihat1988 · CC BY 3.0', page: 'https://commons.wikimedia.org/wiki/File:Cesme_Ilica_Plaji_(beach)_-_panoramio.jpg' },
@@ -50,13 +54,19 @@ const seeds: Seed[] = [
   ['catalazmak','Çatalazmak Plajı','Çeşme','Dalyan','beach',null],
 
   ['buyuk-akkum','Büyük Akkum Plajı','Seferihisar','Sığacık','public_beach',null],
-  ['akkum','Akkum Plajı','Seferihisar','Sığacık','public_beach',null,'Rüzgârlı günlerde deniz koşullarını kontrol edin.'],
+  ['akkum','Küçük Akkum Plajı','Seferihisar','Sığacık','public_beach',null,'Rüzgârlı günlerde deniz koşullarını kontrol edin.'],
   ['akarca','Akarca Plajı','Seferihisar','Akarca','public_beach',null],
   ['ekmeksiz','Ekmeksiz Plajı','Seferihisar','Sığacık · Teos','natural_coast',null],
   ['gemisuyu','Gemisuyu Mevkii Plajı','Seferihisar','Akarca · Gemisuyu','public_beach',null],
   ['doganbey','Doğanbey Halk Plajı','Seferihisar','Doğanbey','public_beach',null],
   ['urkmez','Ürkmez Belediye Plajı','Seferihisar','Ürkmez','public_beach',null],
   ['bengiler','Bengiler Halk Plajı','Seferihisar','Ürkmez · Bengiler','public_beach',null],
+  ['orsal-bahadir','Orşal / Bahadır Mevkii Halk Plajı','Seferihisar','Akarca · Bahadır','public_beach','Ücretsiz'],
+  ['doganbey-sakiz','Doğanbey Sakız Ağacı Mevkii Halk Plajı','Seferihisar','Doğanbey · Sakız Ağacı','public_beach','Ücretsiz'],
+  ['doganbey-havacilar','Doğanbey Havacılar Sitesi Halk Plajı','Seferihisar','Doğanbey · Havacılar Sitesi','public_beach','Ücretsiz'],
+  ['doganbey-omur','Doğanbey Ömür Beldesi Halk Plajı','Seferihisar','Doğanbey · Ömür Beldesi','public_beach','Ücretsiz'],
+  ['urkmez-saglik','Ürkmez Sağlık Ocağı Halk Plajı','Seferihisar','Ürkmez · Sağlık Ocağı','public_beach','Ücretsiz'],
+  ['iztur-sertur','İztur / Sertur Halk Plajı','Seferihisar','Akarca · İztur / Sertur','public_beach','Ücretsiz'],
 
   ['ardic','Ardıç Plajı','Karaburun','Mordoğan · Ardıç','public_beach',null],
   ['manal','Manal Koyu','Karaburun','Mordoğan · Balıklıova','cove',null],
@@ -94,20 +104,46 @@ const seeds: Seed[] = [
   ['pamucak','Pamucak Halk Plajı','Selçuk','Pamucak','public_beach','Ücretsiz'],
   ['guzelbahce','Güzelbahçe Halk Plajı','Güzelbahçe','Siteler · kıyı bandı','public_beach',null],
   ['yeni-sakran','Yeni Şakran Halk Plajı','Aliağa','Yeni Şakran','public_beach',null],
+  ['agapark','Ağapark Plajı','Aliağa','Yeni Şakran · Ağapark','public_beach',null],
+  ['polis-kampi','Polis Kampı Plajı','Aliağa','Aliağa kıyısı','public_beach',null],
+  ['albest-on','ALBEST Ön Plaj','Aliağa','ALBEST Sosyal Tesisleri önü','public_beach',null],
 ];
+
+const blueFlag2026: Record<string, string> = {
+  ilica: cesme2026, kocakari: cesme2026, tekke: cesme2026,
+  'buyuk-akkum': seferihisar2026, akarca: seferihisar2026, gemisuyu: seferihisar2026,
+  bengiler: seferihisar2026, 'orsal-bahadir': seferihisar2026, 'doganbey-sakiz': seferihisar2026,
+  'doganbey-havacilar': seferihisar2026, 'doganbey-omur': seferihisar2026,
+  'urkmez-saglik': seferihisar2026, 'iztur-sertur': seferihisar2026,
+  agapark: aliaga2026, 'polis-kampi': aliaga2026, 'albest-on': aliaga2026,
+};
+
+const verifiedLocations: Record<string, [number, number]> = {
+  ilica: [38.3092076, 26.3772479], tekke: [38.3284622, 26.2971823],
+  altinkum: [38.2702408, 26.2600995], pirlanta: [38.2851397, 26.2491886],
+  'buyuk-akkum': [38.1906623, 26.7731260], akarca: [38.1668983, 26.8076731],
+  ardic: [38.5295423, 26.6134309], manal: [38.4718720, 26.6110615],
+  killik: [39.0364876, 26.8110942], gumuldur: [38.0715785, 26.9903279],
+  pamucak: [37.9401800, 27.2750149],
+};
 
 const typeLabel = (type: IzmirBeachType) => type === 'public_beach' ? 'halk plajı' : type === 'cove' ? 'koy' : type === 'natural_coast' ? 'doğal yüzme kıyısı' : 'plaj';
 
 export const izmirBeaches: IzmirBeach[] = seeds.map(([key,name,district,area,placeType,access,seaWarning]) => {
   const photo = photos[key];
+  const coordinates = verifiedLocations[key];
+  const blueFlagSource = blueFlag2026[key];
   return {
     id: `izmir-beach-${key}`, name, city: 'İzmir', district, area, sea: 'Ege', category: 'Sahil', placeType,
     summary: `${area} çevresindeki ${name}, İzmir kıyı rehberinde ${typeLabel(placeType)} olarak sınıflandırılmıştır. Sezon, erişim ve tesis koşullarını ziyaret öncesinde resmî kanallardan kontrol edin.`,
-    latitude: null, longitude: null, locationStatus: 'needs_review', locationSource: seaTourism, locationVerifiedAt: null,
+    latitude: coordinates?.[0] ?? null, longitude: coordinates?.[1] ?? null,
+    locationStatus: coordinates ? 'verified' : 'needs_review', locationSource: coordinates ? openStreetMap : seaTourism,
+    locationVerifiedAt: coordinates ? '2026-08-28' : null,
     image: photo?.image ?? placeholder, imageIsPlaceholder: !photo, imageCredit: photo?.credit ?? null, imagePage: photo?.page ?? null,
     surface: null, access: access ?? null, operator: null, parking: null, shower: null, toilet: null, changingRoom: null,
     food: null, sunbed: null, umbrella: null, familyFriendly: null, childFriendly: null, lifeguardAvailable: null, accessible: null,
-    blueFlag: false, blueFlagYear: null, seaWarning: seaWarning ?? null, sourceUrl: district === 'Seferihisar' ? tourism : seaTourism,
+    blueFlag: blueFlagSource ? true : null, blueFlagYear: blueFlagSource ? 2026 : null,
+    seaWarning: seaWarning ?? null, sourceUrl: blueFlagSource ?? (district === 'Seferihisar' ? tourism : seaTourism),
   };
 });
 
