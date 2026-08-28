@@ -1,6 +1,6 @@
-const CACHE_NAME = 'turkiye-rehberi-1787950824628';
+const CACHE_NAME = 'turkiye-rehberi-1787951238482';
 const APP_ASSETS = [
-  "./_expo/static/js/web/AppEntry-c76f14934a09bef1706aa60f1c1dcf95.js",
+  "./_expo/static/js/web/AppEntry-902ef9769d341d6806442a3ba0d24a84.js",
   "./assets/assets/ankara/altinpark.3c175c24854b56b0b1c1461158203ff1.jpg",
   "./assets/assets/ankara/anadolu-medeniyetleri.4cffabc67dbb9d0d5a7f56e962907567.jpg",
   "./assets/assets/ankara/anitkabir.d9a2810f2ea2d241decd9532b5e76f22.jpg",
@@ -125,7 +125,7 @@ const APP_ASSETS = [
   "./assets/assets/izmir/cesme-kalesi.5031de1397bfd8fee45df035480c90bf.jpg",
   "./assets/assets/izmir/dikili.0221c8a51ed3367e1069d2dff5210bb3.jpg",
   "./assets/assets/izmir/efes.29c4ae8fbd9044d2233597717895a5be.jpg",
-  "./assets/assets/izmir/ekmeksiz.713b78d75fd2b1ba52e6c97dbc108245.jpg",
+  "./assets/assets/izmir/ekmeksiz.326288d38a16e0dea52ac741f5e51047.jpg",
   "./assets/assets/izmir/foca.0f352fa9cbf265ad5db2e7b4cf6a5889.jpg",
   "./assets/assets/izmir/gediz.0c00656510753c921c12992ed2e7c1a8.jpg",
   "./assets/assets/izmir/gümüldür.1585703fc10f385d763f082fe592a746.jpg",
