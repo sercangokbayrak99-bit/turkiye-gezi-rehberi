@@ -52,6 +52,7 @@ export type CityGuideModules = {
   familyRoutes: { area: string; district: string; character: string; mapQuery: string }[];
   nightlifeAreas: { area: string; district: string; character: string; mapQuery: string }[];
   shoppingStreets: { area: string; district: string; character: string; mapQuery: string }[];
+  transport: { icon: string; name: string; description: string; mapQuery: string }[];
 };
 
 export const bursaGuideModules: CityGuideModules = {
@@ -122,5 +123,13 @@ export const bursaGuideModules: CityGuideModules = {
     { area: 'Cumhuriyet Caddesi', district: 'Osmangazi', character: 'Tarihî merkez boyunca mağazaları, tramvayı ve çarşı bağlantılarıyla canlı yaya aksı.', mapQuery: 'Cumhuriyet Caddesi Bursa' },
     { area: 'FSM Bulvarı', district: 'Nilüfer', character: 'Mağaza, kafe ve restoranların sıralandığı modern alışveriş ve yaşam bulvarı.', mapQuery: 'Fatih Sultan Mehmet Bulvarı Bursa' },
     { area: 'PodyumPark çevresi', district: 'Nilüfer', character: 'Açık hava alışverişi, yeme içme ve eğlenceyi bir araya getiren çağdaş kent bölgesi.', mapQuery: 'PodyumPark Bursa' },
+  ],
+  transport: [
+    { icon: 'M', name: 'Bursaray', description: 'Kent merkezini Nilüfer, Osmangazi, Yıldırım ve üniversite yönleriyle bağlayan raylı sistem.', mapQuery: 'Bursaray metro istasyonları Bursa' },
+    { icon: 'T', name: 'Tramvay', description: 'Tarihî merkez, Cumhuriyet Caddesi ve kent içindeki kısa bağlantılarda kullanılan tramvay hatları.', mapQuery: 'Bursa tramvay durakları' },
+    { icon: 'B', name: 'BURULAŞ otobüsleri', description: 'Merkez ilçelerden çevre mahallelere ve ilçelere uzanan belediye otobüsü bağlantıları.', mapQuery: 'BURULAŞ otobüs durakları Bursa' },
+    { icon: 'F', name: 'BUDO & deniz ulaşımı', description: 'Mudanya üzerinden İstanbul bağlantısı sağlayan deniz otobüsü ve iskele seçenekleri.', mapQuery: 'BUDO Mudanya iskelesi Bursa' },
+    { icon: 'TF', name: 'Uludağ Teleferik', description: 'Teferrüç’ten Uludağ yönüne çıkan manzaralı teleferik hattı ve istasyonları.', mapQuery: 'Bursa Teleferik istasyonları' },
+    { icon: 'O', name: 'Otogar & şehirlerarası ulaşım', description: 'Bursa Şehirlerarası Otobüs Terminali ve ilçelere aktarma noktaları.', mapQuery: 'Bursa Otogar şehirlerarası terminal' },
   ],
 };

@@ -213,3 +213,12 @@ export const istanbulTransport = [
   { icon: 'T', name: 'Tramvay & füniküler', description: 'Tarihî yarımada, Beyoğlu ve Boğaz bağlantılarındaki kısa şehir hatları.', mapQuery: 'İstanbul tramvay füniküler istasyonları' },
   { icon: '✈', name: 'Havalimanı ulaşımı', description: 'İstanbul ve Sabiha Gökçen havalimanlarına toplu taşıma seçenekleri.', mapQuery: 'İstanbul havalimanı toplu taşıma' },
 ];
+
+export const istanbulGallery = [
+  { title: 'Tarihî Yarımada', district: 'Fatih', image: require('../assets/istanbul/hagia-sophia.jpg') },
+  { title: 'Boğaz kıyıları', district: 'Beşiktaş', image: require('../assets/istanbul/ortakoy-mosque.jpg') },
+  { title: 'Dolmabahçe Sarayı', district: 'Beşiktaş', image: require('../assets/istanbul/dolmabahce.jpg') },
+  { title: 'Galata', district: 'Beyoğlu', image: require('../assets/istanbul/galata.jpg') },
+  { title: 'Adalar', district: 'Adalar', image: require('../assets/istanbul/princes-islands.jpg') },
+  { title: 'Emirgan Korusu', district: 'Sarıyer', image: require('../assets/istanbul/emirgan-park.jpg') },
+];
