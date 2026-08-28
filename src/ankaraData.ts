@@ -90,6 +90,14 @@ export const ankaraVenueAreas = [
   { area: 'Beypazarı Çarşısı', district: 'Beypazarı', character: 'Güveç, yaprak sarma, havuç ürünleri ve yöresel fırınlar.', cafeQuery: 'kafeler Beypazarı tarihi çarşı', restaurantQuery: 'yöresel restoranlar Beypazarı Ankara' },
 ];
 
+export const ankaraNightlifeAreas = [
+  { area: 'Tunalı Hilmi & Kavaklıdere', district: 'Çankaya', character: 'Kafeler, restoranlar, canlı müzik ve yürünebilir sokaklarıyla Ankara’nın güçlü akşam yaşamı merkezlerinden.', mapQuery: 'akşam mekanları canlı müzik Tunalı Hilmi Kavaklıdere Ankara' },
+  { area: 'Kızılay & Sakarya', district: 'Çankaya', character: 'Merkezî ulaşım, farklı bütçelere uygun kafeler, restoranlar ve kültür duraklarıyla hareketli şehir akşamları.', mapQuery: 'akşam mekanları canlı müzik Kızılay Sakarya Ankara' },
+  { area: 'Bahçelievler 7. Cadde', district: 'Çankaya', character: 'Yoğun yaya hareketi, mahalle kafeleri ve restoranlarla genç şehir yaşamının akşama uzanan buluşma aksı.', mapQuery: 'akşam mekanları Bahçelievler 7. Cadde Ankara' },
+  { area: 'Çayyolu & Ümitköy', district: 'Çankaya', character: 'Modern restoranlar, kafeler ve daha sakin akşam yemekleri için batı Ankara’nın güçlü sosyal yaşam bölgesi.', mapQuery: 'akşam mekanları restoranlar Çayyolu Ümitköy Ankara' },
+  { area: 'GOP & Gaziosmanpaşa', district: 'Çankaya', character: 'Restoranlar, kafeler ve şehirli sosyal yaşamıyla akşam yemeği ve sohbet odaklı seçkin bir kent aksı.', mapQuery: 'akşam mekanları restoranlar Gaziosmanpaşa Ankara' },
+];
+
 export const ankaraAccommodations: AccommodationArea[] = [
   { area: 'Kızılay', district: 'Çankaya', category: 'Merkez', bestFor: 'İlk ziyaret · toplu ulaşım', character: 'Metro bağlantısı, müzeler ve merkezi akslara kolay erişim.', level: 'Karma', mapQuery: 'otel Kızılay Ankara' },
   { area: 'Kavaklıdere & Tunalı', district: 'Çankaya', category: 'Kent yaşamı', bestFor: 'Kafe · restoran · yürüyüş', character: 'Şehir yaşamına yakın butik ve üst segment oteller.', level: 'Orta', mapQuery: 'otel Kavaklıdere Tunalı Ankara' },

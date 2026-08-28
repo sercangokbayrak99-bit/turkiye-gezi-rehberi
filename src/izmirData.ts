@@ -98,6 +98,16 @@ export const izmirVenueAreas = [
   { area:'Bergama Çarşısı', district:'Bergama', character:'Yerel peynir, çığırtma ve geleneksel lokantalar.', cafeQuery:'kafeler Bergama çarşı İzmir', restaurantQuery:'restoranlar Bergama İzmir' },
 ];
 
+export const izmirNightlifeAreas = [
+  { area:'Alsancak & Kordon', district:'Konak', character:'Canlı müzik, kafeler, restoranlar ve Kordon boyunca geceye uzanan hareketli İzmir atmosferi.', mapQuery:'akşam mekanları canlı müzik Alsancak Kordon İzmir' },
+  { area:'Kıbrıs Şehitleri & Alsancak', district:'Konak', character:'Yoğun yaya hareketi, kültür durakları, kafeler ve canlı müzikle merkezde hareketli bir akşam rotası.', mapQuery:'akşam mekanları Kıbrıs Şehitleri Alsancak İzmir' },
+  { area:'Bostanlı & Karşıyaka', district:'Karşıyaka', character:'Gün batımı, sahil yürüyüşü, kafeler ve restoranlarla yerel yaşamın akşama taşındığı kıyı bölgesi.', mapQuery:'akşam mekanları Bostanlı Karşıyaka İzmir' },
+  { area:'Bornova Küçükpark', district:'Bornova', character:'Öğrenci yaşamı, kafeler, kültür ve canlı müzik seçenekleriyle hareketli akşam saatlerine sahip merkez.', mapQuery:'akşam mekanları canlı müzik Küçükpark Bornova İzmir' },
+  { area:'Alaçatı', district:'Çeşme', character:'Taş sokaklar, restoranlar ve canlı müzikle özellikle yaz sezonunda hareketlenen yarımada akşamları.', mapQuery:'akşam mekanları canlı müzik Alaçatı Çeşme İzmir' },
+  { area:'Çeşme Marina & Merkez', district:'Çeşme', character:'Marina, restoranlar ve sahil yürüyüşüyle yaz akşamlarında canlı, deniz odaklı bir merkez rotası.', mapQuery:'akşam mekanları Çeşme Marina Çeşme İzmir' },
+  { area:'Urla İskele', district:'Urla', character:'Kıyı restoranları, sakin yürüyüşler ve uzun akşam yemekleriyle daha dingin bir Ege gecesi alternatifi.', mapQuery:'akşam mekanları restoranlar Urla İskele İzmir' },
+];
+
 export const izmirAccommodations: AccommodationArea[] = [
   { area:'Konak & Alsancak', district:'Konak', category:'Merkez', bestFor:'İlk ziyaret · araçsız gezi · gece hayatı', character:'Metro, tramvay, vapur, Kemeraltı ve Kordon’a kolay erişim.', level:'Karma', mapQuery:'otel Konak Alsancak İzmir' },
   { area:'Karşıyaka & Bostanlı', district:'Karşıyaka', category:'Yerel yaşam', bestFor:'Sahil · uzun konaklama', character:'Vapur bağlantısı ve sahil yaşamıyla merkeze alternatif.', level:'Orta', mapQuery:'otel Karşıyaka Bostanlı İzmir' },
