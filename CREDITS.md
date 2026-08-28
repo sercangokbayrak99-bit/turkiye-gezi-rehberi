@@ -56,12 +56,15 @@ Bursa sahil ve plaj fotoğrafları:
 
 Ankara rehberi fotoğrafları:
 
-- Anıtkabir / Aslanlı Yol — Diego Delso — CC BY-SA 4.0
-- Anadolu Medeniyetleri Müzesi — Carole Raddato — CC BY-SA 2.0
-- Hamamönü — Bjørn Christian Tørrissen — CC BY-SA 2.0
+- Anıtkabir mozole binası — A. Savin — Free Art License
+- Anadolu Medeniyetleri Müzesi ana girişi — Raicem — CC BY-SA 4.0
+- Hamamönü meydanı ve tarihî evleri — Omer Unlu — CC BY 2.0
 - Roma Hamamı — Diego Delso — CC BY-SA 4.0
 - Kocatepe Camii ve Atakule — A. Savin — Free Art License
-- Gordion Müzesi — Dosseman — CC BY-SA 4.0
-- Ankara Kalesi, Augustus Tapınağı, Hacı Bayram Camii, Eymir ve Mogan gölleri, Soğuksu Millî Parkı, Nallıhan Kuş Cenneti, Beypazarı, Tuz Gölü ve Altınpark — Wikimedia Commons; ayrıntılı eser ve lisans bağlantıları Ankara kartlarında verilmiştir.
+- Mogan Gölü — European Commission / Necati Savaş — CC BY 4.0
+- Gordion tümülüsleri — Özge Kesgin — CC BY-SA 4.0
+- Beypazarı tarihî evleri — İlhan Turun — CC BY 3.0
+- Altınpark ana girişi — Dosseman — CC BY-SA 4.0
+- Ankara Kalesi, Augustus Tapınağı, Hacı Bayram Camii, Eymir Gölü, Soğuksu Millî Parkı, Nallıhan Kuş Cenneti ve Tuz Gölü — Wikimedia Commons; ayrıntılı eser ve lisans bağlantıları Ankara kartlarında verilmiştir.
 
 Uygulama simgesi, Bursa Ulu Cami fotoğrafından kırpılmıştır.

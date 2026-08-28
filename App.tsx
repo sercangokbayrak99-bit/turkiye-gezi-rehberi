@@ -84,6 +84,12 @@ const istanbulNearbySearches = [
 
 type OfflineStatus = 'idle' | 'downloading' | 'ready' | 'error';
 
+// Kalıcı harita kuralı: belirli bir mekâna gitmek Directions, bölgesel keşif Search kullanır.
+const googleMapsDirectionsUrl = (destination: string) =>
+  `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}&travelmode=driving`;
+
+const openDirections = (destination: string) => Linking.openURL(googleMapsDirectionsUrl(destination));
+
 async function downloadOfflineGuide(storageKey: string) {
   if (Platform.OS !== 'web') {
     await AsyncStorage.setItem(storageKey, 'ready');
@@ -464,7 +470,7 @@ function IstanbulBeachModal({ beach, favorite, planned, onFavorite, onPlan, onCl
 }
 
 function IstanbulPlaceModal({ place, favorite, planned, onClose, onFavorite, onTogglePlan }: { place: IstanbulPlace | null; favorite: boolean; planned: boolean; onClose: () => void; onFavorite: (id: string) => void; onTogglePlan: (id: string) => void }) {
-  const openMap = () => place && Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.mapQuery)}`);
+  const openMap = () => place && openDirections(place.mapQuery);
   return <Modal visible={Boolean(place)} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>{place && <View style={styles.modal}><Image source={place.image} style={styles.modalImage} /><View style={styles.modalShade} /><SafeAreaView style={styles.modalSafe}><View style={styles.modalActions}><Pressable onPress={onClose} style={styles.modalRound}><Text style={styles.modalRoundText}>×</Text></Pressable><Pressable onPress={() => onFavorite(place.id)} style={styles.modalRound}><Text style={styles.modalRoundText}>{favorite ? '♥' : '♡'}</Text></Pressable></View><View style={styles.modalBody}><Text style={styles.modalMeta}>{place.category.toUpperCase()} · {place.district.toUpperCase()}</Text><Text style={styles.modalTitle}>{place.name}</Text><Text style={styles.modalCopy}>{place.summary}</Text><View style={styles.infoCard}><Text style={styles.infoLabel}>ZİYARET BİLGİSİ</Text><Text style={styles.infoTitle}>Konumu ve güncel bilgileri görüntüle</Text><Text style={styles.infoCopy}>Çalışma saatleri, ulaşım seçenekleri ve güncel yol durumunu ziyaret öncesinde haritadan kontrol edin.</Text></View><Pressable onPress={() => onTogglePlan(place.id)} style={[styles.spiritualPlanButton, planned && styles.spiritualPlanButtonActive]}><Text style={[styles.spiritualPlanText, planned && styles.spiritualPlanTextActive]}>{planned ? '✓  Gezi planıma eklendi' : '+  Gezi planıma ekle'}</Text></Pressable><Pressable onPress={openMap} style={styles.primaryButton}><Text style={styles.primaryButtonText}>Konum ve yol tarifi  →</Text></Pressable><Pressable onPress={() => Linking.openURL(place.imagePage)} style={styles.sourceButton}><Text style={styles.sourceButtonText}>Fotoğraf: {place.credit}</Text></Pressable></View></SafeAreaView></View>}</Modal>;
 }
 
@@ -826,7 +832,7 @@ function PlanScreen({ districtNames, spiritualIds, bursaPlaceIds, istanbulPlaceI
     const first = destinations[0];
     const last = destinations.at(-1);
     if (!first || !last) return;
-    if (destinations.length === 1) return Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(first)}`);
+    if (destinations.length === 1) return openDirections(first);
     const origin = encodeURIComponent(first);
     const destination = encodeURIComponent(last);
     const waypoints = destinations.slice(1, -1).join('|');
@@ -867,7 +873,7 @@ function BeachModal({ place, favorite, planned, onClose, onFavorite, onTogglePla
 
 function PlaceModal({ place, favorite, planned, onClose, onFavorite, onTogglePlan }: { place: Place | null; favorite: boolean; planned: boolean; onClose: () => void; onFavorite: (id: string) => void; onTogglePlan: (id: string) => void }) {
   if (place?.beach) return <BeachModal place={place} favorite={favorite} planned={planned} onClose={onClose} onFavorite={onFavorite} onTogglePlan={onTogglePlan} />;
-  const openMap = () => place && Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.mapQuery)}`);
+  const openMap = () => place && openDirections(place.mapQuery);
   return <Modal visible={Boolean(place)} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>{place && <View style={styles.modal}><Image source={place.image} style={styles.modalImage} /><View style={styles.modalShade} /><SafeAreaView style={styles.modalSafe}><View style={styles.modalActions}><Pressable onPress={onClose} style={styles.modalRound}><Text style={styles.modalRoundText}>×</Text></Pressable><Pressable onPress={() => onFavorite(place.id)} style={styles.modalRound}><Text style={styles.modalRoundText}>{favorite ? '♥' : '♡'}</Text></Pressable></View><View style={styles.modalBody}><Text style={styles.modalMeta}>{place.category.toUpperCase()} · {place.district.toUpperCase()}</Text><Text style={styles.modalTitle}>{place.name}</Text><Text style={styles.modalCopy}>{place.summary}</Text><View style={styles.infoCard}><Text style={styles.infoLabel}>BU ROTA İÇİN</Text><Text style={styles.infoTitle}>Haritada konumu aç</Text><Text style={styles.infoCopy}>Güncel yol durumunu ve ulaşım seçeneklerini harita uygulamasından görüntüle.</Text></View><Pressable onPress={() => onTogglePlan(place.id)} style={[styles.spiritualPlanButton, planned && styles.spiritualPlanButtonActive]}><Text style={[styles.spiritualPlanText, planned && styles.spiritualPlanTextActive]}>{planned ? '✓  Gezi planıma eklendi' : '+  Gezi planıma ekle'}</Text></Pressable><Pressable onPress={openMap} style={styles.primaryButton}><Text style={styles.primaryButtonText}>Yol tarifi al  →</Text></Pressable>{place.imagePage && <Pressable onPress={() => Linking.openURL(place.imagePage!)} style={styles.sourceButton}><Text style={styles.sourceButtonText}>Fotoğraf: {place.imageCredit}</Text></Pressable>}</View></SafeAreaView></View>}</Modal>;
 }
 
@@ -883,7 +889,7 @@ function DistrictModal({ district, planned, onClose, onTogglePlan }: { district:
 }
 
 function SpiritualModal({ site, planned, onClose, onTogglePlan }: { site: SpiritualSite | null; planned: boolean; onClose: () => void; onTogglePlan: (id: string) => void }) {
-  const openMap = () => site && Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.mapQuery)}`);
+  const openMap = () => site && openDirections(site.mapQuery);
   const openSource = () => site && Linking.openURL(site.sourceUrl);
   const openImageSource = () => site && Linking.openURL(site.imagePage);
   return <Modal visible={Boolean(site)} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>{site && <SafeAreaView style={styles.spiritualModal}><View style={styles.spiritualModalHero}><Image source={site.image} style={styles.spiritualModalImage} /><View style={styles.spiritualModalImageShade} /><View style={styles.spiritualModalTop}><View><Text style={styles.spiritualModalKicker}>{site.kind.toUpperCase()} · {site.district.toUpperCase()}</Text><Text style={styles.spiritualModalTitle}>{site.name}</Text></View><Pressable onPress={onClose} style={styles.spiritualClose}><Text style={styles.spiritualCloseText}>×</Text></Pressable></View></View><ScrollView contentContainerStyle={styles.spiritualModalScroll}><Pressable onPress={openImageSource} style={styles.photoCredit}><Text style={styles.photoCreditLabel}>FOTOĞRAF</Text><Text style={styles.photoCreditText}>{site.imageCredit} · Wikimedia Commons  ↗</Text></Pressable><View style={styles.spiritualPeriod}><Text style={styles.spiritualPeriodLabel}>DÖNEM</Text><Text style={styles.spiritualPeriodText}>{site.period}</Text></View><Text style={styles.spiritualModalCopy}>{site.summary}</Text><View style={styles.etiquetteCard}><Text style={styles.etiquetteLabel}>ZİYARET NOTU</Text><Text style={styles.etiquetteText}>{site.etiquette}</Text></View><Pressable onPress={() => onTogglePlan(site.id)} style={[styles.spiritualPlanButton, planned && styles.spiritualPlanButtonActive]}><Text style={[styles.spiritualPlanText, planned && styles.spiritualPlanTextActive]}>{planned ? '✓  Gezi planıma eklendi' : '+  Gezi planıma ekle'}</Text></Pressable><Pressable onPress={openMap} style={styles.spiritualMapButton}><Text style={styles.spiritualMapText}>Konumu ve yol tarifini aç  →</Text></Pressable><Pressable onPress={openSource} style={styles.sourceButton}><Text style={styles.sourceButtonText}>Resmî bilgi kaynağı  ↗</Text></Pressable></ScrollView></SafeAreaView>}</Modal>;
