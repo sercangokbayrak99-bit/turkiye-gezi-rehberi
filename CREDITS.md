@@ -54,4 +54,14 @@ Bursa sahil ve plaj fotoğrafları:
 - Kadırga Koyu — Karakartal34 — CC BY-SA 4.0
 - Kınalıada kıyısı — Jorge Franganillo — CC BY 4.0
 
+Ankara rehberi fotoğrafları:
+
+- Anıtkabir / Aslanlı Yol — Diego Delso — CC BY-SA 4.0
+- Anadolu Medeniyetleri Müzesi — Carole Raddato — CC BY-SA 2.0
+- Hamamönü — Bjørn Christian Tørrissen — CC BY-SA 2.0
+- Roma Hamamı — Diego Delso — CC BY-SA 4.0
+- Kocatepe Camii ve Atakule — A. Savin — Free Art License
+- Gordion Müzesi — Dosseman — CC BY-SA 4.0
+- Ankara Kalesi, Augustus Tapınağı, Hacı Bayram Camii, Eymir ve Mogan gölleri, Soğuksu Millî Parkı, Nallıhan Kuş Cenneti, Beypazarı, Tuz Gölü ve Altınpark — Wikimedia Commons; ayrıntılı eser ve lisans bağlantıları Ankara kartlarında verilmiştir.
+
 Uygulama simgesi, Bursa Ulu Cami fotoğrafından kırpılmıştır.

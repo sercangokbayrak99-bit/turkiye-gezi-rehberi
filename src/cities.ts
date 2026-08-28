@@ -10,7 +10,7 @@ export type TurkeyCity = {
 
 export const regions: Array<'Tümü' | Region> = ['Tümü', 'Marmara', 'Ege', 'Akdeniz', 'İç Anadolu', 'Karadeniz', 'Doğu Anadolu', 'Güneydoğu Anadolu'];
 
-const nextCities = new Set(['İstanbul', 'Ankara', 'İzmir', 'Antalya', 'Konya']);
+const nextCities = new Set(['İzmir', 'Antalya', 'Konya']);
 
 const cityRows: Array<[number, string, Region]> = [
   [1, 'Adana', 'Akdeniz'], [2, 'Adıyaman', 'Güneydoğu Anadolu'], [3, 'Afyonkarahisar', 'Ege'], [4, 'Ağrı', 'Doğu Anadolu'],
@@ -40,5 +40,5 @@ export const turkeyCities: TurkeyCity[] = cityRows.map(([plate, name, region]) =
   plate,
   name,
   region,
-  status: name === 'Bursa' || name === 'İstanbul' ? 'active' : nextCities.has(name) ? 'next' : 'planned',
+  status: name === 'Bursa' || name === 'İstanbul' || name === 'Ankara' ? 'active' : nextCities.has(name) ? 'next' : 'planned',
 }));
