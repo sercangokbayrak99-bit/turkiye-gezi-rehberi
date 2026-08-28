@@ -1,6 +1,6 @@
-const CACHE_NAME = 'turkiye-rehberi-1787930381938';
+const CACHE_NAME = 'turkiye-rehberi-1787948518780';
 const APP_ASSETS = [
-  "./_expo/static/js/web/AppEntry-74ba6fe3b07cee7fe77147860a95f6b5.js",
+  "./_expo/static/js/web/AppEntry-500b5c5af87127c183a408c3ef48e106.js",
   "./assets/assets/ankara/altinpark.3c175c24854b56b0b1c1461158203ff1.jpg",
   "./assets/assets/ankara/anadolu-medeniyetleri.4cffabc67dbb9d0d5a7f56e962907567.jpg",
   "./assets/assets/ankara/anitkabir.d9a2810f2ea2d241decd9532b5e76f22.jpg",
@@ -129,7 +129,7 @@ const APP_ASSETS = [
   "./assets/assets/izmir/foca.0f352fa9cbf265ad5db2e7b4cf6a5889.jpg",
   "./assets/assets/izmir/gediz.0c00656510753c921c12992ed2e7c1a8.jpg",
   "./assets/assets/izmir/gümüldür.1585703fc10f385d763f082fe592a746.jpg",
-  "./assets/assets/izmir/hero.e4d0afd04b1cc14578cfe225d181f89c.jpg",
+  "./assets/assets/izmir/hero.49fdbdb23fca023ef6de93810dd88c77.jpg",
   "./assets/assets/izmir/ilica.17de41bbcb6a93ab209817021258a16f.jpg",
   "./assets/assets/izmir/karaburun.5e81b42fd23b16145e827f1b64b08a07.jpg",
   "./assets/assets/izmir/kemeralti.a50e08474e7836abdfa85b602c2d67fe.jpg",
