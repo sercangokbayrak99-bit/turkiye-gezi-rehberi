@@ -12,7 +12,7 @@ export const izmirQuickFacts = [
   { label: 'Nüfus', value: '4.504.185', note: '2025 ADNKS' },
   { label: 'İlçe', value: '30', note: 'İzmir ili' },
   { label: 'Bölge', value: 'Ege', note: 'Türkiye' },
-  { label: 'Plaj & koy', value: '53', note: 'Rehber envanteri' },
+  { label: 'Plaj & koy', value: '60', note: 'Rehber envanteri' },
   { label: 'UNESCO', value: '2', note: 'Efes · Bergama' },
   { label: 'Plaka', value: '35', note: 'Şehir kodu' },
 ];
