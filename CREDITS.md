@@ -71,7 +71,7 @@ Ankara rehberi fotoğrafları:
 İzmir rehberi fotoğrafları:
 
 - İzmir Saat Kulesi ve Konak Meydanı — Ingo Mehling — CC BY-SA 3.0
-- Kemeraltı Çarşısı — Dosseman — CC BY-SA 4.0
+- Kemeraltı Çarşısı ve Kızlarağası Hanı — Furkan Akkurt — CC BY-SA 4.0
 - Tarihî Asansör — Mach — CC BY-SA 3.0
 - Smyrna Agora — Didier Laroche — CC BY-SA 3.0
 - Efes / Celsus Kütüphanesi — Benh LIEU SONG — CC BY-SA 3.0
