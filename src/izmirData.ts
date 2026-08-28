@@ -108,6 +108,18 @@ export const izmirNightlifeAreas = [
   { area:'Urla İskele', district:'Urla', character:'Kıyı restoranları, sakin yürüyüşler ve uzun akşam yemekleriyle daha dingin bir Ege gecesi alternatifi.', mapQuery:'akşam mekanları restoranlar Urla İskele İzmir' },
 ];
 
+export const izmirShoppingStreets = [
+  { area:'Kemeraltı Çarşısı', district:'Konak', character:'Hanları, pasajları, geleneksel dükkânları, baharatçıları ve Kızlarağası Hanı çevresiyle İzmir’in tarihî alışveriş merkezidir.', mapQuery:'Kemeraltı Çarşısı alışveriş Konak İzmir' },
+  { area:'Alsancak & Kıbrıs Şehitleri Caddesi', district:'Konak', character:'Butik dükkânlar, kitapçılar, mağazalar ve kafelerle yürünebilir İzmir kent yaşamını alışverişle birleştiren aks.', mapQuery:'alışveriş Kıbrıs Şehitleri Caddesi Alsancak İzmir' },
+  { area:'Karşıyaka Çarşısı', district:'Karşıyaka', character:'Vapur iskelesinden başlayan yoğun yaya aksında mağazaları, kitapçıları, kafeleri ve yerel çarşı atmosferini buluşturur.', mapQuery:'Karşıyaka Çarşısı alışveriş İzmir' },
+  { area:'Alaçatı Çarşısı', district:'Çeşme', character:'Taş sokaklarda butik mağazalar, tasarım ürünleri, yerel tatlar ve hediyeliklerle özellikle yazın canlanan kasaba rotası.', mapQuery:'Alaçatı Çarşısı alışveriş Çeşme İzmir' },
+  { area:'Çeşme Çarşısı', district:'Çeşme', character:'Kale, marina ve merkez arasında yerel ürünleri, hediyelikleri ve sahil kasabası alışverişini bir araya getirir.', mapQuery:'Çeşme Çarşısı alışveriş İzmir' },
+  { area:'Urla Sanat Sokağı & Malgaca Pazarı', district:'Urla', character:'Sanat, butik üretim, yerel ürünler ve tarihî pazar dokusuyla sakin bir Ege kasabası alışveriş deneyimi sunar.', mapQuery:'Urla Sanat Sokağı Malgaca Pazarı alışveriş İzmir' },
+  { area:'Sığacık Kaleiçi & Üretici Pazarı', district:'Seferihisar', character:'Kaleiçi sokaklarında yerel üretici tezgâhları, el emeği ürünler ve hediyelikleri tarihî doku içinde buluşturur.', mapQuery:'Sığacık Kaleiçi Üretici Pazarı alışveriş Seferihisar İzmir' },
+  { area:'Tire Tarihî Çarşısı', district:'Tire', character:'Geleneksel dükkânlar, yerel pazar kültürü, el işi ürünler ve Tire’ye özgü tatlarla güçlü bir ilçe çarşısı rotasıdır.', mapQuery:'Tire Tarihî Çarşısı pazar alışveriş İzmir' },
+  { area:'Bergama Tarihî Çarşısı', district:'Bergama', character:'Arasta çevresi, geleneksel esnaf, yerel dokumalar ve yöresel ürünlerle arkeoloji gezisini çarşı kültürüyle tamamlar.', mapQuery:'Bergama Tarihî Çarşısı arasta alışveriş İzmir' },
+];
+
 export const izmirAccommodations: AccommodationArea[] = [
   { area:'Konak & Alsancak', district:'Konak', category:'Merkez', bestFor:'İlk ziyaret · araçsız gezi · gece hayatı', character:'Metro, tramvay, vapur, Kemeraltı ve Kordon’a kolay erişim.', level:'Karma', mapQuery:'otel Konak Alsancak İzmir' },
   { area:'Karşıyaka & Bostanlı', district:'Karşıyaka', category:'Yerel yaşam', bestFor:'Sahil · uzun konaklama', character:'Vapur bağlantısı ve sahil yaşamıyla merkeze alternatif.', level:'Orta', mapQuery:'otel Karşıyaka Bostanlı İzmir' },

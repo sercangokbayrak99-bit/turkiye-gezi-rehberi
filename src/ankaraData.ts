@@ -98,6 +98,16 @@ export const ankaraNightlifeAreas = [
   { area: 'GOP & Gaziosmanpaşa', district: 'Çankaya', character: 'Restoranlar, kafeler ve şehirli sosyal yaşamıyla akşam yemeği ve sohbet odaklı seçkin bir kent aksı.', mapQuery: 'akşam mekanları restoranlar Gaziosmanpaşa Ankara' },
 ];
 
+export const ankaraShoppingStreets = [
+  { area: 'Tunalı Hilmi Caddesi', district: 'Çankaya', character: 'Mağazaları, kitapçıları, pasajları ve kafeleriyle yürüyerek keşfedilebilen güçlü bir şehir alışveriş aksı.', mapQuery: 'alışveriş Tunalı Hilmi Caddesi Çankaya Ankara' },
+  { area: 'Kızılay & İzmir Caddesi', district: 'Çankaya', character: 'Metro bağlantıları, mağazalar, pasajlar ve yoğun yaya hareketiyle başkentin merkezî günlük alışveriş rotası.', mapQuery: 'alışveriş Kızılay İzmir Caddesi Çankaya Ankara' },
+  { area: 'Bahçelievler 7. Cadde', district: 'Çankaya', character: 'Mağazaları, kafeleri ve mahalle yaşamıyla alışverişi akşam yürüyüşüyle birleştiren hareketli cadde.', mapQuery: 'alışveriş Bahçelievler 7. Cadde Çankaya Ankara' },
+  { area: 'Ulus & Anafartalar Caddesi', district: 'Altındağ', character: 'Tarihî merkezde tekstil, gündelik ihtiyaçlar ve geleneksel ticaret dokusunu bir araya getiren yoğun kent rotası.', mapQuery: 'alışveriş Ulus Anafartalar Caddesi Altındağ Ankara' },
+  { area: 'Çıkrıkçılar Yokuşu & Samanpazarı', district: 'Altındağ', character: 'Bakırcılar, antikacılar, tekstil ve geleneksel dükkânlarla Ankara’nın otantik alışveriş hafızasını yaşatan bölge.', mapQuery: 'Çıkrıkçılar Yokuşu Samanpazarı alışveriş Ankara' },
+  { area: 'Hamamönü', district: 'Altındağ', character: 'Restore edilmiş tarihî sokaklarda el sanatları, hediyelikler ve yerel ürünleri kent gezisiyle buluşturan rota.', mapQuery: 'el sanatları hediyelik alışveriş Hamamönü Altındağ Ankara' },
+  { area: 'Beypazarı Tarihî Çarşısı', district: 'Beypazarı', character: 'El sanatları, telkâri, yöresel ürünler ve tarihî dükkânlarla alışverişi geleneksel kent dokusuyla birleştiren çarşı.', mapQuery: 'Beypazarı Tarihî Çarşısı alışveriş Ankara' },
+];
+
 export const ankaraAccommodations: AccommodationArea[] = [
   { area: 'Kızılay', district: 'Çankaya', category: 'Merkez', bestFor: 'İlk ziyaret · toplu ulaşım', character: 'Metro bağlantısı, müzeler ve merkezi akslara kolay erişim.', level: 'Karma', mapQuery: 'otel Kızılay Ankara' },
   { area: 'Kavaklıdere & Tunalı', district: 'Çankaya', category: 'Kent yaşamı', bestFor: 'Kafe · restoran · yürüyüş', character: 'Şehir yaşamına yakın butik ve üst segment oteller.', level: 'Orta', mapQuery: 'otel Kavaklıdere Tunalı Ankara' },
