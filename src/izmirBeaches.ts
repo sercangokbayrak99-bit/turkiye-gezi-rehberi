@@ -31,7 +31,7 @@ const photos: Record<string, { image: ImageSourcePropType; credit: string; page:
   ilica: { image: require('../assets/izmir/ilica.jpg'), credit: 'Nihat1988 · CC BY 3.0', page: 'https://commons.wikimedia.org/wiki/File:Cesme_Ilica_Plaji_(beach)_-_panoramio.jpg' },
   altinkum: { image: require('../assets/izmir/altinkum.jpg'), credit: 'Bir Ege Hikayesi · CC BY 3.0', page: 'https://commons.wikimedia.org/wiki/File:Alt%C4%B1nkum,_35930_Ovac%C4%B1k-%C3%87e%C5%9Fme-%C4%B0zmir,_Turkey_-_panoramio.jpg' },
   pirlanta: { image: require('../assets/izmir/pirlanta.jpg'), credit: 'Justinianus · CC BY-SA 4.0', page: 'https://commons.wikimedia.org/wiki/File:P%C4%B1rlanta_koyu_1.jpg' },
-  ekmeksiz: { image: require('../assets/izmir/ekmeksiz.jpg'), credit: 'Fivitria · CC BY-SA 4.0', page: 'https://commons.wikimedia.org/wiki/File:Branches_of_a_tree_in_Ekmeksiz_beach.jpg' },
+  ekmeksiz: { image: require('../assets/izmir/ekmeksiz.jpg'), credit: 'Visit İzmir · İzmir Büyükşehir Belediyesi', page: 'https://www.visitizmir.org/en/Destinasyon/10665' },
   'bodrum-koyu': { image: require('../assets/izmir/karaburun.jpg'), credit: 'Faik Sarıkaya · Attribution', page: 'https://commons.wikimedia.org/wiki/File:Faik_Sarikaya_Karaburun_Bodrum_Koyu.jpg' },
   candarli: { image: require('../assets/izmir/dikili.jpg'), credit: 'Fatih Renkligil · CC BY-SA 4.0', page: 'https://commons.wikimedia.org/wiki/File:CANDARLI_-_PITANE-_DIKILI_-_IZMIR.jpg' },
   gumuldur: { image: require('../assets/izmir/gümüldür.jpg'), credit: 'BIG-K006 · CC BY 4.0', page: 'https://commons.wikimedia.org/wiki/File:G%C3%BCne%C5%9Fin_bat%C4%B1%C5%9F%C4%B1_G%C3%BCm%C3%BCld%C3%BCr,_%C4%B0zmir,_T%C3%BCrkiye.jpg' },
