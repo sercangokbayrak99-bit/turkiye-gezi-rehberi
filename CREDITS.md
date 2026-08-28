@@ -60,7 +60,8 @@ Ankara rehberi fotoğrafları:
 - Anadolu Medeniyetleri Müzesi ana girişi — Raicem — CC BY-SA 4.0
 - Hamamönü meydanı ve tarihî evleri — Omer Unlu — CC BY 2.0
 - Roma Hamamı — Diego Delso — CC BY-SA 4.0
-- Kocatepe Camii ve Atakule — A. Savin — Free Art License
+- Kocatepe Camii — A. Savin — Free Art License
+- Atakule ve Botanik Parkı — Gargarapalvin — CC BY-SA 4.0
 - Mogan Gölü — European Commission / Necati Savaş — CC BY 4.0
 - Gordion tümülüsleri — Özge Kesgin — CC BY-SA 4.0
 - Beypazarı tarihî evleri — İlhan Turun — CC BY 3.0
