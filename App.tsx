@@ -39,6 +39,13 @@ const palette = {
   white: '#FFFFFF',
 };
 
+const izmirTheme = {
+  forest: '#173F35', forestDark: '#102F28', moss: '#376A5B',
+  cream: '#F4EFE3', creamSoft: '#F8F5ED', paper: '#FFFDF8', white: '#FFFFFF',
+  gold: '#C99A4A', goldSoft: '#E6D3A7', ink: '#18332C', muted: '#6F7E78',
+  line: '#DED9CC', lineGreen: '#CBD8D1', seaSoft: '#DCEBE7', sandSoft: '#EFE1C8', sageSoft: '#DFE8D8',
+} as const;
+
 type Tab = 'home' | 'explore' | 'plan' | 'favorites' | 'profile';
 type CityId = 'bursa' | 'istanbul' | 'ankara' | 'izmir';
 type ExploreCategory = 'Tümü' | Category | 'Manevi';
@@ -261,7 +268,7 @@ export default function App() {
     <View style={styles.app}>
       <StatusBar style="light" />
       {content}
-      <BottomTabs tab={tab} setTab={setTab} favoriteCount={favorites.length} planCount={planCount} />
+      <BottomTabs tab={tab} setTab={setTab} favoriteCount={favorites.length} planCount={planCount} izmirThemed={activeCity === 'izmir'} />
       <PlaceModal place={selected} favorite={selected ? favorites.includes(selected.id) : false} planned={selected ? (selectedIsIstanbul ? plannedIstanbulPlaces : selectedIsAnkara ? plannedAnkaraPlaces : selectedIsIzmir ? plannedIzmirPlaces : plannedBursaPlaces).includes(selected.id) : false} onClose={() => setSelected(null)} onFavorite={toggleFavorite} onTogglePlan={selectedIsIstanbul ? toggleIstanbulPlacePlan : selectedIsAnkara ? toggleAnkaraPlacePlan : selectedIsIzmir ? toggleIzmirPlacePlan : toggleBursaPlacePlan} />
       <DistrictModal district={selectedDistrict} planned={selectedDistrict ? plannedDistricts.includes(selectedDistrict.name) : false} onClose={() => setSelectedDistrict(null)} onTogglePlan={toggleDistrictPlan} />
       <SpiritualModal site={selectedSpiritual} planned={selectedSpiritual ? plannedSpiritual.includes(selectedSpiritual.id) : false} onClose={() => setSelectedSpiritual(null)} onTogglePlan={toggleSpiritualPlan} />
@@ -366,6 +373,12 @@ function IzmirGuide({ plannedPlaceIds, favorites, onFavorite, onTogglePlan, onMe
   const nearby = [{label:'Gezilecek yer',icon:'⌖',query:'gezilecek yerler'},{label:'Kafe',icon:'☕',query:'kafeler'},{label:'Restoran',icon:'🍴',query:'restoranlar'},{label:'Müze',icon:'▣',query:'müzeler'},{label:'Eczane',icon:'+',query:'eczaneler'},{label:'Hastane',icon:'H',query:'hastaneler'},{label:'AVM',icon:'⌂',query:'alışveriş merkezleri'},{label:'Otopark',icon:'P',query:'otoparklar'}];
   const featuredPlaces = ['izmir-saat-kulesi', 'izmir-efes', 'izmir-alacati', 'izmir-foca'].map(id => izmirPlaces.find(place => place.id === id)).filter((place): place is IzmirPlace => Boolean(place));
   const factIcons = ['◉', '▥', '⌖', '≈', '◇', '▣'];
+  const intentCards = [
+    { id: 'history' as const, icon: '◇', title: 'Tarih & Kültür', copy: 'Konak, Selçuk, Bergama ve daha fazlası', cardStyle: styles.izmirIntentHistory, textStyle: styles.izmirIntentHistoryText, copyStyle: styles.izmirIntentHistoryCopy },
+    { id: 'sea' as const, icon: '≈', title: 'Deniz & Koylar', copy: 'Çeşme, Seferihisar, Foça ve saklı koylar', cardStyle: styles.izmirIntentSea, textStyle: styles.izmirIntentSeaText, copyStyle: styles.izmirIntentSeaCopy },
+    { id: 'family' as const, icon: '◉', title: 'Ailece Keşif', copy: 'Sasalı, İnciraltı ve çocuk dostu rotalar', cardStyle: styles.izmirIntentFamily, textStyle: styles.izmirIntentFamilyText, copyStyle: styles.izmirIntentFamilyCopy },
+    { id: 'evening' as const, icon: '☾', title: 'Akşam & Sosyal', copy: 'Alsancak, Bostanlı, Alaçatı ve daha fazlası', cardStyle: styles.izmirIntentEvening, textStyle: styles.izmirIntentEveningText, copyStyle: styles.izmirIntentEveningCopy },
+  ];
   const selectGuideSection = (section: CityGuideSection) => { if (section === 'beaches') { setShowBeachGuide(true); return; } if (section === 'food') setFoodSection('venues'); setPlaceFocus('all'); setGuideSection(section); setQuery(''); setCategory('Tümü'); setTimeout(() => scrollRef.current?.scrollTo({ y: 0, animated: false }), 0); };
   const selectFoodSection = (section: IzmirFoodSection) => { setFoodSection(section); setTimeout(() => scrollRef.current?.scrollTo({ y: isDesktop ? 520 : 380, animated: true }), 0); };
   const selectIntent = (intent: 'history' | 'sea' | 'family' | 'evening') => {
@@ -382,20 +395,18 @@ function IzmirGuide({ plannedPlaceIds, favorites, onFavorite, onTogglePlan, onMe
   const nature=categoryPlaces.filter(place=>['Doğa','Manzara','Aile & Park'].includes(place.category));
   const coast=categoryPlaces.filter(place=>place.category==='Sahil');
   if (showBeachGuide) return <IzmirBeachGuide query={query} setQuery={setQuery} favorites={favorites} plannedPlaceIds={plannedPlaceIds} onFavorite={onFavorite} onTogglePlan={onTogglePlan} onBack={()=>{setShowBeachGuide(false);setGuideSection('overview');setCategory('Tümü');}} />;
-  return <SafeAreaView style={styles.istanbulPage}><ScrollView ref={scrollRef} contentContainerStyle={[styles.istanbulContent,styles.izmirContent]} showsVerticalScrollIndicator={false}>
+  return <SafeAreaView style={[styles.istanbulPage,styles.izmirPage]}><ScrollView ref={scrollRef} contentContainerStyle={[styles.istanbulContent,styles.izmirContent]} showsVerticalScrollIndicator={false}>
     <View style={[styles.izmirHeader,isDesktop&&styles.izmirHeaderDesktop]}>{isDesktop?<><View style={styles.izmirBrand}><Text style={styles.izmirBrandMark}>✥</Text><Text style={styles.izmirBrandText}>Türkiye Gezi Rehberi</Text></View><View style={styles.izmirHeaderActions}><Pressable onPress={()=>onNavigate('favorites')} style={styles.izmirHeaderLink}><Text style={styles.izmirHeaderLinkIcon}>♡</Text><Text style={styles.izmirHeaderLinkText}>Favorilerim</Text></Pressable><Pressable onPress={()=>onNavigate('plan')} style={styles.izmirHeaderLink}><Text style={styles.izmirHeaderLinkIcon}>⌑</Text><Text style={styles.izmirHeaderLinkText}>Gezi Planım</Text></Pressable><Pressable accessibilityRole="button" accessibilityLabel="Ana menüyü aç" onPress={onMenu} style={styles.izmirHeaderMenu}><Text style={styles.izmirHeaderMenuText}>☰</Text></Pressable></View></>:<><Pressable accessibilityRole="button" accessibilityLabel="Ana menüyü aç" onPress={onMenu} style={styles.izmirHeaderMenu}><Text style={styles.izmirHeaderMenuText}>☰</Text></Pressable><View style={styles.izmirBrand}><Text style={styles.izmirBrandMark}>✥</Text><Text numberOfLines={1} style={styles.izmirBrandText}>Türkiye Gezi Rehberi</Text></View><Pressable onPress={()=>onNavigate('favorites')} style={styles.izmirHeaderMenu}><Text style={styles.izmirHeaderHeart}>♡</Text></Pressable></>}</View>
     <View style={[styles.istanbulHero,styles.izmirPremiumHero,isDesktop?styles.izmirPremiumHeroDesktop:styles.izmirPremiumHeroMobile]}>{Platform.OS === 'web' ? <View style={[StyleSheet.absoluteFill, styles.istanbulHeroImage, ({ backgroundImage: `url("${require('./assets/izmir/hero.jpg').uri}")`, backgroundPosition: '25% center', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' } as object)]}/> : <Image source={require('./assets/izmir/hero.jpg')} resizeMode="cover" style={StyleSheet.absoluteFill}/>}<View style={[styles.istanbulHeroShade,styles.izmirPremiumHeroShade]}/><View style={styles.izmirHeroLeftGradient}/><View style={[styles.istanbulHeroBody,styles.izmirPremiumHeroBody]}><Text style={[styles.istanbulHeroTitle,isDesktop&&styles.izmirPremiumHeroTitle]}>İZMİR</Text><Text style={styles.izmirHeroSubtitle}>Ege’nin İncisi</Text><Text style={[styles.istanbulHeroCopy,styles.izmirPremiumHeroCopy]}>Tarih, deniz, kültür ve Ege yaşamının buluştuğu şehir.</Text></View></View>
     <View style={[styles.izmirGuideNav,isDesktop&&styles.izmirGuideNavDesktop]}><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.izmirGuideNavRail,isDesktop&&styles.izmirGuideNavRailDesktop]}>{izmirGuideSections.map(item=><Pressable key={item.id} onPress={()=>selectGuideSection(item.id)} style={[styles.izmirGuideNavItem,isDesktop&&styles.izmirGuideNavItemDesktop,guideSection===item.id&&styles.izmirGuideNavItemActive]}><Text style={[styles.izmirGuideNavIcon,guideSection===item.id&&styles.izmirGuideNavTextActive]}>{item.icon}</Text><Text numberOfLines={1} style={[styles.izmirGuideNavText,isDesktop&&styles.izmirGuideNavTextDesktop,guideSection===item.id&&styles.izmirGuideNavTextActive]}>{item.label}</Text></Pressable>)}</ScrollView></View>
     <View style={[styles.istanbulBody,styles.izmirPremiumBody]}>
-      {guideSection!=='overview'&&<View style={styles.izmirBreadcrumb}><Pressable onPress={()=>selectGuideSection('overview')} style={styles.izmirBreadcrumbBack}><Text numberOfLines={1} style={styles.izmirBreadcrumbBackText}>←<Text style={styles.izmirBreadcrumbBackGap}>  </Text>Genel Bakış</Text></Pressable><Text style={styles.izmirBreadcrumbCurrent}>İzmir  ›  {izmirGuideSections.find(item=>item.id===guideSection)?.label}</Text></View>}
-      {guideSection==='overview'&&<><View style={styles.izmirOverviewIntro}><View style={styles.izmirOverviewTitleRow}><View style={styles.izmirOverviewLine}/><View style={styles.izmirOverviewDot}/><Text style={[styles.moduleTitle,isDesktop&&styles.izmirOverviewTitleDesktop]}>İzmir’e Genel Bakış</Text><View style={styles.izmirOverviewDot}/><View style={styles.izmirOverviewLine}/></View><Text style={styles.izmirOverviewCopy}>Ege’nin tarihini, kıyılarını, mutfağını ve şehir yaşamını tek rehberde keşfet.</Text></View>
+      {guideSection!=='overview'&&<View style={styles.izmirBreadcrumb}><Pressable onPress={()=>selectGuideSection('overview')} style={styles.izmirBreadcrumbBack}><Text numberOfLines={1} style={styles.izmirBreadcrumbBackText}>←<Text style={styles.izmirBreadcrumbBackGap}>  </Text>Genel Bakış</Text></Pressable><Text style={styles.izmirBreadcrumbCurrent}><Text style={styles.izmirBreadcrumbCity}>İzmir</Text><Text style={styles.izmirBreadcrumbSeparator}>  ›  </Text><Text style={styles.izmirBreadcrumbActive}>{izmirGuideSections.find(item=>item.id===guideSection)?.label}</Text></Text></View>}
+      {guideSection==='overview'&&<><View style={styles.izmirOverviewIntro}><View style={styles.izmirOverviewTitleRow}><View style={styles.izmirOverviewLine}/><View style={styles.izmirOverviewDot}/><Text style={[styles.moduleTitle,styles.izmirHeadingText,isDesktop&&styles.izmirOverviewTitleDesktop]}>İzmir’e Genel Bakış</Text><View style={styles.izmirOverviewDot}/><View style={styles.izmirOverviewLine}/></View><Text style={styles.izmirOverviewCopy}>Ege’nin tarihini, kıyılarını, mutfağını ve şehir yaşamını tek rehberde keşfet.</Text></View>
         <View style={[styles.izmirDashboard,isDesktop&&styles.izmirDashboardDesktop]}>
-          <View style={[styles.izmirDashboardPanel,styles.izmirFactsPanel,isDesktop&&styles.izmirDashboardFacts,isTablet&&styles.izmirDashboardTabletHalf]}><Text style={styles.izmirPanelEyebrow}>HIZLI BİLGİLER</Text><View style={styles.izmirFactsGrid}>{izmirQuickFacts.map((fact,index)=><View key={fact.label} style={styles.izmirFact}><Text style={styles.izmirFactIcon}>{factIcons[index]??'•'}</Text><View style={styles.izmirFactBody}><Text numberOfLines={1} adjustsFontSizeToFit style={styles.izmirFactValue}>{fact.label==='Nüfus'?'4,5 M+':fact.value}</Text><Text style={styles.izmirFactLabel}>{fact.label}</Text></View></View>)}</View><Text style={styles.izmirFactsFootnote}>Kaynak: TÜİK, UNESCO ve mevcut İzmir rehber envanteri.</Text></View>
-          <View style={[styles.izmirDashboardPanel,styles.izmirFeaturedPanel,isDesktop&&styles.izmirDashboardFeatured,isTablet&&styles.izmirDashboardTabletHalf]}><Text style={styles.izmirPanelEyebrow}>★  ÖNE ÇIKANLAR</Text>{isDesktop||isTablet?<View style={styles.izmirFeaturedGrid}>{featuredPlaces.map(place=><Pressable key={place.id} onPress={()=>setSelectedPlace(place)} style={styles.izmirFeaturedCard}><Image source={place.image} style={styles.izmirFeaturedImage}/><View style={styles.izmirFeaturedShade}/><View style={styles.izmirFeaturedBody}><Text style={styles.izmirFeaturedDistrict}>{place.district.toUpperCase()}</Text><Text style={styles.izmirFeaturedName}>{place.name}</Text></View></Pressable>)}</View>:<ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.izmirFeaturedRail}>{featuredPlaces.map(place=><Pressable key={place.id} onPress={()=>setSelectedPlace(place)} style={[styles.izmirFeaturedCard,styles.izmirFeaturedCardMobile]}><Image source={place.image} style={styles.izmirFeaturedImage}/><View style={styles.izmirFeaturedShade}/><View style={styles.izmirFeaturedBody}><Text style={styles.izmirFeaturedDistrict}>{place.district.toUpperCase()}</Text><Text style={styles.izmirFeaturedName}>{place.name}</Text></View></Pressable>)}</ScrollView>}<Pressable onPress={()=>selectGuideSection('places')} style={styles.izmirFeaturedAll}><Text style={styles.izmirFeaturedAllText}>Tüm öne çıkanları gör  →</Text></Pressable></View>
+          <View style={[styles.izmirDashboardPanel,styles.izmirFactsPanel,isDesktop&&styles.izmirDashboardFacts,isTablet&&styles.izmirDashboardTabletHalf]}><Text style={styles.izmirPanelEyebrow}>HIZLI BİLGİLER</Text><View style={styles.izmirFactsGrid}>{izmirQuickFacts.map((fact,index)=><View key={fact.label} style={[styles.izmirFact,{backgroundColor:[izmirTheme.creamSoft,izmirTheme.cream,izmirTheme.sageSoft,izmirTheme.creamSoft,izmirTheme.sandSoft,izmirTheme.sageSoft][index%6]}]}><Text style={styles.izmirFactIcon}>{factIcons[index]??'•'}</Text><View style={styles.izmirFactBody}><Text numberOfLines={1} adjustsFontSizeToFit style={styles.izmirFactValue}>{fact.label==='Nüfus'?'4,5 M+':fact.value}</Text><Text style={styles.izmirFactLabel}>{fact.label}</Text></View></View>)}</View><Text style={styles.izmirFactsFootnote}>Kaynak: TÜİK, UNESCO ve mevcut İzmir rehber envanteri.</Text></View>
+          <View style={[styles.izmirDashboardPanel,styles.izmirFeaturedPanel,isDesktop&&styles.izmirDashboardFeatured,isTablet&&styles.izmirDashboardTabletHalf]}><Text style={styles.izmirFeaturedEyebrow}>★  ÖNE ÇIKANLAR</Text>{isDesktop||isTablet?<View style={styles.izmirFeaturedGrid}>{featuredPlaces.map(place=><Pressable key={place.id} onPress={()=>setSelectedPlace(place)} style={styles.izmirFeaturedCard}><Image source={place.image} style={styles.izmirFeaturedImage}/><View style={styles.izmirFeaturedShade}/><View style={styles.izmirFeaturedBody}><Text style={styles.izmirFeaturedDistrict}>{place.district.toUpperCase()}</Text><Text style={styles.izmirFeaturedName}>{place.name}</Text></View></Pressable>)}</View>:<ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.izmirFeaturedRail}>{featuredPlaces.map(place=><Pressable key={place.id} onPress={()=>setSelectedPlace(place)} style={[styles.izmirFeaturedCard,styles.izmirFeaturedCardMobile]}><Image source={place.image} style={styles.izmirFeaturedImage}/><View style={styles.izmirFeaturedShade}/><View style={styles.izmirFeaturedBody}><Text style={styles.izmirFeaturedDistrict}>{place.district.toUpperCase()}</Text><Text style={styles.izmirFeaturedName}>{place.name}</Text></View></Pressable>)}</ScrollView>}<Pressable onPress={()=>selectGuideSection('places')} style={styles.izmirFeaturedAll}><Text style={styles.izmirFeaturedAllText}>Tüm öne çıkanları gör  →</Text></Pressable></View>
         </View>
-        <View style={styles.izmirGuideHeading}><Text style={[styles.moduleTitle,isDesktop&&styles.izmirGuideHeadingTitle]}>İzmir’i Nasıl Keşfetmek İstersin?</Text></View><View style={[styles.izmirIntentGrid,isDesktop&&styles.izmirIntentGridDesktop]}>{[
-          ['history','◇','Tarih & Kültür','Konak, Selçuk, Bergama ve daha fazlası',palette.forest,true],['sea','≈','Deniz & Koylar','Çeşme, Seferihisar, Foça ve saklı koylar','#2F6F73',true],['family','◉','Ailece Keşif','Sasalı, İnciraltı ve çocuk dostu rotalar','#D7A64E',false],['evening','☾','Akşam & Sosyal','Alsancak, Bostanlı, Alaçatı ve daha fazlası','#725C68',true]
-        ].map(([id,icon,title,copy,background,dark])=><Pressable key={String(id)} onPress={()=>selectIntent(id as 'history'|'sea'|'family'|'evening')} style={[styles.izmirIntentCard,{backgroundColor:String(background)}]}><View style={styles.izmirIntentIcon}><Text style={[styles.izmirIntentIconText,dark&&styles.izmirCategoryTextLight]}>{icon}</Text></View><View style={styles.izmirIntentBody}><Text style={[styles.izmirIntentTitle,dark&&styles.izmirCategoryTextLight]}>{title}</Text><Text numberOfLines={2} style={[styles.izmirIntentCopy,dark&&styles.izmirCategoryCopyLight]}>{copy}</Text></View><Text style={[styles.izmirIntentArrow,dark&&styles.izmirCategoryTextLight]}>→</Text></Pressable>)}</View>
+        <View style={styles.izmirGuideHeading}><Text style={[styles.moduleTitle,styles.izmirHeadingText,isDesktop&&styles.izmirGuideHeadingTitle]}>İzmir’i Nasıl Keşfetmek İstersin?</Text></View><View style={[styles.izmirIntentGrid,isDesktop&&styles.izmirIntentGridDesktop]}>{intentCards.map(item=><Pressable key={item.id} onPress={()=>selectIntent(item.id)} style={[styles.izmirIntentCard,item.cardStyle]}><View style={styles.izmirIntentIcon}><Text style={[styles.izmirIntentIconText,item.textStyle]}>{item.icon}</Text></View><View style={styles.izmirIntentBody}><Text style={[styles.izmirIntentTitle,item.textStyle]}>{item.title}</Text><Text numberOfLines={2} style={[styles.izmirIntentCopy,item.copyStyle]}>{item.copy}</Text></View><Text style={[styles.izmirIntentArrow,item.textStyle]}>→</Text></Pressable>)}</View>
       </>}
       {guideSection==='places'&&<><View style={styles.citySearch}><Text style={styles.searchIcon}>⌕</Text><TextInput value={query} onChangeText={setQuery} placeholder="Mekân, ilçe veya deneyim ara" placeholderTextColor="#8A9691" style={styles.searchInput}/></View>{placeFocus==='all'&&<><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow}>{placeCategories.map(item=><Pressable key={item} onPress={()=>setCategory(item)} style={[styles.categoryChip,category===item&&styles.categoryChipActive]}><Text style={[styles.categoryText,category===item&&styles.categoryTextActive]}>{item}</Text></Pressable>)}</ScrollView>{renderPlaces('Antik kentler & tarihî doku','İZMİR’İN HAFIZASI',history)}{renderPlaces('Manevi duraklar','İNANÇ MİRASI',spiritual)}{renderPlaces('Doğa & aile keşifleri','DELTA, VADİ & YEŞİL',nature)}{renderPlaces('Kent sahilleri & kıyı rotaları','EGE KIYILARI',coast)}</>}{(placeFocus==='family'||category==='Tümü')&&<><View style={styles.moduleHeading}><View><Text style={styles.istanbulEyebrow}>ÇOCUKLARLA İZMİR</Text><Text style={styles.moduleTitle}>Aile & çocuk rotaları</Text></View><Text style={styles.moduleHint}>{izmirFamilyRoutes.length} rota</Text></View><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.venueRail}>{izmirFamilyRoutes.map(item=><View key={item.area} style={styles.venueCard}><Text style={styles.venueDistrict}>{item.district.toUpperCase()}</Text><Text style={styles.venueArea}>{item.area}</Text><Text style={styles.venueCharacter}>{item.character}</Text><Pressable onPress={()=>openMap(item.mapQuery)} style={[styles.venueButton,styles.venueButtonDark]}><Text style={[styles.venueButtonText,styles.venueButtonTextDark]}>Rotayı haritada aç  ↗</Text></Pressable></View>)}</ScrollView></>}</>}
       {guideSection==='food'&&<><View style={styles.izmirFoodIntro}><Text style={styles.istanbulEyebrow}>YEME & İÇME</Text><Text style={[styles.moduleTitle,isDesktop&&styles.izmirFoodTitleDesktop]}>İzmir’in lezzet ve sosyal yaşam rehberi</Text></View><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.izmirFoodTabs,isDesktop&&styles.izmirFoodTabsDesktop]}>{([{id:'venues',label:'Kafeler & Restoranlar'},{id:'food-guide',label:'Lezzet Rehberi'},{id:'nightlife',label:'Gece Hayatı'}] as {id:IzmirFoodSection;label:string}[]).map(item=><Pressable key={item.id} onPress={()=>selectFoodSection(item.id)} style={[styles.izmirFoodTab,isDesktop&&styles.izmirFoodTabDesktop,foodSection===item.id&&styles.izmirFoodTabActive]}><Text numberOfLines={1} style={[styles.izmirFoodTabText,foodSection===item.id&&styles.izmirFoodTabTextActive]}>{item.label}</Text></Pressable>)}</ScrollView>
@@ -978,9 +989,9 @@ function PlanScreen({ districtNames, spiritualIds, bursaPlaceIds, istanbulPlaceI
   return <SafeAreaView style={styles.plainPage}><View style={styles.plainHeader}><Text style={styles.eyebrow}>KİŞİSEL TÜRKİYE ROTAN</Text><Text style={styles.sectionTitle}>Gezi planım</Text><Text style={styles.plainCopy}>Bursa, İstanbul, Ankara ve İzmir’den seçtiğin duraklar burada sıralanır ve tek rota olarak haritada açılır.</Text></View><ScrollView contentContainerStyle={styles.planContent}>{districts.map((district, index) => <View key={district.name} style={styles.planDistrict}><View style={[styles.planNumber, { backgroundColor: district.theme }]}><Text style={styles.planNumberText}>{String(index + 1).padStart(2, '0')}</Text></View><View style={styles.planDistrictBody}><Text style={styles.planDistrictName}>{district.name}</Text><Text style={styles.planDistrictCopy}>Bursa · İlçe · {district.signature}</Text></View><Pressable onPress={() => onRemoveDistrict(district.name)} hitSlop={10}><Text style={styles.planRemove}>×</Text></Pressable></View>)}{sites.map((site, index) => <View key={site.id} style={styles.planDistrict}><View style={[styles.planNumber, styles.planSpiritual]}><Text style={styles.planNumberText}>{String(districts.length + index + 1).padStart(2, '0')}</Text></View><View style={styles.planDistrictBody}><Text style={styles.planDistrictName}>{site.name}</Text><Text style={styles.planDistrictCopy}>Bursa · Manevi miras · {site.district}</Text></View><Pressable onPress={() => onRemoveSpiritual(site.id)} hitSlop={10}><Text style={styles.planRemove}>×</Text></Pressable></View>)}{bursaStops.map((place, index) => <View key={place.id} style={styles.planDistrict}><View style={[styles.planNumber, { backgroundColor: palette.moss }]}><Text style={styles.planNumberText}>{String(districts.length + sites.length + index + 1).padStart(2, '0')}</Text></View><View style={styles.planDistrictBody}><Text style={styles.planDistrictName}>{place.name}</Text><Text style={styles.planDistrictCopy}>Bursa · {place.category} · {place.district}</Text></View><Pressable onPress={() => onRemoveBursaPlace(place.id)} hitSlop={10}><Text style={styles.planRemove}>×</Text></Pressable></View>)}{istanbulStops.map((place, index) => <View key={place.id} style={styles.planDistrict}><View style={[styles.planNumber, styles.planIstanbul]}><Text style={styles.planNumberText}>{String(districts.length + sites.length + bursaStops.length + index + 1).padStart(2, '0')}</Text></View><View style={styles.planDistrictBody}><Text style={styles.planDistrictName}>{place.name}</Text><Text style={styles.planDistrictCopy}>İstanbul · {place.category} · {place.district}</Text></View><Pressable onPress={() => onRemoveIstanbulPlace(place.id)} hitSlop={10}><Text style={styles.planRemove}>×</Text></Pressable></View>)}{ankaraStops.map((place, index) => <View key={place.id} style={styles.planDistrict}><View style={[styles.planNumber, { backgroundColor: '#8B6844' }]}><Text style={styles.planNumberText}>{String(districts.length + sites.length + bursaStops.length + istanbulStops.length + index + 1).padStart(2, '0')}</Text></View><View style={styles.planDistrictBody}><Text style={styles.planDistrictName}>{place.name}</Text><Text style={styles.planDistrictCopy}>Ankara · {place.category} · {place.district}</Text></View><Pressable onPress={() => onRemoveAnkaraPlace(place.id)} hitSlop={10}><Text style={styles.planRemove}>×</Text></Pressable></View>)}{izmirStops.map((place,index)=><View key={place.id} style={styles.planDistrict}><View style={[styles.planNumber,{backgroundColor:'#477A89'}]}><Text style={styles.planNumberText}>{String(districts.length+sites.length+bursaStops.length+istanbulStops.length+ankaraStops.length+index+1).padStart(2,'0')}</Text></View><View style={styles.planDistrictBody}><Text style={styles.planDistrictName}>{place.name}</Text><Text style={styles.planDistrictCopy}>İzmir · {place.category} · {place.district}</Text></View><Pressable onPress={()=>onRemoveIzmirPlace(place.id)} hitSlop={10}><Text style={styles.planRemove}>×</Text></Pressable></View>)}{!destinations.length && <View style={styles.empty}><Text style={styles.emptyIcon}>⌖</Text><Text style={styles.emptyTitle}>Rotan henüz boş</Text><Text style={styles.emptyCopy}>Şehir rehberlerindeki “Planıma ekle” düğmesine dokun.</Text></View>}{destinations.length > 0 && <Pressable onPress={openRoute} style={styles.planRouteButton}><Text style={styles.planRouteText}>Rotayı Google Maps’te aç  →</Text></Pressable>}</ScrollView></SafeAreaView>;
 }
 
-function BottomTabs({ tab, setTab, favoriteCount, planCount }: { tab: Tab; setTab: (tab: Tab) => void; favoriteCount: number; planCount: number }) {
+function BottomTabs({ tab, setTab, favoriteCount, planCount, izmirThemed = false }: { tab: Tab; setTab: (tab: Tab) => void; favoriteCount: number; planCount: number; izmirThemed?: boolean }) {
   const items: Array<{ id: Tab; icon: string; label: string }> = [{ id: 'home', icon: '⌂', label: 'Ana sayfa' }, { id: 'explore', icon: '⌕', label: 'Keşfet' }, { id: 'plan', icon: '⌖', label: 'Planım' }, { id: 'favorites', icon: '♡', label: 'Favoriler' }, { id: 'profile', icon: '○', label: 'Profil' }];
-  return <View style={styles.tabBar}>{items.map(item => { const badge = item.id === 'favorites' ? favoriteCount : item.id === 'plan' ? planCount : 0; return <Pressable key={item.id} onPress={() => setTab(item.id)} style={styles.tabItem}><View><Text style={[styles.tabIcon, tab === item.id && styles.tabActive]}>{item.icon}</Text>{badge > 0 && <View style={styles.tabBadge}><Text style={styles.tabBadgeText}>{badge}</Text></View>}</View><Text style={[styles.tabLabel, tab === item.id && styles.tabActive]}>{item.label}</Text></Pressable>; })}</View>;
+  return <View style={[styles.tabBar,izmirThemed&&styles.izmirTabBar]}>{items.map(item => { const badge = item.id === 'favorites' ? favoriteCount : item.id === 'plan' ? planCount : 0; const active=tab===item.id; return <Pressable key={item.id} onPress={() => setTab(item.id)} style={styles.tabItem}>{active&&izmirThemed&&<View style={styles.izmirTabIndicator}/>}<View><Text style={[styles.tabIcon,izmirThemed&&styles.izmirTabInactive,active&&styles.tabActive]}>{item.icon}</Text>{badge > 0 && <View style={[styles.tabBadge,izmirThemed&&styles.izmirTabBadge]}><Text style={styles.tabBadgeText}>{badge}</Text></View>}</View><Text style={[styles.tabLabel,izmirThemed&&styles.izmirTabInactive,active&&styles.tabActive]}>{item.label}</Text></Pressable>; })}</View>;
 }
 
 const facilityLabel = (value: boolean | null) => value === true ? 'Var' : value === false ? 'Yok' : 'Doğrulanmadı';
@@ -1154,85 +1165,91 @@ const styles = StyleSheet.create({
   menuLinkCount: { minWidth: 24, paddingHorizontal: 7, paddingVertical: 4, overflow: 'hidden', borderRadius: 12, color: palette.ink, backgroundColor: palette.gold, fontSize: 9, fontWeight: '900', textAlign: 'center' },
   menuLinkArrow: { color: palette.muted, fontSize: 24 },
   menuFooter: { marginTop: 'auto', paddingTop: 20, color: palette.muted, fontSize: 10, textAlign: 'center' },
-  izmirContent: { paddingBottom: 160 },
-  izmirHeader: { width: '100%', maxWidth: 1380, minHeight: 58, alignSelf: 'center', paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: palette.paper },
+  izmirPage: { backgroundColor: izmirTheme.cream },
+  izmirContent: { paddingBottom: 160, backgroundColor: izmirTheme.cream },
+  izmirHeader: { width: '100%', maxWidth: 1380, minHeight: 58, alignSelf: 'center', paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: izmirTheme.line, backgroundColor: izmirTheme.paper },
   izmirHeaderDesktop: { minHeight: 64, paddingHorizontal: 22 },
   izmirBrand: { minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 9 },
-  izmirBrandMark: { color: palette.gold, fontSize: 25, lineHeight: 28, fontWeight: '900' },
-  izmirBrandText: { flexShrink: 1, color: palette.forest, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 16, fontWeight: '700' },
+  izmirBrandMark: { color: izmirTheme.gold, fontSize: 25, lineHeight: 28, fontWeight: '900' },
+  izmirBrandText: { flexShrink: 1, color: izmirTheme.forest, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 16, fontWeight: '700' },
   izmirHeaderActions: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   izmirHeaderLink: { minHeight: 42, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', gap: 6, borderRadius: 13 },
-  izmirHeaderLinkIcon: { color: palette.gold, fontSize: 20, fontWeight: '900' },
-  izmirHeaderLinkText: { color: palette.forest, fontSize: 11, fontWeight: '900' },
-  izmirHeaderMenu: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 14, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.paper },
-  izmirHeaderMenuText: { color: palette.forest, fontSize: 20, fontWeight: '900' },
-  izmirHeaderHeart: { color: palette.forest, fontSize: 25, fontWeight: '900' },
+  izmirHeaderLinkIcon: { color: izmirTheme.gold, fontSize: 20, fontWeight: '900' },
+  izmirHeaderLinkText: { color: izmirTheme.forest, fontSize: 11, fontWeight: '900' },
+  izmirHeaderMenu: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 14, borderWidth: 1, borderColor: izmirTheme.forest, backgroundColor: izmirTheme.forest },
+  izmirHeaderMenuText: { color: izmirTheme.paper, fontSize: 20, fontWeight: '900' },
+  izmirHeaderHeart: { color: izmirTheme.paper, fontSize: 25, fontWeight: '900' },
   izmirPremiumHero: { width: 'auto', maxWidth: 1380, alignSelf: 'stretch', borderRadius: 0 },
   izmirPremiumHeroDesktop: { height: 400 },
   izmirPremiumHeroMobile: { height: 280 },
-  izmirPremiumHeroShade: { backgroundColor: 'rgba(7,25,28,.12)' },
-  izmirHeroLeftGradient: { position: 'absolute', inset: 0, ...(Platform.OS === 'web' ? ({ backgroundImage: 'linear-gradient(90deg, rgba(7,31,26,.80) 0%, rgba(7,31,26,.58) 28%, rgba(7,31,26,.14) 58%, rgba(7,31,26,0) 75%)' } as object) : { backgroundColor: 'rgba(7,31,26,.22)' }) },
+  izmirPremiumHeroShade: { backgroundColor: 'rgba(16,47,40,.02)' },
+  izmirHeroLeftGradient: { position: 'absolute', inset: 0, ...(Platform.OS === 'web' ? ({ backgroundImage: 'linear-gradient(90deg, rgba(16,47,40,.72) 0%, rgba(16,47,40,.25) 48%, rgba(16,47,40,.02) 78%)' } as object) : { backgroundColor: 'rgba(16,47,40,.25)' }) },
   izmirPremiumHeroBody: { width: '100%', maxWidth: 1280, alignSelf: 'center', alignItems: 'flex-start', justifyContent: 'center', paddingHorizontal: 28, paddingBottom: 0 },
   izmirPremiumHeroTitle: { fontSize: 72, letterSpacing: 2 },
-  izmirHeroSubtitle: { marginTop: 4, color: '#F2D6A4', fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 20, fontWeight: '600' },
-  izmirPremiumHeroCopy: { maxWidth: 430, textAlign: 'left' },
-  izmirGuideNav: { width: '96%', maxWidth: 1280, alignSelf: 'center', marginTop: -24, paddingHorizontal: 8, borderWidth: 1, borderColor: palette.line, borderRadius: 19, backgroundColor: palette.paper, shadowColor: '#153E35', shadowOffset: { width: 0, height: 8 }, shadowOpacity: .12, shadowRadius: 18, elevation: 5, zIndex: 4 },
+  izmirHeroSubtitle: { marginTop: 4, color: '#D9AE63', fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 20, fontWeight: '600' },
+  izmirPremiumHeroCopy: { maxWidth: 430, color: izmirTheme.creamSoft, textAlign: 'left' },
+  izmirGuideNav: { width: '96%', maxWidth: 1280, alignSelf: 'center', marginTop: -24, paddingHorizontal: 8, borderWidth: 1, borderColor: izmirTheme.line, borderRadius: 19, backgroundColor: izmirTheme.paper, shadowColor: izmirTheme.forest, shadowOffset: { width: 0, height: 8 }, shadowOpacity: .10, shadowRadius: 18, elevation: 5, zIndex: 4 },
   izmirGuideNavDesktop: { marginTop: -42, paddingHorizontal: 8 },
   izmirGuideNavRail: { gap: 7, paddingVertical: 8, paddingRight: 10 },
   izmirGuideNavRailDesktop: { flexGrow: 1, paddingRight: 0 },
-  izmirGuideNavItem: { minWidth: 138, minHeight: 58, paddingHorizontal: 14, alignItems: 'center', justifyContent: 'center', gap: 4, borderRadius: 14, borderWidth: 1, borderColor: 'transparent', backgroundColor: palette.paper },
+  izmirGuideNavItem: { minWidth: 138, minHeight: 58, paddingHorizontal: 14, alignItems: 'center', justifyContent: 'center', gap: 4, borderRadius: 14, borderWidth: 1, borderColor: 'transparent', backgroundColor: izmirTheme.paper },
   izmirGuideNavItemDesktop: { flex: 1, minWidth: 0, minHeight: 76, paddingHorizontal: 10 },
-  izmirGuideNavItemActive: { borderColor: palette.forest, backgroundColor: palette.forest },
-  izmirGuideNavText: { color: palette.muted, fontSize: 11, fontWeight: '900' },
-  izmirGuideNavTextDesktop: { color: palette.forest, fontSize: 11, letterSpacing: .2 },
-  izmirGuideNavTextActive: { color: palette.white },
-  izmirGuideNavIcon: { color: palette.moss, fontSize: 20, lineHeight: 22, fontWeight: '900' },
+  izmirGuideNavItemActive: { borderColor: izmirTheme.forest, backgroundColor: izmirTheme.forest },
+  izmirGuideNavText: { color: izmirTheme.forest, fontSize: 11, fontWeight: '900' },
+  izmirGuideNavTextDesktop: { color: izmirTheme.forest, fontSize: 11, letterSpacing: .2 },
+  izmirGuideNavTextActive: { color: izmirTheme.white },
+  izmirGuideNavIcon: { color: izmirTheme.moss, fontSize: 20, lineHeight: 22, fontWeight: '900' },
   izmirPremiumBody: { width: '100%', maxWidth: 1280, alignSelf: 'center' },
   izmirBreadcrumb: { marginTop: 30, marginBottom: 24, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 14 },
-  izmirBreadcrumbBack: { minWidth: 140, height: 44, paddingHorizontal: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 20, borderWidth: 1, borderColor: palette.moss, backgroundColor: palette.paper },
-  izmirBreadcrumbBackText: { color: palette.forest, fontSize: 11, lineHeight: 16, fontWeight: '900' },
+  izmirBreadcrumbBack: { minWidth: 140, height: 44, paddingHorizontal: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 20, borderWidth: 1, borderColor: izmirTheme.lineGreen, backgroundColor: izmirTheme.paper },
+  izmirBreadcrumbBackText: { color: izmirTheme.forest, fontSize: 11, lineHeight: 16, fontWeight: '900' },
   izmirBreadcrumbBackGap: { letterSpacing: 3 },
-  izmirBreadcrumbCurrent: { flexGrow: 1, flexShrink: 0, color: palette.muted, fontSize: 11, fontWeight: '800' },
+  izmirBreadcrumbCurrent: { flexGrow: 1, flexShrink: 0, fontSize: 11, fontWeight: '800' },
+  izmirBreadcrumbCity: { color: izmirTheme.muted },
+  izmirBreadcrumbSeparator: { color: izmirTheme.gold },
+  izmirBreadcrumbActive: { color: izmirTheme.forest },
   izmirOverviewIntro: { width: '100%', maxWidth: 860, alignSelf: 'center', marginTop: 50, marginBottom: 8, alignItems: 'center' },
   izmirOverviewTitleRow: { width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 },
-  izmirOverviewLine: { width: 34, height: 1, backgroundColor: palette.gold },
-  izmirOverviewDot: { width: 5, height: 5, borderRadius: 3, backgroundColor: palette.gold },
+  izmirOverviewLine: { width: 34, height: 1, backgroundColor: izmirTheme.gold },
+  izmirOverviewDot: { width: 5, height: 5, borderRadius: 3, backgroundColor: izmirTheme.gold },
   izmirOverviewTitleDesktop: { fontSize: 38, lineHeight: 45 },
-  izmirOverviewCopy: { marginTop: 8, color: palette.muted, fontSize: 15, lineHeight: 23, textAlign: 'center' },
+  izmirHeadingText: { color: izmirTheme.forest },
+  izmirOverviewCopy: { marginTop: 8, color: izmirTheme.muted, fontSize: 15, lineHeight: 23, textAlign: 'center' },
   izmirDashboard: { marginTop: 24, flexDirection: 'row', flexWrap: 'wrap', gap: 18 },
   izmirDashboardDesktop: { flexWrap: 'nowrap', alignItems: 'stretch', gap: 20 },
-  izmirDashboardPanel: { flexGrow: 1, flexBasis: 280, padding: 22, borderRadius: 22, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.paper, shadowColor: '#153E35', shadowOffset: { width: 0, height: 8 }, shadowOpacity: .06, shadowRadius: 18, elevation: 2 },
+  izmirDashboardPanel: { flexGrow: 1, flexBasis: 280, padding: 22, borderRadius: 22, borderWidth: 1, borderColor: izmirTheme.line, backgroundColor: izmirTheme.paper, shadowColor: izmirTheme.forest, shadowOffset: { width: 0, height: 8 }, shadowOpacity: .10, shadowRadius: 18, elevation: 2 },
   izmirDashboardFacts: { flexGrow: 0, flexShrink: 1, flexBasis: '32%' },
   izmirDashboardFeatured: { flexGrow: 1, flexShrink: 1, flexBasis: '68%' },
   izmirDashboardTabletHalf: { flexBasis: '47%' },
   izmirDashboardTabletFull: { flexBasis: '100%' },
-  izmirFactsPanel: { backgroundColor: '#F8F3E9' },
-  izmirFeaturedPanel: { backgroundColor: palette.paper },
+  izmirFactsPanel: { backgroundColor: izmirTheme.paper },
+  izmirFeaturedPanel: { borderColor: izmirTheme.forest, backgroundColor: izmirTheme.forest },
   izmirPopularPanel: { backgroundColor: '#EEF3EF' },
-  izmirPanelEyebrow: { marginBottom: 16, color: palette.moss, fontSize: 10, fontWeight: '900', letterSpacing: 1.3 },
+  izmirPanelEyebrow: { marginBottom: 16, color: izmirTheme.forest, fontSize: 10, fontWeight: '900', letterSpacing: 1.3 },
+  izmirFeaturedEyebrow: { marginBottom: 16, color: izmirTheme.white, fontSize: 10, fontWeight: '900', letterSpacing: 1.3 },
   izmirFactsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 9 },
-  izmirFact: { width: '47%', minHeight: 86, padding: 11, flexDirection: 'row', alignItems: 'center', gap: 9, borderRadius: 15, borderWidth: 1, borderColor: '#E9E0D1', backgroundColor: palette.paper },
-  izmirFactIcon: { width: 28, color: palette.moss, fontSize: 20, fontWeight: '900', textAlign: 'center' },
+  izmirFact: { width: '47%', minHeight: 86, padding: 11, flexDirection: 'row', alignItems: 'center', gap: 9, borderRadius: 15, borderWidth: 1, borderColor: izmirTheme.line },
+  izmirFactIcon: { width: 28, color: izmirTheme.moss, fontSize: 20, fontWeight: '900', textAlign: 'center' },
   izmirFactBody: { flex: 1, minWidth: 0 },
-  izmirFactValue: { color: palette.ink, fontSize: 18, lineHeight: 21, fontWeight: '900' },
-  izmirFactLabel: { marginTop: 4, color: palette.moss, fontSize: 9, fontWeight: '900', textTransform: 'uppercase' },
+  izmirFactValue: { color: izmirTheme.forest, fontSize: 18, lineHeight: 21, fontWeight: '900' },
+  izmirFactLabel: { marginTop: 4, color: izmirTheme.muted, fontSize: 9, fontWeight: '900', textTransform: 'uppercase' },
   izmirFactNote: { marginTop: 3, color: palette.muted, fontSize: 8, fontWeight: '700' },
-  izmirFactsFootnote: { marginTop: 12, color: palette.muted, fontSize: 8, lineHeight: 13 },
+  izmirFactsFootnote: { marginTop: 12, color: izmirTheme.muted, fontSize: 8, lineHeight: 13 },
   izmirPopularList: { gap: 9 },
   izmirPopularButton: { minHeight: 58, paddingHorizontal: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderRadius: 14, borderWidth: 1, borderColor: '#D7E2DC', backgroundColor: palette.paper },
   izmirPopularText: { color: palette.ink, fontSize: 11, fontWeight: '900' },
   izmirPopularArrow: { color: palette.gold, fontSize: 18, fontWeight: '900' },
   izmirFeaturedGrid: { flex: 1, flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   izmirFeaturedRail: { gap: 12, paddingRight: 8 },
-  izmirFeaturedCard: { width: '48%', minHeight: 150, overflow: 'hidden', borderRadius: 16, backgroundColor: palette.forest },
+  izmirFeaturedCard: { width: '48%', minHeight: 150, overflow: 'hidden', borderRadius: 16, backgroundColor: izmirTheme.forestDark },
   izmirFeaturedCardMobile: { width: 188, minHeight: 158 },
   izmirFeaturedImage: { position: 'absolute', inset: 0, width: '100%', height: '100%' },
-  izmirFeaturedShade: { position: 'absolute', inset: 0, backgroundColor: 'rgba(7,31,26,.38)' },
+  izmirFeaturedShade: { position: 'absolute', inset: 0, ...(Platform.OS === 'web' ? ({ backgroundImage: 'linear-gradient(180deg, rgba(16,47,40,0) 28%, rgba(16,47,40,.82) 100%)' } as object) : { backgroundColor: 'rgba(16,47,40,.38)' }) },
   izmirFeaturedBody: { flex: 1, padding: 13, justifyContent: 'flex-end' },
-  izmirFeaturedDistrict: { color: palette.gold, fontSize: 9, fontWeight: '900', letterSpacing: 1 },
-  izmirFeaturedName: { marginTop: 4, color: palette.white, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 17, lineHeight: 21, fontWeight: '600' },
-  izmirFeaturedAll: { minHeight: 42, marginTop: 10, alignItems: 'flex-end', justifyContent: 'center' },
-  izmirFeaturedAllText: { color: palette.forest, fontSize: 10, fontWeight: '900' },
+  izmirFeaturedDistrict: { color: izmirTheme.goldSoft, fontSize: 9, fontWeight: '900', letterSpacing: 1 },
+  izmirFeaturedName: { marginTop: 4, color: izmirTheme.white, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 17, lineHeight: 21, fontWeight: '600' },
+  izmirFeaturedAll: { minHeight: 42, marginTop: 10, paddingHorizontal: 14, alignSelf: 'flex-end', alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: izmirTheme.paper },
+  izmirFeaturedAllText: { color: izmirTheme.forest, fontSize: 10, fontWeight: '900' },
   izmirGuideHeading: { marginTop: 54, marginBottom: 22, alignItems: 'center' },
   izmirGuideHeadingTitle: { fontSize: 34, lineHeight: 41 },
   izmirCategoryGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 16 },
@@ -1248,25 +1265,33 @@ const styles = StyleSheet.create({
   izmirCategoryCopyLight: { color: 'rgba(255,255,255,.74)' },
   izmirIntentGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 14 },
   izmirIntentGridDesktop: { flexWrap: 'nowrap', gap: 16 },
-  izmirIntentCard: { flexGrow: 1, flexBasis: 260, minHeight: 112, padding: 18, flexDirection: 'row', alignItems: 'center', gap: 12, borderRadius: 19, borderWidth: 1, borderColor: 'rgba(21,62,53,.10)', shadowColor: '#153E35', shadowOffset: { width: 0, height: 6 }, shadowOpacity: .06, shadowRadius: 12, elevation: 2 },
+  izmirIntentCard: { flexGrow: 1, flexBasis: 260, minHeight: 112, padding: 18, flexDirection: 'row', alignItems: 'center', gap: 12, borderRadius: 19, borderWidth: 1, borderColor: izmirTheme.lineGreen, shadowColor: izmirTheme.forest, shadowOffset: { width: 0, height: 6 }, shadowOpacity: .10, shadowRadius: 12, elevation: 2 },
   izmirIntentIcon: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 21, backgroundColor: 'rgba(255,255,255,.18)' },
-  izmirIntentIconText: { color: palette.forest, fontSize: 24, fontWeight: '900' },
+  izmirIntentIconText: { color: izmirTheme.forest, fontSize: 24, fontWeight: '900' },
   izmirIntentBody: { flex: 1, minWidth: 0 },
-  izmirIntentTitle: { color: palette.ink, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 17, fontWeight: '700' },
-  izmirIntentCopy: { marginTop: 5, color: '#314C43', fontSize: 10, lineHeight: 15 },
-  izmirIntentArrow: { color: palette.forest, fontSize: 21, fontWeight: '900' },
+  izmirIntentTitle: { color: izmirTheme.ink, fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }), fontSize: 17, fontWeight: '700' },
+  izmirIntentCopy: { marginTop: 5, color: izmirTheme.muted, fontSize: 10, lineHeight: 15 },
+  izmirIntentArrow: { color: izmirTheme.forest, fontSize: 21, fontWeight: '900' },
+  izmirIntentHistory: { backgroundColor: izmirTheme.forest }, izmirIntentHistoryText: { color: izmirTheme.goldSoft }, izmirIntentHistoryCopy: { color: '#E8EEE9' },
+  izmirIntentSea: { backgroundColor: izmirTheme.seaSoft }, izmirIntentSeaText: { color: izmirTheme.forest }, izmirIntentSeaCopy: { color: '#557068' },
+  izmirIntentFamily: { backgroundColor: izmirTheme.sandSoft }, izmirIntentFamilyText: { color: izmirTheme.forest }, izmirIntentFamilyCopy: { color: '#6F685A' },
+  izmirIntentEvening: { backgroundColor: izmirTheme.moss }, izmirIntentEveningText: { color: izmirTheme.goldSoft }, izmirIntentEveningCopy: { color: '#EDF3EF' },
   izmirFoodIntro: { maxWidth: 760, marginBottom: 20 },
   izmirFoodTitleDesktop: { fontSize: 36, lineHeight: 43 },
   izmirFoodTabs: { minWidth: '100%', gap: 8, paddingBottom: 4 },
   izmirFoodTabsDesktop: { gap: 10 },
-  izmirFoodTab: { minWidth: 170, minHeight: 50, paddingHorizontal: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 15, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.paper },
+  izmirFoodTab: { minWidth: 170, minHeight: 50, paddingHorizontal: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 15, borderWidth: 1, borderColor: izmirTheme.lineGreen, backgroundColor: izmirTheme.paper },
   izmirFoodTabDesktop: { flex: 1, minHeight: 54 },
-  izmirFoodTabActive: { borderColor: palette.forest, backgroundColor: palette.forest },
-  izmirFoodTabText: { color: palette.forest, fontSize: 11, fontWeight: '900' },
-  izmirFoodTabTextActive: { color: palette.cream },
+  izmirFoodTabActive: { borderColor: izmirTheme.forest, backgroundColor: izmirTheme.forest },
+  izmirFoodTabText: { color: izmirTheme.forest, fontSize: 11, fontWeight: '900' },
+  izmirFoodTabTextActive: { color: izmirTheme.white },
   izmirNightlifeSection: { marginTop: 4, paddingBottom: 8 },
-  izmirNightlifeIntro: { marginTop: 8, maxWidth: 650, color: palette.muted, fontSize: 13, lineHeight: 20 },
-  izmirNightlifeCard: { borderColor: '#C8D8D0', backgroundColor: '#F8F5EC' },
+  izmirNightlifeIntro: { marginTop: 8, maxWidth: 650, color: izmirTheme.muted, fontSize: 13, lineHeight: 20 },
+  izmirNightlifeCard: { borderColor: izmirTheme.lineGreen, backgroundColor: izmirTheme.creamSoft },
+  izmirTabBar: { borderColor: izmirTheme.moss, backgroundColor: izmirTheme.forest, shadowColor: izmirTheme.forestDark },
+  izmirTabInactive: { color: izmirTheme.lineGreen },
+  izmirTabIndicator: { position: 'absolute', top: 3, width: 22, height: 3, borderRadius: 2, backgroundColor: izmirTheme.gold },
+  izmirTabBadge: { backgroundColor: izmirTheme.gold },
   izmirDistrictGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   izmirDistrictCard: { flexGrow: 1, flexBasis: 240, width: 'auto', minHeight: 224 },
   disabledButton: { opacity: .48 },
